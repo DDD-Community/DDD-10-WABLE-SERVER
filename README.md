@@ -20,10 +20,13 @@ CI/CD 끝나면 아래 링크 수정 필요
 
 
 ```sh
-...
-...
-...
+# vi /etc/hosts
+127.0.0.1       ddd.com api.ddd.com db.ddd.com soan.ddd.com jenkins.ddd.com
+
+# cli
+docker-compose up -d
 ```
+http://localhost:81 에서 잘 하셈
 
 ## 개발 환경 설정
 
