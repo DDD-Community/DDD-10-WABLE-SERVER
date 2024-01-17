@@ -10,37 +10,34 @@ Table users {
   name varchar [not null, unique]
   nickname string [not null, unique]
   birth date
-  role varchar
   mbti varchar
   profile_image_url varchar
   created_at timestamp
   updated_at timestamp
 }
 
-Table user_favorites {
-  id int [primary key]
-  user_id int  [ref: > users.id]
-  favorite_id int [ref: > favorites.id]
-}
-
-Table favorites {
-  id int [primary key]
-  term varchar // 관심사
-  type varchar // 관심사의 종류
-}
-
 Table introductions {
   id int [primary key]
   user_id int [ref: > users.id]
-  group_id int
-  is_main bool [Note: "기본 프로필 설정"]
+  group_id int [ref: > groups.id]
+  nickname varchar
+  profile_image_url varchar
   descriptions varchar
+}
+
+Table introduction_questions {
+  id int [primary key]
+  introduction_id int [ref: > introductions.id]
+  type questionType
+  question varchar
+  has_selections bool
+  answers []varchar
 }
 
 Table groups {
   id int [primary key]
   name varchar // 그룹명
-  owner_id int
+  owner_id int [ref: > users.id]
   created_at timestamp
   updated_at timestamp
 }
@@ -75,4 +72,24 @@ enum cardType {
     "감사"
 }
 
+Table group_questions {
+  id int [primary key]
+  group_id int  [ref: > groups.id]
+  question_id int [ref: > questions.id]
+  Note: "그룹들이 필수로 받고 싶은 질문 항목"
+}
+
+Table questions {
+  id int [primary key]
+  type questionType
+  question varchar
+  has_selections bool
+  selections []varchar [Note: "선택지 리스트"]
+}
+
+enum questionType {
+  "성격"
+  "취미"
+  "커스텀"
+}
 
