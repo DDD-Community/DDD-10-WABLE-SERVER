@@ -80,3 +80,8 @@ http://localhost:81 에서 잘 하셈
     - 사용자별 인공지능 요약 제공 (사람들이 말한 바에 따르면, 당신은 00한 사람이군요!)
 </pre></details>
 
+## ERD
+---
+[그림 첨부 예정]
+
+https://dbdiagram.io/d/wable-64888412722eb77494e48e6a
