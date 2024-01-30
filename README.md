@@ -30,10 +30,50 @@ http://localhost:81 에서 잘 하셈
 
 ## 개발 환경 설정
 
-개발 의존성 설치 방법과 자동 테스트 슈트 실행 방법 작성
+TODO: 개발 의존성 설치 방법과 자동 테스트 슈트 실행 방법 작성
 
+아래 방법을 통해 개발에 필요한 DB, Redis, phpMyAdmin을 실행할 수 있다.
+phpMyAdmin은 http://localhost:8888 에서 접속할 수 있으며, MySQL을 웹에서 관리할 수 있다.
+
+API 는 IntelliJ IDEA 에서 실행하면 된다.
 ```sh
-..
+docker network create ddd-network
+
+docker run -d \
+  --name ddd-mysql \
+  --network ddd-network \
+  -p 3306:3306 \
+  --restart always \
+  -e MYSQL_DATABASE=default \
+  -e MYSQL_ROOT_PASSWORD=password \
+  -e MYSQL_USER=admin \
+  -e MYSQL_PASSWORD=password \
+  mysql:8.2 --default-authentication-plugin=mysql_native_password
+  
+docker run -d \
+  --name ddd-phpmyadmin \
+  --network ddd-network \
+  --restart always \
+  -e PMA_ARBITRARY=1 \
+  -e PMA_HOST=ddd-mysql \
+  -p 8888:80 \
+  phpmyadmin
+
+docker run -d \
+  --name ddd-redis \
+  --network ddd-network \
+  --restart always \
+  redis:7.2-alpine
+```
+
+로컬 개발환경에서는 application.yml 을 아래와 같이 설정하면 된다.
+```yml
+# src/main/resources/application.yml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/default
+    username: admin
+    password: password
 ```
 
 ## 업데이트 내역
