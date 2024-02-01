@@ -13,6 +13,9 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Enumerated(EnumType.STRING)
+    private CardName sid;
+
     @ManyToOne
     @JoinColumn(name = "from_user_id")
     private User fromUser;
@@ -30,9 +33,6 @@ public class Card {
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
-
-    @Enumerated(EnumType.STRING)
-    private CardType type;
 
     private String content;
 

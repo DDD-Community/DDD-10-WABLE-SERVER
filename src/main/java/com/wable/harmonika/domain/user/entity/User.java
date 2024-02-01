@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.security.Timestamp;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,5 +41,10 @@ public class User extends BaseTimeEntity {
             this.name = name;
             this.encodedPassword = encodedPassword;
         }
+
+        @Column(name = "created_at")
+        private Timestamp createdAt;
+        @Column(name = "updated_at")
+        private Timestamp updatedAt;
 }
 

@@ -2,6 +2,7 @@ package com.wable.harmonika.domain.group.entity;
 
 import jakarta.persistence.*;
 
+import java.security.Timestamp;
 import java.util.List;
 
 @Entity
@@ -10,16 +11,22 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Enumerated(EnumType.STRING)
-    private QuestionType type;
+    private String sid;
 
     private String question;
 
-    @Column(name = "has_selections")
-    private boolean hasSelections;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "question_type")
+    private QuestionType questionType;
 
     @ElementCollection
     private List<String> selections;
 
-    // Getters and setters
+    @Column(name = "created_at")
+    private Timestamp createdAt;
+
+    @Column(name = "updated_at")
+    private Timestamp updatedAt;
+
+    // Getters and Setters
 }

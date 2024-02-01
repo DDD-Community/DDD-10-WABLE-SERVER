@@ -5,6 +5,8 @@ import com.wable.harmonika.domain.group.entity.Group;
 import com.wable.harmonika.domain.user.entity.User;
 import jakarta.persistence.*;
 
+import java.security.Timestamp;
+
 @Entity
 @Table(name = "profiles")
 public class Profile {
@@ -27,5 +29,10 @@ public class Profile {
 
     private String descriptions;
 
-    // Getters and setters
+    @Column(name = "created_at")
+    private Timestamp createdAt;
+
+    @Column(name = "updated_at")
+    private Timestamp updatedAt;
+
 }
