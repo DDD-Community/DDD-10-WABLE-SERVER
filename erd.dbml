@@ -1,4 +1,7 @@
 // https://dbdiagram.io/d/wable-64888412722eb77494e48e6a
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
 Project project_name {
   database_type: 'MySQL'
   Note: 'Description of the project'
@@ -10,28 +13,31 @@ Table users {
   name varchar [not null, unique]
   nickname string [not null, unique]
   birth date
-  mbti varchar
   profile_image_url varchar
   created_at timestamp
   updated_at timestamp
 }
 
-Table introductions {
+Table profiles {
   id int [primary key]
   user_id int [ref: > users.id]
   group_id int [ref: > groups.id]
   nickname varchar
   profile_image_url varchar
   descriptions varchar
+  created_at timestamp
+  updated_at timestamp
 }
 
-Table introduction_questions {
+Table profile_questions {
   id int [primary key]
-  introduction_id int [ref: > introductions.id]
-  type questionType
+  profile_id int [ref: > profiles.id]
+  sid questionName
   question varchar
-  has_selections bool
-  answers []varchar
+  question_type questionType
+  answers varchar
+  created_at timestamp
+  updated_at timestamp
 }
 
 Table groups {
@@ -53,23 +59,23 @@ Table user_groups {
 
 Table cards {
   id int [primary key]
+  sid cardName
   from_user_id int [ref: > users.id]
   from_user_name varchar
   to_user_id int [ref: > users.id]
   to_user_name varchar
   group_id int [ref: > groups.id]
-  type cardType
   content varchar
   is_visible bool
   created_at timestamp
   updated_at timestamp
 }
 
-enum cardType {
-    "인사"
-    "축하"
-    "응원"
-    "감사"
+enum cardName {
+  "GREETING"
+  "CELEBRATION"
+  "ENCOURAGEMENT"
+  "GRATITUDE"
 }
 
 Table group_questions {
@@ -81,15 +87,21 @@ Table group_questions {
 
 Table questions {
   id int [primary key]
-  type questionType
+  sid questionName
   question varchar
-  has_selections bool
-  selections []varchar [Note: "선택지 리스트"]
+  question_type questionType
+  selections varchar [Note: "선택지 리스트"]
+  created_at timestamp
+  updated_at timestamp
 }
 
 enum questionType {
-  "성격"
-  "취미"
-  "커스텀"
+  "OPEN_ENDED"
+  "MULTIPLE_CHOICE"
 }
 
+enum questionName {
+  "MBTI"
+  "HOBBY"
+  "CUSTOM"
+}
