@@ -3,6 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '3.2.1'
 	id 'io.spring.dependency-management' version '1.1.4'
 	id 'org.asciidoctor.jvm.convert' version '3.3.2'
+	id 'com.google.cloud.tools.jib' version '3.4.0'
 }
 
 group = 'com.wable'
@@ -54,4 +55,32 @@ tasks.named('test') {
 tasks.named('asciidoctor') {
 	inputs.dir snippetsDir
 	dependsOn test
+}
+
+jib {
+	from {
+    	image = 'eclipse-temurin:17-jdk-focal'
+  	}
+	to {
+		image = 'ghcr.io/ddd-community/ddd-10-wable-server:main'
+	}
+	container {
+		entrypoint = ['java', '-Dspring.profiles.active=test', '-jar', 'harmonika-0.0.1-SNAPSHOT.jar']
+
+		jvmFlags = ['-Xms512m', '-Xmx512m', '-Xdebug', '-XshowSettings:vm', '-XX:+UnlockExperimentalVMOptions', '-XX:+UseContainerSupport']
+		ports = ['8080']
+
+		environment = [SPRING_OUTPUT_ANSI_ENABLED: "ALWAYS"]
+		labels = [version:project.version, name:project.name, group:project.group]
+
+		creationTime = 'USE_CURRENT_TIMESTAMP'
+		format = 'Docker'
+	}
+	extraDirectories {
+		paths {	
+			path {
+				from = file('build/libs')
+			}
+		}
+	}
 }

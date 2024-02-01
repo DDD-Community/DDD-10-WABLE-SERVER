@@ -1,14 +1,13 @@
 FROM eclipse-temurin:17-jdk-focal
 
-# TODO: jib 추가
 WORKDIR /app
 
 COPY . /app
 
 RUN ./gradlew bootJar
 
-RUN cp /app/build/libs/*.jar /app.jar
+RUN cp ./build/libs/harmonika-0.0.1-SNAPSHOT.jar /harmonika-0.0.1-SNAPSHOT.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENTRYPOINT ["java", "-jar", "/harmonika-0.0.1-SNAPSHOT.jar"]

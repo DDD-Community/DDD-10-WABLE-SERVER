@@ -2,10 +2,19 @@ version: "3.7"
 
 services:
   jenkins:
+    privileged: true
     container_name: ddd-jenkins
-    image: jenkins/jenkins:lts
+    build: 
+      dockerfile: Dockerfile.jenkins
+    restart: always
+    ports:
+      - "8080:8080"
+      - "50000:50000"
     volumes:
-      - ./data/jenkins/home:/var/jenkins_home
+      - ./data/jenkins/jenkins_home:/var/jenkins_home
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      TZ: "Asia/Seoul"
 
   sonarqube:
     container_name: ddd-sonarqube
@@ -21,6 +30,7 @@ services:
       - ./data/sonarqube/data:/opt/sonarqube/data
       - ./data/sonarqube/extensions:/opt/sonarqube/extensions
       - ./data/sonarqube/logs:/opt/sonarqube/logs
+
   mysql:
     container_name: ddd-mysql
     image: mysql:8.2
@@ -72,4 +82,3 @@ services:
     build:
       context: .
     restart: always
-
