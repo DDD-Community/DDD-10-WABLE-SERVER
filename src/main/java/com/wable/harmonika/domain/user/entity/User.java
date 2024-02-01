@@ -40,3 +40,4 @@ public class User extends BaseTimeEntity {
             this.encodedPassword = encodedPassword;
         }
 }
+
