@@ -2,13 +2,19 @@ package com.wable.harmonika.domain.card.entity;
 
 import com.wable.harmonika.domain.group.entity.Group;
 import com.wable.harmonika.domain.user.entity.User;
+import com.wable.harmonika.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 
 @Entity
-public class Card {
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Card  extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -34,16 +40,9 @@ public class Card {
     @JoinColumn(name = "group_id")
     private Group group;
 
+    @Column(name = "content")
     private String content;
 
     @Column(name = "is_visible")
     private boolean isVisible;
-
-    @Column(name = "created_at")
-    private Date createdAt;
-
-    @Column(name = "updated_at")
-    private Date updatedAt;
-
-    // Getters and setters
 }

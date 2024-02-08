@@ -41,10 +41,5 @@ public class User extends BaseTimeEntity {
             this.name = name;
             this.encodedPassword = encodedPassword;
         }
-
-        @Column(name = "created_at")
-        private Timestamp createdAt;
-        @Column(name = "updated_at")
-        private Timestamp updatedAt;
 }
 
