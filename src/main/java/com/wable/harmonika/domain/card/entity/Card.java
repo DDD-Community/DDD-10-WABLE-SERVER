@@ -8,29 +8,29 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 
 @Entity
 @Getter
+@Table(name = "cards")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Card  extends BaseTimeEntity {
+public class Card extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "sid")
     private CardName sid;
 
     @ManyToOne
-    @JoinColumn(name = "from_user_id")
+    @JoinColumn(name = "from_user_id", referencedColumnName = "user_id")
     private User fromUser;
 
     @Column(name = "from_user_name")
     private String fromUserName;
 
     @ManyToOne
-    @JoinColumn(name = "to_user_id")
+    @JoinColumn(name = "to_user_id", referencedColumnName = "user_id")
     private User toUser;
 
     @Column(name = "to_user_name")

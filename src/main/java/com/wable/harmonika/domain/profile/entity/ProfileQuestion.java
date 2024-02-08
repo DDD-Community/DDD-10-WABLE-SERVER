@@ -3,18 +3,15 @@ package com.wable.harmonika.domain.profile.entity;
 import com.wable.harmonika.domain.group.entity.QuestionType;
 import com.wable.harmonika.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-import java.security.Timestamp;
 import java.util.List;
 
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProfileQuestion  extends BaseTimeEntity {
+@Table(name = "profile_questions")
+public class ProfileQuestion extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

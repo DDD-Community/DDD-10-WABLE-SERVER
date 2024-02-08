@@ -5,23 +5,18 @@ import com.wable.harmonika.domain.group.entity.Group;
 import com.wable.harmonika.domain.user.entity.User;
 import com.wable.harmonika.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.security.Timestamp;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "profiles")
-public class Profile  extends BaseTimeEntity {
+public class Profile extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
     @ManyToOne
