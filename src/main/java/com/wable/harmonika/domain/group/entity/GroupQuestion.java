@@ -8,7 +8,7 @@ import lombok.Getter;
 @Entity
 @Getter
 @Table(name = "group_questions")
-public class GroupQuestion extends BaseTimeEntity {
+public class GroupQuestion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
