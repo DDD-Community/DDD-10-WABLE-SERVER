@@ -16,10 +16,9 @@ public class Group extends BaseTimeEntity {
     @Column(updatable = false)
     private Long id;
 
-    @Column(name = "name")
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "owner_id")
     private User owner;
 }

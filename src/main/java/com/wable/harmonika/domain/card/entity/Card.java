@@ -19,30 +19,25 @@ public class Card extends BaseTimeEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "sid")
     private CardName sid;
 
     @ManyToOne
-    @JoinColumn(name = "from_user_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "from_user_id")
     private User fromUser;
 
-    @Column(name = "from_user_name")
     private String fromUserName;
 
     @ManyToOne
-    @JoinColumn(name = "to_user_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "to_user_id")
     private User toUser;
 
-    @Column(name = "to_user_name")
     private String toUserName;
 
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
 
-    @Column(name = "content")
     private String content;
 
-    @Column(name = "is_visible")
     private boolean isVisible;
 }

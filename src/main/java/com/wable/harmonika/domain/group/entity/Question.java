@@ -14,17 +14,13 @@ public class Question extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "sid")
     private String sid;
 
-    @Column(name = "question")
     private String question;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "question_type")
     private QuestionType questionType;
 
     @ElementCollection
-    @Column(name = "selections")
     private List<String> selections;
 }

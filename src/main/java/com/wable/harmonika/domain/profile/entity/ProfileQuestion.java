@@ -20,17 +20,13 @@ public class ProfileQuestion extends BaseTimeEntity {
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
     private Profile profile;
 
-    @Column(name = "sid")
     private String sid;
 
-    @Column(name = "question")
     private String question;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "question_type")
     private QuestionType questionType;
 
-    @Column(name = "answers")
     @ElementCollection
     private List<String> answer;
 }
