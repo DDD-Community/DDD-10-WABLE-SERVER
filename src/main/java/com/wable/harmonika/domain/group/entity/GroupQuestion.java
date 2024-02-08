@@ -11,7 +11,7 @@ import lombok.Getter;
 public class GroupQuestion extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "group_id")

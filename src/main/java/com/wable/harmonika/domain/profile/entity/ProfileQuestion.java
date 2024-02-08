@@ -14,7 +14,7 @@ import java.util.List;
 public class ProfileQuestion extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "profile_id", referencedColumnName = "id")

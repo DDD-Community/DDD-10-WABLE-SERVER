@@ -12,7 +12,7 @@ import java.util.List;
 public class Question extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "sid")
     private String sid;

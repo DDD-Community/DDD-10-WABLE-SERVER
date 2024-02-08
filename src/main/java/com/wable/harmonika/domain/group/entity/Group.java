@@ -9,11 +9,12 @@ import lombok.Getter;
 
 @Entity
 @Getter
-@Table(name = "groups")
+@Table(name = "`groups`")
 public class Group extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(updatable = false)
+    private Long id;
 
     @Column(name = "name")
     private String name;

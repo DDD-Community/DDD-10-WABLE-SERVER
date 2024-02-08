@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class Card extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "sid")
