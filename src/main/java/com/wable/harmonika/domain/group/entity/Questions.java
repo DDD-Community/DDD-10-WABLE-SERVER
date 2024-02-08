@@ -8,8 +8,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@Table(name = "questions")
-public class Question extends BaseTimeEntity {
+public class Questions extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,7 +18,7 @@ public class Question extends BaseTimeEntity {
     private String question;
 
     @Enumerated(EnumType.STRING)
-    private QuestionType questionType;
+    private QuestionTypes questionType;
 
     @ElementCollection
     private List<String> selections;

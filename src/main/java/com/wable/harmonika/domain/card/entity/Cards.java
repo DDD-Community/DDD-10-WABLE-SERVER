@@ -1,7 +1,7 @@
 package com.wable.harmonika.domain.card.entity;
 
-import com.wable.harmonika.domain.group.entity.Group;
-import com.wable.harmonika.domain.user.entity.User;
+import com.wable.harmonika.domain.group.entity.Groups;
+import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,31 +11,30 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "cards")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Card extends BaseTimeEntity {
+public class Cards extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private CardName sid;
+    private CardNames sid;
 
     @ManyToOne
     @JoinColumn(name = "from_user_id")
-    private User fromUser;
+    private Users fromUser;
 
     private String fromUserName;
 
     @ManyToOne
     @JoinColumn(name = "to_user_id")
-    private User toUser;
+    private Users toUser;
 
     private String toUserName;
 
     @ManyToOne
     @JoinColumn(name = "group_id")
-    private Group group;
+    private Groups group;
 
     private String content;
 

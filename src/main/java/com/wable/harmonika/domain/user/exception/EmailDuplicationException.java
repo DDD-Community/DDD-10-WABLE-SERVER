@@ -3,7 +3,7 @@ package com.wable.harmonika.domain.user.exception;
 import lombok.Getter;
 
 @Getter
-public class EmailDuplicationException  extends RuntimeException{
+public class EmailDuplicationException extends RuntimeException {
     private String field = "email";
     private String value;
 

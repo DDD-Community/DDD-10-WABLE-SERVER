@@ -1,7 +1,6 @@
 package com.wable.harmonika.domain.group.entity;
 
 
-import com.wable.harmonika.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -15,9 +14,9 @@ public class GroupQuestion {
 
     @ManyToOne
     @JoinColumn(name = "group_id")
-    private Group group;
+    private Groups group;
 
     @ManyToOne
     @JoinColumn(name = "question_id")
-    private Question question;
+    private Questions question;
 }

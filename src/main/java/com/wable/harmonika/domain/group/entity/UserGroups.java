@@ -1,24 +1,25 @@
 package com.wable.harmonika.domain.group.entity;
 
 
-import com.wable.harmonika.domain.user.entity.User;
+import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-
 @Entity
 @Getter
-@Table(name = "`groups`")
-public class Group extends BaseTimeEntity {
+public class UserGroups extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false)
     private Long id;
 
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users user;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private User owner;
+    @JoinColumn(name = "group_id")
+    private Groups group;
+
+    private String position;
 }
