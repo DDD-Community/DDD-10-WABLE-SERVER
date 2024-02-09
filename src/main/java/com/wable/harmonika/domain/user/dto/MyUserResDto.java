@@ -1,6 +1,6 @@
 package com.wable.harmonika.domain.user.dto;
 
-import com.wable.harmonika.domain.user.entity.User;
+import com.wable.harmonika.domain.user.entity.Users;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,7 +18,7 @@ public class MyUserResDto {
     private LocalDateTime createDate;
     private LocalDateTime modifiedDate;
 
-    public MyUserResDto(User user) {
+    public MyUserResDto(Users user) {
         this.email = user.getEmail();
         this.name = user.getName();
         this.createDate = user.getCreateDate();

@@ -1,13 +1,15 @@
 spring:
+  profiles:
+    active: dev
   datasource:
-    url: jdbc:mysql://localhost:3306/default
+    url: jdbc:mysql://ddd-mysql:3306/default
     username: root
     password: password
 
   # Hibernate 설정
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
       naming:
         strategy: org.hibernate.cfg.ImprovedNamingStrategy
       properties:
