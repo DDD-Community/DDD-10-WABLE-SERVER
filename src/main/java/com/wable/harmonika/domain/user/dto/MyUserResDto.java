@@ -15,13 +15,13 @@ public class MyUserResDto {
 
     private String email;
     private String name;
-    private LocalDateTime createDate;
-    private LocalDateTime modifiedDate;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public MyUserResDto(Users user) {
         this.email = user.getEmail();
         this.name = user.getName();
-        this.createDate = user.getCreateDate();
-        this.modifiedDate = user.getModifiedDate();
+        this.createdAt = user.getCreatedAt();
+        this.updatedAt = user.getUpdatedAt();
     }
 }

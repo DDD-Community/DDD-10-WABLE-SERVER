@@ -20,18 +20,13 @@ import java.time.LocalDateTime;
 // BaseTimeEntity에 Auditing 기능을 포함시킨다.
 // Audit이란, Spring Date JPA에서 시간에 대해 자동으로 값을 넣어주는 기능
 public abstract class BaseTimeEntity {
-    // 모든 Entity의 상위 클래스가 되어, createDate와 modifiedDate를 자동 관리한다.
-    // 직접 생성해서 사용할 일이 없으므로 추상 클래스로 사용을 권장한다.
-
-
     @CreatedDate
-    // Entity가 생성되어 저장될 때 시간이 자동 저장된다.
     @Column(updatable = false) // 해당 컬럼은 수정되지 않는다는 의미
     // update 시에 Null 되는 경우 방지
-    private LocalDateTime createDate;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(insertable=false) // 해당 컬럼은 삽입에서 제외된다는 의미(DB Insert에서 제외). 삽입 시점에서는 비워져있어야하므로 false
     // 조회한 Entity의 값을 변경할 때 시간이 자동 저장된다.
-    private LocalDateTime modifiedDate;
+    private LocalDateTime updatedAt;
 }
