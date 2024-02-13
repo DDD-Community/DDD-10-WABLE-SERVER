@@ -83,11 +83,6 @@ public class ProfileController {
 
         // 2. 서명된 URL 반환
 
-        // 1. 서명된 URL 생성
-        val response = ProfileService.getSignedUrl(activeProfile, imageBucketName, imageBucketPath, fileName);
-
-        // 2. 서명된 URL 반환
-
         // 3. 이미지 업로드 가능한 URL 생성
         // 3.1 주면 됨
         return response;
