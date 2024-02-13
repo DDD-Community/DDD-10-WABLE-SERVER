@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.Duration;
 import java.util.Map;
@@ -27,22 +28,25 @@ public class ProfileService {
     private final UserRepository userRepository;
     private final S3Presigner s3Presigner;
 
+    @Value("${cloud.aws.s3.bucket}")
+    private String imageBucketName;
+
     @Transactional(readOnly = true)
-    public Profiles getProfileById(Long id) {
+    public Profiles getGroupProfileById(Long id) {
         return profileRepository.findById(id)
                 .orElseThrow(() -> new ProfileNotFoundException("id", id));
     }
 
     @Transactional(readOnly = true)
-    public Users getUserProfileById(Long id) {
+    public Users getUserProfileByUserId(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ProfileNotFoundException("id", id));
     }
 
-    public Map<String, String> getSignedUrl(String activeProfile, String imageBucketName, String imageBucketPath, String fileName) {
+    public Map<String, String> getSignedUrl(Long userId, String fileName) {
         validateImageExtension(fileName);
 
-        val keyName = "/" + activeProfile + imageBucketPath + UUID.randomUUID() + "-" + fileName;
+        val keyName = "/" + userId + "/" + UUID.randomUUID() + "-" + fileName;
         val contentType = "image/" + getFileExtension(fileName);
 
         PutObjectRequest objectRequest = PutObjectRequest.builder()

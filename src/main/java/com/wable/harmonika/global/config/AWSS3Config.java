@@ -1,4 +1,4 @@
-package com.sopterm.makeawish.config;
+package com.wable.harmonika.global.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

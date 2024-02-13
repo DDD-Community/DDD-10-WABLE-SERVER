@@ -2,6 +2,7 @@ package com.wable.harmonika.domain.profile.api;
 
 import com.wable.harmonika.domain.profile.dto.GroupProfileDto;
 import com.wable.harmonika.domain.profile.dto.ProfileResponse;
+import com.wable.harmonika.domain.profile.dto.SignedUrlDto;
 import com.wable.harmonika.domain.profile.dto.UserProfileDto;
 import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.domain.profile.service.ProfileService;
@@ -15,6 +16,8 @@ import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 
 @Tag(name = "프로필 API", description = "프로필 API")
@@ -41,11 +44,11 @@ public class ProfileController {
         if (toUserId != null) {
             // 토큰 유저와 toUserId 가 같은 소속인지 확인
             // toUserId 의 profile, profile_question 가져 오기
-            return new ProfileResponse(new GroupProfileDto(ProfileService.getProfile(toUserId)));
+            return new ProfileResponse(new GroupProfileDto(ProfileService.getGroupProfileById(toUserId)));
         }
 
         // 2. profile, profile_question 가져 오기
-        Profiles userGroupProfile = ProfileService.getProfile(1L);
+        Profiles userGroupProfile = ProfileService.getGroupProfileById(1L);
         return new ProfileResponse(new GroupProfileDto(userGroupProfile));
     }
 
@@ -62,12 +65,23 @@ public class ProfileController {
     @Operation(summary = "프로필의 이미지 업로드 URL", description = "프로필의 이미지 업로드 URL 을 생성해서 준다")
     @GetMapping("/presigned-url")
     @ResponseStatus(value = HttpStatus.OK)
-    public String makeImageUploadURL(@RequestParam(value = "group_id", required = false) Long groupId) {
+    public Map<String, String> makeImageUploadURL(@RequestParam(value = "group_id", required = false) Long groupId) {
         // 1. 유저 정보 확인 (유저 토큰 가져온 후 UserId 을 가져 와야 함)
         // 1.1. 유저 정보가 없으면 에러 --> 어노테이션으로 처리
 
         // 2 그룹 파라메터가 있는지 확인 (쿼리 파라메터로 옵셔널하게 group_id 을 받아야 함)
         // 2.1 그룹 정보가 없으면 에러
+        String fileName = "user.jpg";
+        if (groupId != null) {
+            fileName = "group.jpg";
+        }
+
+        Long userId = 1L;
+
+        // 1. 서명된 URL 생성
+        val response = ProfileService.getSignedUrl(userId, fileName);
+
+        // 2. 서명된 URL 반환
 
         // 1. 서명된 URL 생성
         val response = ProfileService.getSignedUrl(activeProfile, imageBucketName, imageBucketPath, fileName);
@@ -76,7 +90,7 @@ public class ProfileController {
 
         // 3. 이미지 업로드 가능한 URL 생성
         // 3.1 주면 됨
-        return ResponseEntity.ok(new SignedUrlDto.success("데이터", response));
+        return response;
     }
 
     // profile update
