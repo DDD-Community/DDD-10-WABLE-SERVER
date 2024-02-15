@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    active: dev
   datasource:
     url: jdbc:mysql://ddd-mysql:3306/default
     username: root
