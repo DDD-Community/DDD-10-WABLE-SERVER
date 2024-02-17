@@ -4,13 +4,14 @@ import com.wable.harmonika.domain.user.dto.MyUserResDto;
 import com.wable.harmonika.domain.user.dto.SignUpReqDto;
 import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.domain.user.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
