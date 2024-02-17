@@ -69,9 +69,9 @@ jib {
 		image = 'ghcr.io/ddd-community/ddd-10-wable-server:main'
 	}
 	container {
-		entrypoint = ['java', '-Dspring.profiles.active=test', '-jar', 'harmonika-0.0.1-SNAPSHOT.jar']
+		entrypoint = ['java', '-Dspring.profiles.active=dev', '-jar', 'harmonika-0.0.1-SNAPSHOT.jar']
 
-		jvmFlags = ['-Dspring.profiles.active=dev', '-Xms512m', '-Xmx512m', '-Xdebug', '-XshowSettings:vm', '-XX:+UnlockExperimentalVMOptions', '-XX:+UseContainerSupport']
+		jvmFlags = ['-Xms512m', '-Xmx512m', '-Xdebug', '-XshowSettings:vm', '-XX:+UnlockExperimentalVMOptions', '-XX:+UseContainerSupport']
 		ports = ['8080']
 
 		environment = [SPRING_OUTPUT_ANSI_ENABLED: "ALWAYS"]
