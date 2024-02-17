@@ -4,6 +4,7 @@ import com.wable.harmonika.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +33,8 @@ public class Users extends BaseTimeEntity {
     // 소셜로그인으로 인해서 비밀번호를 안 받을 수 있기에 추후 확인이 필요합니다.
     @NotNull(message = "비밀번호는 필수로 입력되어야 합니다.")
     private String encodedPassword;
+
+    private LocalDate birth;
 
     @Builder
     public Users(String email, String name, String encodedPassword) {

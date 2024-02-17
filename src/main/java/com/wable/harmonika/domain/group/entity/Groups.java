@@ -21,4 +21,10 @@ public class Groups extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private Users owner;
+
+    public Groups(Long id, String name, Users owner) {
+        this.id = id;
+        this.name = name;
+        this.owner = owner;
+    }
 }
