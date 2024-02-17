@@ -48,8 +48,11 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.springframework.security:spring-security-config:6.0.2'
 
-	// 이거 쓰니까 되더라구요
+	// 이거 쓰니까 스웨거 되더라구요
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
+	// aws s3
+	implementation 'software.amazon.awssdk:s3:2.17.285'
 
 	// jpa query logging
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'

@@ -3,6 +3,17 @@ spring:
     url: jdbc:mysql://localhost:3306/default
     username: root
     password: password
+  cloud:
+    aws:
+      s3:
+        credentials:
+          accessKey: ${AWS_S3_ACCESS_KEY}
+          secretKey: ${AWS_S3_SECRET_KEY}
+        bucket: ${AWS_S3_BUCKET}
+      region:
+        static: ${AWS_REGION}
+      stack:
+        auto: false
 
   # Hibernate 설정
   jpa:
