@@ -29,8 +29,19 @@ pipeline {
                 sh """
                     docker pull ${repository}:main;
                     docker stop ddd-api;
-                    docker rm ddd-api;
                     docker container run -d -t --network=ddd-10-wable-server_default --rm --name ddd-api ${repository}:main;
+                """
+            }
+        }
+        stage('Notification') {
+            steps {
+                sh """
+                    curl --location ${env.DISCORD_WEBHOOK_URL} \
+                    --header 'Content-Type: application/json' \
+                    --data-raw '{
+                        "username": "Jenkins harmonika",
+                        "content": "[DEV] - API 디폴로이 되었습니다. \\nSwagger : https://harmonika.wo.tc/api/swagger-ui/index.html \\nRepository : https://github.com/DDD-Community/DDD-10-WABLE-SERVER"
+                    }'
                 """
             }
         }

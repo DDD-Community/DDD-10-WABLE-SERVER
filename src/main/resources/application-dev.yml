@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    active: dev
   datasource:
     url: jdbc:mysql://ddd-mysql:3306/default
     username: root
@@ -15,3 +13,8 @@ spring:
       properties:
         hibernate.format_sql: true
         hibernate.enable_lazy_load_no_trans: true
+
+# Prefix 설정
+server:
+  servlet:
+    context-path: /api
