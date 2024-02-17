@@ -4,6 +4,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.4'
 	id 'org.asciidoctor.jvm.convert' version '3.3.2'
 	id 'com.google.cloud.tools.jib' version '3.4.0'
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'com.wable'
@@ -34,6 +35,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	// for cognito
+	implementation platform('software.amazon.awssdk:bom:2.20.56')
+	implementation 'software.amazon.awssdk:s3'
 	// NOTE: Is Not Working
 	// implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
 	compileOnly 'org.projectlombok:lombok'
@@ -49,6 +53,13 @@ dependencies {
 
 	// jpa query logging
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
+
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'software.amazon.awssdk:cognitoidentityprovider:2.20.66'
 }
 
 tasks.named('test') {
