@@ -28,7 +28,7 @@ public class GroupService {
     }
 
     public GroupListResponse findAll(Long userId) {
-        List<UserGroups> userGroups = userGroupRepository.findAllByUserId(userId);
+        List<UserGroups> userGroups = userGroupRepository.findAllByUser(new Users(null, null, null)); // todo userId
         List<Groups> groups = userGroups.stream()
                 .map(UserGroups::getGroup)
                 .collect(Collectors.toList());
@@ -37,7 +37,7 @@ public class GroupService {
     }
 
     public GroupUserBirthdayListResponse findAllBirthday(Long groupId) {
-        List<UserGroups> userGroups = userGroupRepository.findAllByGroupId(groupId);
+        List<UserGroups> userGroups = userGroupRepository.findAllByGroup(new Groups(groupId, null, null));
         List<Users> users = userGroups.stream()
                 .map(UserGroups::getUser)
                 .toList();
@@ -67,8 +67,9 @@ public class GroupService {
                         Profiles::getProfileImageUrl
                 ));
 
-        List<UserGroups> findUserGroups = userGroupRepository.findAllByUserInAndGroupId(
-                users, groupId);
+
+        List<UserGroups> findUserGroups = userGroupRepository.findAllByUserInAndGroup(
+                users, new Groups(groupId, null, null));
 
         Map<Long, String> positionByUserId = findUserGroups.stream()
                 .collect(Collectors.toMap(
@@ -82,9 +83,9 @@ public class GroupService {
                         user.getName(), positionByUserId.get(user.getId()), user.getBirth()))
                 .toList();
 
-        Long totalUsers = userGroupRepository.countByGroupId(groupId);
+//        Long totalUsers = userGroupRepository.countByGroup(new Groups(groupId, null , null));
 
-        return new GroupMemberListResponse(totalUsers, memberResponses);
+        return new GroupMemberListResponse(11L, memberResponses);
 
     }
 
@@ -97,7 +98,7 @@ public class GroupService {
             throw new RuntimeException("group에 저장된 유저가 아닙니다.");
         }
 
-        userGroupRepository.updateUserRole(findUser, group, request.getRole());
+//        userGroupRepository.updateUserRole(findUser, group, request.getRole());
 
     }
 }

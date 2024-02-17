@@ -14,14 +14,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public interface UserGroupRepository extends JpaRepository<Long, UserGroups> {
+public interface UserGroupRepository extends JpaRepository<UserGroups, Long> {
 
-    List<UserGroups> findAllByUserInAndGroupId(List<Users> users, Long groupId);
+    List<UserGroups> findAllByUserInAndGroup(List<Users> users, Groups group);
 
+    List<UserGroups> findAllByGroup(Groups group);
 
-    List<UserGroups> findAllByGroupId(Long groupId);
-
-    List<UserGroups> findAllByUserId(Long userId);
+    List<UserGroups> findAllByUser(Users user);
 
     @Query(nativeQuery = true,
             value = "select * from users u "
@@ -37,12 +36,12 @@ public interface UserGroupRepository extends JpaRepository<Long, UserGroups> {
                     + "limit :size ")
     List<Users> findAllUserWithPaging(@Param("groupId") Long groupId, @Param("size") int size);
 
-    Long countByGroupId(Long groupId);
+//    Integer countByGroup(Groups group);
 
-    @Transactional
-    @Modifying
-    @Query("update UserGroups u set u.position = :role where u.user = :user and u.group = :group")
-    void updateUserRole(Users user, Groups groupId, Role role);
+//    @Transactional
+//    @Modifying
+//    @Query("update UserGroups u set u.position = :role where u.user = :user and u.group = :group")
+//    void updateUserRole(@Param("user") Users user,@Param("group") Groups groupId, Role role);
 
     Optional<UserGroups> findByUserAndGroup(@Param("user")Users users, @Param("group")Groups group);
 }
