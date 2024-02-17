@@ -29,7 +29,6 @@ pipeline {
                 sh """
                     docker pull ${repository}:main;
                     docker stop ddd-api;
-                    docker rm ddd-api;
                     docker container run -d -t --network=ddd-10-wable-server_default --rm --name ddd-api ${repository}:main;
                 """
             }
