@@ -12,17 +12,17 @@ class JasyptConfigAESTest {
         String username = "root";
         String password = "password";
 
-        System.out.println(jasyptEncoding(url));
-        System.out.println(jasyptEncoding(username));
-        System.out.println(jasyptEncoding(password));
+        System.out.println("ENC(" + jasyptEncoding(url) + ")");
+        System.out.println("ENC(" + jasyptEncoding(username) + ")");
+        System.out.println("ENC(" + jasyptEncoding(password) + ")");
     }
 
     public String jasyptEncoding(String value) {
-
-        String key = "dddTest";
+        String jasyptPassword = System.getProperty("jasypt.encryptor.password");
+        System.out.println(jasyptPassword);
         StandardPBEStringEncryptor pbeEnc = new StandardPBEStringEncryptor();
         pbeEnc.setAlgorithm("PBEWITHHMACSHA512ANDAES_256");
-        pbeEnc.setPassword(key);
+        pbeEnc.setPassword(jasyptPassword);
         pbeEnc.setIvGenerator(new RandomIvGenerator());
         return pbeEnc.encrypt(value);
     }

@@ -15,8 +15,9 @@ public class JasyptConfigAES {
     public StringEncryptor stringEncryptor() {
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
+        String jasyptPassword = System.getProperty("jasypt.encryptor.password");
 
-        config.setPassword("dddTest"); // 암호화키
+        config.setPassword(jasyptPassword); // 암호화키
         config.setAlgorithm("PBEWITHHMACSHA512ANDAES_256"); // 알고리즘
         config.setKeyObtentionIterations("1000"); // 반복할 해싱 회수
         config.setPoolSize("1"); // 인스턴스 pool

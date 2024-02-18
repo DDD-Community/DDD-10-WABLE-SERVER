@@ -2,7 +2,6 @@ package com.wable.harmonika.domain.profile.api;
 
 import com.wable.harmonika.domain.profile.dto.GroupProfileDto;
 import com.wable.harmonika.domain.profile.dto.ProfileResponse;
-import com.wable.harmonika.domain.profile.dto.SignedUrlDto;
 import com.wable.harmonika.domain.profile.dto.UserProfileDto;
 import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.domain.profile.service.ProfileService;
@@ -10,11 +9,9 @@ import com.wable.harmonika.domain.user.entity.Users;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -79,7 +76,7 @@ public class ProfileController {
         Long userId = 1L;
 
         // 1. 서명된 URL 생성
-//        val response = ProfileService.getSignedUrl(userId, fileName);
+        val response = ProfileService.getSignedUrl(userId, fileName);
 
         // 2. 서명된 URL 반환
 

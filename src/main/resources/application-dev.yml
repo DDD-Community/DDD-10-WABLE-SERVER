@@ -34,3 +34,8 @@ server:
           cognito:
             issuerUri: https://cognito-idp.{region}.amazonaws.com/{poolId}
             user-name-attribute: cognito:username
+
+
+#  ENC(iwNu61GJC47MKQyQjWBOYAffcOGNCdy5o95deRHyCKyRxo5plqjPdj2smfTjR45JFTMvBjMlOuIa5CXiWOfzeQ==)
+#  ENC(zt7S+i0m5djaviP6mSJrVtRsAwqH1/lqsKOiuNYPyiRcicMwsBIp2BdbSwbs58URA0pixG+WWcEDOu0DgEske1q9lVmnG1RB2mkyZUKXgYk=)
+#  ENC(WhHC+UJPfeiEAtn6xo5IEK/HS3w2ze4kl98y1bsfOSJ34g44flV5ffpOWc1+6mpB)

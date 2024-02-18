@@ -11,6 +11,9 @@ import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Value;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 import java.time.Duration;
 import java.util.Map;
@@ -23,10 +26,10 @@ import java.util.regex.Pattern;
 public class ProfileService {
     private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
-//    private final S3Presigner s3Presigner;
+    private final S3Presigner s3Presigner;
 
-//    @Value("${cloud.aws.s3.bucket}")
-//    private String imageBucketName;
+    @Value("${cloud.aws.bucket}")
+    private String imageBucketName;
 
     @Transactional(readOnly = true)
     public Profiles getGroupProfileById(Long id) {
@@ -40,28 +43,28 @@ public class ProfileService {
                 .orElseThrow(() -> new ProfileNotFoundException("id", id));
     }
 
-//    public Map<String, String> getSignedUrl(Long userId, String fileName) {
-//        validateImageExtension(fileName);
-//
-//        val keyName = "/" + userId + "/" + UUID.randomUUID() + "-" + fileName;
-//        val contentType = "image/" + getFileExtension(fileName);
-//
-//        PutObjectRequest objectRequest = PutObjectRequest.builder()
-//                .bucket(imageBucketName)
-//                .key(keyName)
-//                .contentType(contentType)
-//                .build();
-//
-//        PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
-//                .signatureDuration(Duration.ofMinutes(10))
-//                .putObjectRequest(objectRequest)
-//                .build();
-//
-//        val preSignedRequest = s3Presigner.presignPutObject(presignRequest);
-//        val signedUrl = preSignedRequest.url().toString();
-//
-//        return Map.of("signedUrl", signedUrl, "filename", keyName);
-//    }
+    public Map<String, String> getSignedUrl(Long userId, String fileName) {
+        validateImageExtension(fileName);
+
+        val keyName = "/" + userId + "/" + UUID.randomUUID() + "-" + fileName;
+        val contentType = "image/" + getFileExtension(fileName);
+
+        PutObjectRequest objectRequest = PutObjectRequest.builder()
+                .bucket(imageBucketName)
+                .key(keyName)
+                .contentType(contentType)
+                .build();
+
+        PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(10))
+                .putObjectRequest(objectRequest)
+                .build();
+
+        val preSignedRequest = s3Presigner.presignPutObject(presignRequest);
+        val signedUrl = preSignedRequest.url().toString();
+
+        return Map.of("signedUrl", signedUrl, "filename", keyName);
+    }
 
     private void validateImageExtension(String fileName) {
         val regExp = "^(jpeg|png|gif|bmp)$";
