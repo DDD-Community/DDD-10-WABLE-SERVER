@@ -8,6 +8,7 @@ import com.wable.harmonika.domain.card.entity.CardNames;
 import com.wable.harmonika.domain.card.entity.Cards;
 import com.wable.harmonika.domain.card.service.CardService;
 import com.wable.harmonika.domain.user.entity.Users;
+import com.wable.harmonika.domain.user.entity.Users;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.validation.Valid;
@@ -43,9 +44,9 @@ public class CardController {
         return new ResponseEntity<>(cards, HttpStatus.OK);
     }
 
-    @RequestMapping(value="/{cardId}", method=RequestMethod.PUT)
+    @RequestMapping(value="/", method=RequestMethod.PUT)
     public void updateCards(Users user, @Valid UpdateCardsRequest request) throws Exception {
-//        Cards cards =  cardService.update();
+//        cardService.update();
     }
 
     @RequestMapping(value="/received", method=RequestMethod.GET)

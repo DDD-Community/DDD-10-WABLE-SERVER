@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class UpdateCardsRequest {
+    private Long cardId;
     @NotBlank
     @Size(min = 5)
     private String content;
