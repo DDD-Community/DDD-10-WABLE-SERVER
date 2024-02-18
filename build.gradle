@@ -68,6 +68,8 @@ dependencies {
 
 	// cognito
 	implementation 'software.amazon.awssdk:cognitoidentityprovider:2.20.66'
+
+	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 }
 
 tasks.named('test') {

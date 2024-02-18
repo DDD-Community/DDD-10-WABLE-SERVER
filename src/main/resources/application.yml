@@ -1,8 +1,12 @@
+jasypt:
+  encryptor:
+    bean: jasyptEncryptorAES
+
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/default
-    username: root
-    password: password
+    url: ENC(pBxaXDo0d03Vl7uG7gBVbnitMEcnjqBC+/JlsricrLl9rvOu8bSZjpY7+wvldjrZnoYdZtIYnhdmTuIJf+PkmyNTserlgdWJT070+pAP2Yc=)
+    username: ENC(2v85vg1wmDiI1ecFVm5//0V2p030+bN6A8CEMHR6LKd707ejtTZfeEPCr66QDLkR)
+    password: ENC(mNbK8azHnelz3u0/LNxvcvYo8VBQd7FUGx7qIMS+Rc+7k7ortKlPf5yJSFmV75um)
   cloud:
     aws:
       s3:
