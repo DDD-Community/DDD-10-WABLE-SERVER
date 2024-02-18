@@ -21,6 +21,8 @@ public class QUsers extends EntityPathBase<Users> {
 
     public final com.wable.harmonika.global.entity.QBaseTimeEntity _super = new com.wable.harmonika.global.entity.QBaseTimeEntity(this);
 
+    public final DatePath<java.time.LocalDate> birth = createDate("birth", java.time.LocalDate.class);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
