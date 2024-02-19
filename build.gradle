@@ -110,13 +110,26 @@ jib {
 	}
 }
 
+// QueryDSL
+def querydslDir = "$buildDir/generated/querydsl"
+
 querydsl {
 	jpa = true
+	querydslSourcesDir = querydslDir
+}
+sourceSets {
+	main.java.srcDir querydslDir
 }
 
 compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
+	// https://stackoverflow.com/questions/76248226/how-to-make-spring-boot-msa-with-querydsl
+	options.compilerArgs += ['-proc:none']
+	source = fileTree(querydslDir)
+	exclude(querydslDir + "/**/**")
+	exclude(querydslDir + "/**/Q*")
 }
+
 
 configurations {
 	compileOnly {
