@@ -57,11 +57,16 @@ dependencies {
 	// jpa query logging
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
 
+	// Querydsl 추가
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
-	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+	annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+	annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+	annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+
+	// spring security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// cognito
 	implementation 'software.amazon.awssdk:cognitoidentityprovider:2.20.66'
 }
 
@@ -77,8 +82,8 @@ tasks.named('asciidoctor') {
 
 jib {
 	from {
-    	image = 'eclipse-temurin:17-jdk-focal'
-  	}
+		image = 'eclipse-temurin:17-jdk-focal'
+	}
 	to {
 		image = 'ghcr.io/ddd-community/ddd-10-wable-server:main'
 	}
@@ -95,10 +100,25 @@ jib {
 		format = 'Docker'
 	}
 	extraDirectories {
-		paths {	
+		paths {
 			path {
 				from = file('build/libs')
 			}
 		}
 	}
+}
+
+querydsl {
+	jpa = true
+}
+
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	querydsl.extendsFrom compileClasspath
 }
