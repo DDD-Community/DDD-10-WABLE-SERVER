@@ -90,7 +90,7 @@ jib {
 		image = 'ghcr.io/ddd-community/ddd-10-wable-server:main'
 	}
 	container {
-		entrypoint = ['java', '-Dspring.profiles.active=dev', '-jar', 'harmonika-0.0.1-SNAPSHOT.jar', '-Djasypt.encryptor.password=' + System.getenv("encryptor.password")]
+		entrypoint = ['java', '-Dspring.profiles.active=dev', '-jar', 'harmonika-0.0.1-SNAPSHOT.jar', '-Djasypt.encryptor.password=' + System.getenv("ENCRYPTOR_PASSWORD")]
 
 		jvmFlags = ['-Xms512m', '-Xmx512m', '-Xdebug', '-XshowSettings:vm', '-XX:+UnlockExperimentalVMOptions', '-XX:+UseContainerSupport']
 		ports = ['8080']
@@ -117,6 +117,7 @@ querydsl {
 	jpa = true
 	querydslSourcesDir = querydslDir
 }
+
 sourceSets {
 	main.java.srcDir querydslDir
 }
@@ -129,7 +130,6 @@ compileQuerydsl {
 	exclude(querydslDir + "/**/**")
 	exclude(querydslDir + "/**/Q*")
 }
-
 
 configurations {
 	compileOnly {
