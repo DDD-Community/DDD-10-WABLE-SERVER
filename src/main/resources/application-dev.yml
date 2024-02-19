@@ -11,9 +11,9 @@ spring:
 cloud:
   aws:
     credentials:
-      accessKey: ENC(iwNu61GJC47MKQyQjWBOYAffcOGNCdy5o95deRHyCKyRxo5plqjPdj2smfTjR45JFTMvBjMlOuIa5CXiWOfzeQ==)
-      secretKey: ENC(zt7S+i0m5djaviP6mSJrVtRsAwqH1/lqsKOiuNYPyiRcicMwsBIp2BdbSwbs58URA0pixG+WWcEDOu0DgEske1q9lVmnG1RB2mkyZUKXgYk=)
-    bucket: ENC(WhHC+UJPfeiEAtn6xo5IEK/HS3w2ze4kl98y1bsfOSJ34g44flV5ffpOWc1+6mpB)
+      accessKey: ENC(Ij9inu+dGlOweV/EyB4bFdiOh1ZZyDZBjDCmf6dq5h9+BrvKvZAJnTJIW1iF84WM9indqsHkKj2MAFCL/lU4WA==)
+      secretKey: ENC(5risYUm8b7lp77GPGPr1FKFcalC+KICC+K3FKNwah7HyJlU+0Xj83hkOdsd5Ks1nyS5lBwR8f7ZJ8gZA7RFDBjcDwU4AwotOi95977DpXQI=)
+    bucket: ENC(6cjlk56Ve3Gf4vqOf9MWk4gCHFhU5oeMXoYGN+VzLUON6Zs5wWn654EbIcXJXm87)
     region:
       static: ap-northeast-2
     stack:
