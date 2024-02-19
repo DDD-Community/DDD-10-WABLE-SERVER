@@ -1,8 +1,23 @@
+jasypt:
+  encryptor:
+    bean: jasyptEncryptorAES
+
 spring:
   datasource:
-    url: jdbc:mysql://ddd-mysql:3306/default
-    username: root
-    password: password
+    url: ENC(uW99qXewsVbrUfoUUmdEX9tTTTNEjd653F3igVYqDV2k+DC5CAmLCunwKlhSPWJU2d5cH9zuajvETWYo9XyOwJf7A0oR1xGWBYXOG+tJwGo=)
+    username: ENC(NtYGB8d4CwhGQ9f5p/rmebVSMMoSWd863myZO0IHwa48zyBT9FtJQDOJl51lzL2b)
+    password: ENC(ovaMAIknRctuozbNHwrZBf+0wZIlGs5PXjeMe+AWLYhMjUlc1UBXAp5IiEDwFIXp)
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ENC(iwNu61GJC47MKQyQjWBOYAffcOGNCdy5o95deRHyCKyRxo5plqjPdj2smfTjR45JFTMvBjMlOuIa5CXiWOfzeQ==)
+      secretKey: ENC(zt7S+i0m5djaviP6mSJrVtRsAwqH1/lqsKOiuNYPyiRcicMwsBIp2BdbSwbs58URA0pixG+WWcEDOu0DgEske1q9lVmnG1RB2mkyZUKXgYk=)
+    bucket: ENC(WhHC+UJPfeiEAtn6xo5IEK/HS3w2ze4kl98y1bsfOSJ34g44flV5ffpOWc1+6mpB)
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
 
   # Hibernate 설정
   jpa:
@@ -34,8 +49,3 @@ server:
           cognito:
             issuerUri: https://cognito-idp.{region}.amazonaws.com/{poolId}
             user-name-attribute: cognito:username
-
-
-#  ENC(iwNu61GJC47MKQyQjWBOYAffcOGNCdy5o95deRHyCKyRxo5plqjPdj2smfTjR45JFTMvBjMlOuIa5CXiWOfzeQ==)
-#  ENC(zt7S+i0m5djaviP6mSJrVtRsAwqH1/lqsKOiuNYPyiRcicMwsBIp2BdbSwbs58URA0pixG+WWcEDOu0DgEske1q9lVmnG1RB2mkyZUKXgYk=)
-#  ENC(WhHC+UJPfeiEAtn6xo5IEK/HS3w2ze4kl98y1bsfOSJ34g44flV5ffpOWc1+6mpB)
