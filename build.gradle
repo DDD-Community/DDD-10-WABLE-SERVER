@@ -90,7 +90,7 @@ jib {
 		image = 'ghcr.io/ddd-community/ddd-10-wable-server:main'
 	}
 	container {
-		entrypoint = ['java', '-Dspring.profiles.active=dev', '-jar', 'harmonika-0.0.1-SNAPSHOT.jar', '-Djasypt.encryptor.password=어떻게할까이걸']
+		entrypoint = ['java', '-Dspring.profiles.active=dev', '-jar', 'harmonika-0.0.1-SNAPSHOT.jar', '-Djasypt.encryptor.password=' + System.getenv("encryptor.password")]
 
 		jvmFlags = ['-Xms512m', '-Xmx512m', '-Xdebug', '-XshowSettings:vm', '-XX:+UnlockExperimentalVMOptions', '-XX:+UseContainerSupport']
 		ports = ['8080']
