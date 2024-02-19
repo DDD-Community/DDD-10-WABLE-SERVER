@@ -97,7 +97,7 @@ jib {
 
 		environment = [
 				SPRING_OUTPUT_ANSI_ENABLED: "ALWAYS",
-				'ENCRYPTOR_PASSWORD': System.getenv("ENCRYPTOR_PASSWORD")
+				ENCRYPTOR_PASSWORD: System.getenv("ENCRYPTOR_PASSWORD")
 		]
 		labels = [version:project.version, name:project.name, group:project.group]
 
