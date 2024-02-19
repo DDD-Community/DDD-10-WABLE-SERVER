@@ -34,10 +34,10 @@ public class CardRepositoryImpl implements CardRepositoryCustom {
             builder.and(cards.fromUser.id.eq(fromUserId));
         }
 
-//        // groupId가 있으면 필터
-//        if (groupIds != null || groupIds.isEmpty()) {
-//            builder.and(cards.group.id.in(groupIds));
-//        }
+        // groupId가 있으면 필터
+        if (groupIds != null || groupIds.isEmpty()) {
+            builder.and(cards.group.id.in(groupIds));
+        }
         // sid가 있으면 필터
         if (sids != null || sids.isEmpty()) {
             builder.and(cards.sid.in(sids));

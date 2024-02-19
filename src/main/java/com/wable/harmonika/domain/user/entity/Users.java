@@ -41,9 +41,13 @@ public class Users extends BaseTimeEntity {
     private List<Groups> groups;
 
     @Builder
-    public Users(String userId, String gender, String name, LocalDate birth) {
+    public Users(String userId, String name, LocalDate birth) {
         this.userId = userId;
-        this.gender = gender;
+        this.name = name;
+        this.birth = birth;
+    }
+
+    public Users(String name, LocalDate birth) {
         this.name = name;
         this.birth = birth;
     }

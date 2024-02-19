@@ -34,4 +34,13 @@ public class Groups extends BaseTimeEntity {
         this.name = name;
         this.owner = owner;
     }
+
+    public Groups(Long id) {
+        this.id = id;
+    }
+
+    public Groups(String name, Users owner)  {
+        this.name = name;
+        this.owner = owner;
+    }
 }

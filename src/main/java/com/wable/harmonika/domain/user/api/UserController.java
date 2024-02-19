@@ -21,5 +21,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
+    private final UserService userService;
 
+    @Operation(summary = "회원가입", description = "회원가입을 한다")
+    @PostMapping("/signup")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public void signUp(@Valid @RequestBody SignUpReqDto signUpReqDto) {
+        userService.signUp(signUpReqDto);
+    }
+
+//    @Operation(summary = "내 정보 조회", description = "내 정보를 조회한다")
+//    @GetMapping("/me")
+//    @ResponseStatus(value = HttpStatus.OK)
+//    public MyUserResDto getMyInfo(@Parameter(hidden = true) Users user) {
+//        return userService.getMyInfo(user);
+//    }
 }

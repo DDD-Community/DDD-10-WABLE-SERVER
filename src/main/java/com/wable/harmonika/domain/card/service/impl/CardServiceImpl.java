@@ -2,10 +2,12 @@ package com.wable.harmonika.domain.card.service.impl;
 
 import com.wable.harmonika.domain.card.dto.CardsRequest;
 import com.wable.harmonika.domain.card.dto.ListCardsRequest;
+import com.wable.harmonika.domain.card.dto.UpdateCardsRequest;
 import com.wable.harmonika.domain.card.entity.CardNames;
 import com.wable.harmonika.domain.card.entity.Cards;
 import com.wable.harmonika.domain.card.repository.CardRepository;
 import com.wable.harmonika.domain.card.service.CardService;
+import com.wable.harmonika.domain.group.GroupRepository;
 import com.wable.harmonika.domain.group.entity.Groups;
 import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.domain.user.repository.UserRepository;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,15 +30,21 @@ public class CardServiceImpl implements CardService {
     private CardRepository cardRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private GroupRepository groupRepository;
+
 
     @Override
     public void create(CardsRequest vo, Users fromUser) throws Exception {
-
+        Users user = userRepository.save(new Users(fromUser.getUserId(), "이름", LocalDate.of(1990, 1, 1)));
+        Users owner = userRepository.save(new Users("abc", "이름", LocalDate.of(1990, 1, 1)));
+        Groups group = groupRepository.save(new Groups("그룹명", owner));
         Cards cards = new Cards(vo.getSid(), vo.getContent());
-        new Groups();
 
-        cards.setFromUser(fromUser);
-        cards.setToUser(new Users(vo.getToUserId(), null, null, null));
+
+        cards.setFromUser(user);
+        cards.setToUser(owner);
+        cards.setGroup(new Groups(group.getId()));
 
         cardRepository.save(cards);
     }
@@ -46,8 +55,8 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public void update(Cards vo) throws Exception {
-
+    public void update(UpdateCardsRequest vo) throws Exception {
+        System.out.println("vo = " + vo);
     }
 
     @Override

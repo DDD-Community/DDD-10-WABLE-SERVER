@@ -1,14 +1,14 @@
 package com.wable.harmonika.domain.card.api;
 
-import com.wable.harmonika.domain.card.dto.CardsRequest;
-import com.wable.harmonika.domain.card.dto.CardsResponse;
-import com.wable.harmonika.domain.card.dto.ListCardsRequest;
-import com.wable.harmonika.domain.card.dto.UpdateCardsRequest;
+import com.wable.harmonika.domain.card.dto.*;
 import com.wable.harmonika.domain.card.entity.CardNames;
 import com.wable.harmonika.domain.card.entity.Cards;
 import com.wable.harmonika.domain.card.service.CardService;
+import com.wable.harmonika.domain.profile.entity.Profiles;
+import com.wable.harmonika.domain.profile.service.ProfileService;
 import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.domain.user.entity.Users;
+import com.wable.harmonika.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.validation.Valid;
@@ -24,6 +24,7 @@ import software.amazon.awssdk.http.HttpStatusCode;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Tag(name = "유저 API", description = "계정 API")
 @Slf4j
@@ -33,8 +34,12 @@ import java.util.Optional;
 public class CardController {
     private final CardService cardService;
 
+    private final ProfileService profileService;
+    private final UserService userService;
+
     @PostMapping()
     public void createCards(Users user, @Valid @RequestBody CardsRequest request) throws Exception {
+//        profileService.save(new Profiles().set);
         cardService.create(request, user);
     }
 
@@ -50,9 +55,13 @@ public class CardController {
     }
 
     @RequestMapping(value="/received", method=RequestMethod.GET)
-    public ResponseEntity<List<Cards>> listReceivedCards(Users user, @Valid ListCardsRequest request) throws Exception {
-        List<Cards> cards =  cardService.findAllReceivedCards(request);
-        return new ResponseEntity<>(cards, HttpStatus.OK);
+    public ResponseEntity<List<CardsResponse>> listReceivedCards(Users user, @Valid ListCardsRequest request) throws Exception {
+        List<CardsDto> cards =  cardService.findAllReceivedCards(request);
+        List<CardsResponse> collect = cards.stream()
+                .map(m -> new CardsResponse(m))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(collect, HttpStatus.OK);
     }
 
     @RequestMapping(value="/sent", method=RequestMethod.GET)
