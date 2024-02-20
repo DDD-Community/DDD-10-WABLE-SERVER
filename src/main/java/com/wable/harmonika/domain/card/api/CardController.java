@@ -7,6 +7,7 @@ import com.wable.harmonika.domain.card.dto.UpdateCardsRequest;
 import com.wable.harmonika.domain.card.entity.CardNames;
 import com.wable.harmonika.domain.card.entity.Cards;
 import com.wable.harmonika.domain.card.service.CardService;
+import com.wable.harmonika.domain.user.entity.Users;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.validation.Valid;
@@ -32,7 +33,8 @@ public class CardController {
     private final CardService cardService;
 
     @PostMapping()
-    public void createCards(@Valid @RequestBody CardsRequest request) throws Exception {
+    public void createCards(@Valid @RequestBody CardsRequest request, Users user) throws Exception {
+        System.out.println("user.getEmail() = " + user.getEmail());
         cardService.create(request);
     }
 

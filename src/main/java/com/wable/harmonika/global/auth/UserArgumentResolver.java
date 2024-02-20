@@ -2,6 +2,7 @@ package com.wable.harmonika.global.auth;
 
 
 import com.wable.harmonika.domain.user.entity.Users;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.catalina.User;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -20,6 +21,17 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         // 예시로, 세션에서 사용자 객체를 가져오는 방법
-        return webRequest.getAttribute("user", NativeWebRequest.SCOPE_SESSION);
+//        HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
+
+
+
+        return Users.builder()
+                .email("test")
+                .name("test");
     }
+//
+//    @Override
+//    public boolean verifyToken() {
+//        return true;
+//    }
 }
