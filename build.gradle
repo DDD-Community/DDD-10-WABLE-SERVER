@@ -68,12 +68,14 @@ dependencies {
 
 	// cognito
 	implementation 'software.amazon.awssdk:cognitoidentityprovider:2.20.66'
+
+	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 }
 
-tasks.named('test') {
-	outputs.dir snippetsDir
-	useJUnitPlatform()
-}
+// tasks.named('test') {
+// 	outputs.dir snippetsDir
+// 	useJUnitPlatform()
+// }
 
 tasks.named('asciidoctor') {
 	inputs.dir snippetsDir
@@ -93,7 +95,10 @@ jib {
 		jvmFlags = ['-Xms512m', '-Xmx512m', '-Xdebug', '-XshowSettings:vm', '-XX:+UnlockExperimentalVMOptions', '-XX:+UseContainerSupport']
 		ports = ['8080']
 
-		environment = [SPRING_OUTPUT_ANSI_ENABLED: "ALWAYS"]
+		environment = [
+				SPRING_OUTPUT_ANSI_ENABLED: "ALWAYS",
+				ENCRYPTOR_PASSWORD: System.getenv("ENCRYPTOR_PASSWORD")
+		]
 		labels = [version:project.version, name:project.name, group:project.group]
 
 		creationTime = 'USE_CURRENT_TIMESTAMP'
@@ -108,12 +113,25 @@ jib {
 	}
 }
 
+// QueryDSL
+def querydslDir = "$buildDir/generated/querydsl"
+
 querydsl {
 	jpa = true
+	querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+	main.java.srcDir querydslDir
 }
 
 compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
+	// https://stackoverflow.com/questions/76248226/how-to-make-spring-boot-msa-with-querydsl
+	options.compilerArgs += ['-proc:none']
+	source = fileTree(querydslDir)
+	exclude(querydslDir + "/**/**")
+	exclude(querydslDir + "/**/Q*")
 }
 
 configurations {

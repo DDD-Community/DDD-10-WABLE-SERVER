@@ -7,34 +7,40 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 @Configuration
 public class AWSS3Config {
 
-//    @Value("${cloud.aws.s3.credentials.accesskey}")
-//    private String accessKey;
-//
-//    @Value("${cloud.aws.s3.credentials.secretkey}")
-//    private String secretKey;
+    @Value("${cloud.aws.credentials.accessKey}")
+    private String accessKey;
 
-//    @Bean
-//    public AwsCredentials basicAWSCredentials() {
-//        return AwsBasicCredentials.create(accessKey, secretKey);
-//    }
+    @Value("${cloud.aws.credentials.secretKey}")
+    private String secretKey;
 
-//    @Bean
-//    public S3Presigner s3Presigner(AwsCredentials awsCredentials) {
-//        return S3Presigner.builder()
-//                .region(Region.AP_NORTHEAST_2)
-//                .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
-//                .build();
-//    }
-//
-//    @Bean
-//    public S3Client s3Client (AwsCredentials awsCredentials) {
-//        return S3Client.builder()
-//                .region(Region.AP_NORTHEAST_2)
-//                .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
-//                .build();
-//    }
+    @Value("${cloud.aws.region.static}")
+    private String region;
+
+
+    @Bean
+    public AwsCredentials basicAWSCredentials() {
+        return AwsBasicCredentials.create(accessKey, secretKey);
+    }
+
+    @Bean
+    public S3Presigner s3Presigner(AwsCredentials awsCredentials) {
+        return S3Presigner.builder()
+                .region(Region.AP_NORTHEAST_2)
+                .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
+                .build();
+    }
+
+    @Bean
+    public S3Client s3Client (AwsCredentials awsCredentials) {
+        return S3Client.builder()
+                .region(Region.AP_NORTHEAST_2)
+                .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
+                .build();
+    }
 }

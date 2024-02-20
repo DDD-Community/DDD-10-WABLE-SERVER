@@ -1,8 +1,23 @@
+jasypt:
+  encryptor:
+    bean: jasyptEncryptorAES
+
 spring:
   datasource:
-    url: jdbc:mysql://ddd-mysql:3306/default
-    username: root
-    password: password
+    url: ENC(uW99qXewsVbrUfoUUmdEX9tTTTNEjd653F3igVYqDV2k+DC5CAmLCunwKlhSPWJU2d5cH9zuajvETWYo9XyOwJf7A0oR1xGWBYXOG+tJwGo=)
+    username: ENC(NtYGB8d4CwhGQ9f5p/rmebVSMMoSWd863myZO0IHwa48zyBT9FtJQDOJl51lzL2b)
+    password: ENC(ovaMAIknRctuozbNHwrZBf+0wZIlGs5PXjeMe+AWLYhMjUlc1UBXAp5IiEDwFIXp)
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ENC(Ij9inu+dGlOweV/EyB4bFdiOh1ZZyDZBjDCmf6dq5h9+BrvKvZAJnTJIW1iF84WM9indqsHkKj2MAFCL/lU4WA==)
+      secretKey: ENC(5risYUm8b7lp77GPGPr1FKFcalC+KICC+K3FKNwah7HyJlU+0Xj83hkOdsd5Ks1nyS5lBwR8f7ZJ8gZA7RFDBjcDwU4AwotOi95977DpXQI=)
+    bucket: ENC(6cjlk56Ve3Gf4vqOf9MWk4gCHFhU5oeMXoYGN+VzLUON6Zs5wWn654EbIcXJXm87)
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
 
   # Hibernate 설정
   jpa:

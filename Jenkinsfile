@@ -29,7 +29,7 @@ pipeline {
                 sh """
                     docker pull ${repository}:main;
                     docker stop ddd-api;
-                    docker container run -d -t --network=ddd-10-wable-server_default --rm --name ddd-api ${repository}:main;
+                    docker container run -d -t -e ENCRYPTOR_PASSWORD=${env.ENCRYPTOR_PASSWORD}--network=ddd-10-wable-server_default --rm --name ddd-api ${repository}:main;
                 """
             }
         }
@@ -40,7 +40,7 @@ pipeline {
                     --header 'Content-Type: application/json' \
                     --data-raw '{
                         "username": "Jenkins harmonika",
-                        "content": "[DEV] - API 디폴로이 되었습니다. \\nSwagger : https://harmonika.wo.tc/api/swagger-ui/index.html \\nRepository : https://github.com/DDD-Community/DDD-10-WABLE-SERVER"
+                        "content": "[DEV] - API 디폴로이 되었습니다. \nSwagger : https://harmonika.wo.tc/api/swagger-ui/index.html \nRepository : https://github.com/DDD-Community/DDD-10-WABLE-SERVER"
                     }'
                 """
             }

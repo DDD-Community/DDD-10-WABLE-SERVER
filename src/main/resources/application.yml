@@ -1,19 +1,23 @@
+jasypt:
+  encryptor:
+    bean: jasyptEncryptorAES
+
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/default
-    username: root
-    password: password
-  cloud:
-    aws:
-      s3:
-        credentials:
-          accessKey: ${AWS_S3_ACCESS_KEY}
-          secretKey: ${AWS_S3_SECRET_KEY}
-        bucket: ${AWS_S3_BUCKET}
-      region:
-        static: ${AWS_REGION}
-      stack:
-        auto: false
+    url: ENC(a88vv9cqcRoOMurp3xZFN017IhnFiwA6vmYRlTq7ae+QHIJ9wrajOtAdRiBVU2FH/3Ut0hdV+bPPivnc6gnN0M9sbUmCyDPLHD9kBf5qOR0=)
+    username: ENC(bJ3RHmDfsp6MJ9v74tBIwTGDM3wXLS9cw2mKXvJc+pp3I0NjUytZs5XYFFv0GykB)
+    password: ENC(9Shs096teqo8YjCjpGjd/te/Odl7xF09om99qjV6IsWBb44petABcl1sngaKt4+u)
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ENC(Xmm07iXvC3PGbv3BpLE9URNexy9A/JzAfcgiROK3cl0KadW537FMb0jqNz50dEMGbvXixBUTVzKfbttVf3uYwg==)
+      secretKey: ENC(3PDM4+K9Zx4GjJRD9YSuk41F3Go/zZ5MUHs7+jN41VISZkku381AKcnoXC3Zbvnz8ysPivcsxMteP+wlB1y1H7EQ6AAsZovBgqNmMuyzmjs=)
+    bucket: ENC(be0O3eACXC5sWqEKZgjZtjAZy/uT2WTVmxgsuz9BALgWz5LCk8mny7iekw0enh/d)
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
 
   # Hibernate 설정
   jpa:
