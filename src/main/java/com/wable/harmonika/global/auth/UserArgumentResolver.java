@@ -2,6 +2,8 @@ package com.wable.harmonika.global.auth;
 
 
 import com.wable.harmonika.domain.user.entity.Users;
+import com.wable.harmonika.global.error.exception.ForbiddenException;
+import com.wable.harmonika.global.error.exception.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.catalina.User;
 import org.springframework.core.MethodParameter;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+
 
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -19,19 +22,21 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception{
         // 예시로, 세션에서 사용자 객체를 가져오는 방법
-//        HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
+        HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
+        String authorization = httpServletRequest.getHeader("Authorization");
+        if (authorization == null) {
+            throw new UnauthorizedException("401 Unauthorized !!");
+        }
 
+        // Token 검증
 
-
-        return Users.builder()
+        return   Users.builder()
                 .email("test")
-                .name("test");
+                .name("test")
+                .encodedPassword(null) // 또는 실제 암호화된 패스워드
+                .build(); // Users 객체를 빌드
+
     }
-//
-//    @Override
-//    public boolean verifyToken() {
-//        return true;
-//    }
 }

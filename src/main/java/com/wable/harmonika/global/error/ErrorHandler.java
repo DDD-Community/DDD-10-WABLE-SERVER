@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.ForbiddenException;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.util.ArrayList;
@@ -46,7 +47,6 @@ public class ErrorHandler {
         List<ErrorResponse.FieldError> fieldError = getFieldError(e.getField(), e.getValue());
         return buildFieldErrors(error, fieldError);
     }
-
 
     private ErrorResponse buildError(Error error) {
         ErrorResponse retError = ErrorResponse.builder()
