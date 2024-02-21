@@ -19,7 +19,6 @@ public class MyUserResDto {
     private LocalDateTime updatedAt;
 
     public MyUserResDto(Users user) {
-        this.email = user.getEmail();
         this.name = user.getName();
         this.createdAt = user.getCreatedAt();
         this.updatedAt = user.getUpdatedAt();

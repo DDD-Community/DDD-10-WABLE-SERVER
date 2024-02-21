@@ -16,7 +16,7 @@ public class ProfileQuestions extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    @JoinColumn(name = "profile_id")
     private Profiles profile;
 
     private String sid;
@@ -27,7 +27,7 @@ public class ProfileQuestions extends BaseTimeEntity {
     private QuestionTypes questionType;
 
     @ElementCollection
-    private List<String> answer;
+    private List<String> answers;
 }
 
 

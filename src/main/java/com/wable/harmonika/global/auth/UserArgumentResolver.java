@@ -1,6 +1,7 @@
 package com.wable.harmonika.global.auth;
 
 
+import com.nimbusds.jwt.JWTClaimsSet;
 import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.global.error.exception.ForbiddenException;
 import com.wable.harmonika.global.error.exception.UnauthorizedException;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+
+import static com.wable.harmonika.global.auth.AwsCognitoJwtValidatorUtil.validateAWSJwtToken;
 
 
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
@@ -26,16 +29,13 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         // 예시로, 세션에서 사용자 객체를 가져오는 방법
         HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
         String authorization = httpServletRequest.getHeader("Authorization");
-        if (authorization == null) {
+        if (authorization == "" || VerifyToken.verify(authorization)){
             throw new UnauthorizedException("401 Unauthorized !!");
         }
-
-        // Token 검증
+        String username = AwsCognitoJwtParserUtil.getClaim(authorization, "cognito:username");
 
         return   Users.builder()
-                .email("test")
-                .name("test")
-                .encodedPassword(null) // 또는 실제 암호화된 패스워드
+                .userId(username)
                 .build(); // Users 객체를 빌드
 
     }

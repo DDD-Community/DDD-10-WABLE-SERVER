@@ -32,13 +32,12 @@ public class SignUpReqDto {
 
     @Builder
     public SignUpReqDto(String email, String name, String password) {
-        this.email = email;
         this.name = name;
         this.password = password;
     }
 
     public Users toEntity(String encodedPassword) {
-        return Users.builder().email(email).encodedPassword(encodedPassword).name(name).build();
+        return Users.builder().name(name).build();
     }
 }
 
