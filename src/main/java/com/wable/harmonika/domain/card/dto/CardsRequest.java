@@ -27,7 +27,7 @@ public class CardsRequest {
     @Enumerated(EnumType.STRING)
     private CardNames sid;
 
-    private Long toUserId;
+    private String toUserId;
 
     private Long groupId;
 }

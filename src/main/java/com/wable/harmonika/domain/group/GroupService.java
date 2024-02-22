@@ -28,7 +28,7 @@ public class GroupService {
     }
 
     public GroupListResponse findAll(Long userId) {
-        List<UserGroups> userGroups = userGroupRepository.findAllByUser(new Users(null, null)); // todo userId
+        List<UserGroups> userGroups = userGroupRepository.findAllByUser(new Users( null)); // todo userId
         List<Groups> groups = userGroups.stream()
                 .map(UserGroups::getGroup)
                 .collect(Collectors.toList());

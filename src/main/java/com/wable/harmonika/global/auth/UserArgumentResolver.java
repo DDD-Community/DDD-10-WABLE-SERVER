@@ -29,10 +29,11 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         // 예시로, 세션에서 사용자 객체를 가져오는 방법
         HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
         String authorization = httpServletRequest.getHeader("Authorization");
-        if (authorization == "" || VerifyToken.verify(authorization)){
+        String token = authorization.replaceAll("^Bearer( )*", "");
+        if (authorization == "" || !VerifyToken.verify(token)){
             throw new UnauthorizedException("401 Unauthorized !!");
         }
-        String username = AwsCognitoJwtParserUtil.getClaim(authorization, "cognito:username");
+        String username = AwsCognitoJwtParserUtil.getClaim(token, "cognito:username");
 
         return   Users.builder()
                 .userId(username)

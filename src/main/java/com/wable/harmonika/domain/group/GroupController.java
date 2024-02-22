@@ -1,5 +1,6 @@
 package com.wable.harmonika.domain.group;
 
+import com.wable.harmonika.domain.user.entity.Users;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +22,7 @@ public class GroupController {
 
     // 그룹 리스트
     @GetMapping
-    public ResponseEntity<GroupListResponse> findAllGroup(Long userId) {
+    public ResponseEntity<GroupListResponse> findAllGroup(Long userId, Users user) {
         GroupListResponse groupListResponse = groupService.findAll(userId);
 
         return ResponseEntity.ok(groupListResponse);
@@ -30,7 +31,7 @@ public class GroupController {
     // 그룹 생일 리스트
     @GetMapping("/{groupId}/birthday")
     public ResponseEntity<GroupUserBirthdayListResponse> findAllBirthday(
-            @PathVariable("groupId") Long groupId) {
+            @PathVariable("groupId") Long groupId, Users user) {
         GroupUserBirthdayListResponse groupBirthdays = groupService.findAllBirthday(groupId);
 
         return ResponseEntity.ok(groupBirthdays);
@@ -40,7 +41,7 @@ public class GroupController {
     @GetMapping("/{groupId}/members")
     public ResponseEntity<GroupMemberListResponse> findAllMember(
             @PathVariable("groupId") Long groupId, @RequestParam("name") String name, // todo 팀원 검색
-            PagingMemberRequest request) {
+            PagingMemberRequest request, Users user) {
 
         GroupMemberListResponse members = groupService.findAllMember(groupId, request.getLastName(),
                 request.getSize());
@@ -51,7 +52,7 @@ public class GroupController {
     // 팀원 역할 수정
     // todo 관리자 권한 체크
     @PutMapping("/{groupId}/role")
-    public ResponseEntity<String> updateUserRole(@PathVariable("groupId") Long groupId, @RequestBody UserRoleUpdateRequest request) {
+    public ResponseEntity<String> updateUserRole(@PathVariable("groupId") Long groupId, @RequestBody UserRoleUpdateRequest request, Users user) {
         groupService.updateUserRole(groupId, request);
 
         return ResponseEntity.ok().build();

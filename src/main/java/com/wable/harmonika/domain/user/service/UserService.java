@@ -28,15 +28,4 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("id", id));
     }
 
-
-    public Long signUp(SignUpReqDto requestDto) {
-
-        String encodedPassword = encodePassword(requestDto.getPassword());
-        Users user = UserRepository.save(requestDto.toEntity(encodedPassword));
-        return user.getId();
-    }
-
-    private String encodePassword(String password) {
-        return passwordEncoder.encode(password);
-    }
 }

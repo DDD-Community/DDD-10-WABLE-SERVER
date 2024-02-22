@@ -28,7 +28,7 @@ public class ProfileController {
     @Operation(summary = "프로필 조회", description = "프로필을 조회한다")
     @GetMapping()
     @ResponseStatus(value = HttpStatus.OK)
-    public ProfileResponse getProfile(@RequestParam(value = "group_id", required = false) Long groupId, @RequestParam(value = "user_id", required = false) Long toUserId) {
+    public ProfileResponse getProfile(@RequestParam(value = "group_id", required = false) Long groupId, @RequestParam(value = "user_id", required = false) Long toUserId, Users user) {
         // 1. group_id 가 있는 경우 profile, profile_question 에서 가져 오기
         // 1. group_id 가 없는 경우 user 테이블에서 가져 오기
 
@@ -52,7 +52,7 @@ public class ProfileController {
     @Operation(summary = "프로필 등록", description = "프로필을 작성한다")
     @PostMapping()
     @ResponseStatus(value = HttpStatus.CREATED)
-    public String saveProfile(@RequestParam(value = "group_id", required = false) Long groupId, @RequestBody GroupProfileDto profileDto) {
+    public String saveProfile(@RequestParam(value = "group_id", required = false) Long groupId, @RequestBody GroupProfileDto profileDto, Users user) {
         // group_id 가 있는 경우 profile, profile_question 에 생성
         // group_id 가 없는 경우 user 테이블에 생성
 
@@ -62,7 +62,7 @@ public class ProfileController {
     @Operation(summary = "프로필의 이미지 업로드 URL", description = "프로필의 이미지 업로드 URL 을 생성해서 준다")
     @GetMapping("/presigned-url")
     @ResponseStatus(value = HttpStatus.OK)
-    public Map<String, String> makeImageUploadURL(@RequestParam(value = "group_id", required = false) Long groupId) {
+    public Map<String, String> makeImageUploadURL(@RequestParam(value = "group_id", required = false) Long groupId, Users user) {
         // 1. 유저 정보 확인 (유저 토큰 가져온 후 UserId 을 가져 와야 함)
         // 1.1. 유저 정보가 없으면 에러 --> 어노테이션으로 처리
 
@@ -90,7 +90,7 @@ public class ProfileController {
     @Operation(summary = "프로필 수정", description = "프로필을 수정한다")
     @PutMapping()
     @ResponseStatus(value = HttpStatus.OK)
-    public String updateProfile(@RequestParam(value = "group_id", required = false) Long groupId, @RequestBody GroupProfileDto profileDto) {
+    public String updateProfile(@RequestParam(value = "group_id", required = false) Long groupId, @RequestBody GroupProfileDto profileDto, Users user) {
         // group_id 가 있는 경우 profile, profile_question 에 수정
         // group_id 가 없는 경우 user 테이블에 수정
 

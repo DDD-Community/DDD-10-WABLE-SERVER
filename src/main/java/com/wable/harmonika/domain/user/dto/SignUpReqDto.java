@@ -35,9 +35,5 @@ public class SignUpReqDto {
         this.name = name;
         this.password = password;
     }
-
-    public Users toEntity(String encodedPassword) {
-        return Users.builder().name(name).build();
-    }
 }
 

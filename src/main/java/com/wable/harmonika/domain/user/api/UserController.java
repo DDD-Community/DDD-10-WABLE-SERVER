@@ -21,15 +21,5 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService UserService;
 
-    @Operation(summary = "회원가입", description = "계정을 생성합니다.")
-    @Parameters({@Parameter(name = "requestDto", description = "회원가입 요청 객체"),})
-    @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public MyUserResDto signUp(@RequestBody @Valid final SignUpReqDto requestDto) {
-        Long userId = UserService.signUp(requestDto);
-        Users findUser = UserService.findById(userId);
-        return new MyUserResDto(findUser);
-    }
 }

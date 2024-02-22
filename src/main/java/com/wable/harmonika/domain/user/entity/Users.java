@@ -5,14 +5,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 
 @Entity
-@Getter
+@Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Users extends BaseTimeEntity {
 
@@ -29,10 +27,9 @@ public class Users extends BaseTimeEntity {
 
     private LocalDate birth;
 
-    @Builder
-    public Users(String userId, String name) {
-        this.userId = userId;
-        this.name = name;
-    }
 
+    @Builder
+    public Users(String userId) {
+        this.userId = userId;
+    }
 }
