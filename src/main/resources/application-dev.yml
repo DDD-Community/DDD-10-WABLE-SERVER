@@ -7,6 +7,15 @@ spring:
     url: ENC(uW99qXewsVbrUfoUUmdEX9tTTTNEjd653F3igVYqDV2k+DC5CAmLCunwKlhSPWJU2d5cH9zuajvETWYo9XyOwJf7A0oR1xGWBYXOG+tJwGo=)
     username: ENC(NtYGB8d4CwhGQ9f5p/rmebVSMMoSWd863myZO0IHwa48zyBT9FtJQDOJl51lzL2b)
     password: ENC(ovaMAIknRctuozbNHwrZBf+0wZIlGs5PXjeMe+AWLYhMjUlc1UBXAp5IiEDwFIXp)
+  # Hibernate 설정
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        strategy: org.hibernate.cfg.ImprovedNamingStrategy
+      properties:
+        hibernate.format_sql: true
+        hibernate.enable_lazy_load_no_trans: true
 
 cloud:
   aws:
@@ -18,16 +27,6 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
-
-  # Hibernate 설정
-  jpa:
-    hibernate:
-      ddl-auto: update
-      naming:
-        strategy: org.hibernate.cfg.ImprovedNamingStrategy
-      properties:
-        hibernate.format_sql: true
-        hibernate.enable_lazy_load_no_trans: true
 
 # Prefix 설정
 server:

@@ -22,7 +22,7 @@ public class Groups extends BaseTimeEntity {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_id", referencedColumnName = "user_id")
     private Users owner;
 
     public Groups(Long id, String name, Users owner) {

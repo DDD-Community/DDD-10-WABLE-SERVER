@@ -28,21 +28,8 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("id", id));
     }
 
-    @Transactional(readOnly = true)
-    public Users findByEmail(String email) {
-        return UserRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("email", email));
-    }
-
-    @Transactional(readOnly = true)
-    public boolean isExistedEmail(String email) {
-        return UserRepository.existsByEmail(email);
-    }
 
     public Long signUp(SignUpReqDto requestDto) {
-        if (isExistedEmail(requestDto.getEmail())) {
-            throw new EmailDuplicationException(requestDto.getEmail());
-        }
 
         String encodedPassword = encodePassword(requestDto.getPassword());
         Users user = UserRepository.save(requestDto.toEntity(encodedPassword));

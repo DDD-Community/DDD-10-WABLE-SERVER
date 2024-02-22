@@ -11,7 +11,7 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "card")
+@Table(name = "cards")
 public class Cards extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,11 +21,11 @@ public class Cards extends BaseTimeEntity {
     private CardNames sid;
 
     @ManyToOne
-    @JoinColumn(name = "from_user_id")
+    @JoinColumn(name = "from_user_id", referencedColumnName = "user_id")
     private Users fromUser;
 
     @ManyToOne
-    @JoinColumn(name = "to_user_id")
+    @JoinColumn(name = "to_user_id", referencedColumnName = "user_id")
     private Users toUser;
 
     @ManyToOne
@@ -34,23 +34,18 @@ public class Cards extends BaseTimeEntity {
 
     private String content;
 
-    private boolean isVisible;
-
 
 
     public Cards(CardNames sid, String content, boolean isVisible) {
         this.sid = sid;
         this.content = content;
-        this.isVisible = isVisible;
     }
 
     // 빌더 클래스 정의
     public static class Builder {
         private CardNames sid;
         private Users fromUser;
-        private String fromUserName;
         private Users toUser;
-        private String toUserName;
         private Groups group;
         private String content;
         private boolean isVisible;
