@@ -1,5 +1,6 @@
 package com.wable.harmonika.domain.profile.api;
 
+import com.wable.harmonika.domain.profile.dto.CreateProfileByGroupDto;
 import com.wable.harmonika.domain.profile.dto.CreateProfileByUserDto;
 import com.wable.harmonika.domain.profile.service.ProfileService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,16 +55,13 @@ public class ProfileController {
 
 
     // 그룹 프로필 생성
-
-//    @Operation(summary = "프로필 등록", description = "프로필을 작성한다")
-//    @PostMapping()
-//    @ResponseStatus(value = HttpStatus.CREATED)
-//    public String saveProfile(@RequestParam(value = "group_id", required = false) Long groupId, @RequestBody GroupProfileDto profileDto) {
-//        // group_id 가 있는 경우 profile, profile_question 에 생성
-//        // group_id 가 없는 경우 user 테이블에 생성
-//
-//        return "InsertProfileController";
-//    }
+    @Operation(summary = "그룹 프로필 등록", description = "그룹 프로필을 작성한다")
+    @PostMapping("/group")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public void saveProfile(@Valid @RequestBody CreateProfileByGroupDto profileByGroupDto) {
+        profileService.validateProfileByGroup(profileByGroupDto);
+//        profileService.saveProfileByGroup(profileByGroupDto);
+    }
 
 //    @Operation(summary = "프로필의 이미지 업로드 URL", description = "프로필의 이미지 업로드 URL 을 생성해서 준다")
 //    @GetMapping("/presigned-url")

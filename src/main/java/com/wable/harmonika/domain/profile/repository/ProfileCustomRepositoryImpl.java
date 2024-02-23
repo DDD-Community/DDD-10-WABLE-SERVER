@@ -23,4 +23,12 @@ public class ProfileCustomRepositoryImpl implements ProfileCustomRepository {
                 .where(profiles.user.userId.eq(userId))
                 .fetchFirst() != null;
     }
+
+    @Override
+    public boolean existsByUserIdAndGroupId(String userId, Long groupId) {
+        return jpaQueryFactory.selectFrom(profiles)
+                .where(profiles.group.id.eq(groupId))
+                .where(profiles.user.userId.eq(userId))
+                .fetchFirst() != null;
+    }
 }

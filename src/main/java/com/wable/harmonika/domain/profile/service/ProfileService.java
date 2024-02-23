@@ -1,5 +1,7 @@
 package com.wable.harmonika.domain.profile.service;
 
+import com.wable.harmonika.domain.group.GroupRepository;
+import com.wable.harmonika.domain.profile.dto.CreateProfileByGroupDto;
 import com.wable.harmonika.domain.profile.dto.CreateProfileByUserDto;
 import com.wable.harmonika.domain.profile.entity.ProfileQuestions;
 import com.wable.harmonika.domain.profile.entity.Profiles;
@@ -10,7 +12,6 @@ import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.domain.user.repository.UserRepository;
 import com.wable.harmonika.global.error.Error;
 import com.wable.harmonika.global.error.exception.InvalidException;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
 public class ProfileService {
     private final ProfileRepository profileRepository;
     private final ProfileQuestionsRepository profileQuestionsRepository;
+    private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final S3Presigner s3Presigner;
 
@@ -53,6 +55,23 @@ public class ProfileService {
         }
     }
 
+    public void validateProfileByGroup(CreateProfileByGroupDto profileByGroupDto) {
+        boolean isRegisterUser = userRepository.existsByUserId(profileByGroupDto.getUserId());
+        if (isRegisterUser == false) {
+            throw new InvalidException("userId", profileByGroupDto.getUserId(), Error.ACCOUNT_NOT_FOUND);
+        }
+
+        boolean existsGroup = groupRepository.existsById(profileByGroupDto.getGroupId());
+        if (existsGroup == false) {
+            throw new InvalidException("groupId", profileByGroupDto.getGroupId(), Error.GROUP_NOT_FOUND);
+        }
+
+        boolean hasGroup = profileRepository.existsByUserIdAndGroupId(profileByGroupDto.getUserId(), profileByGroupDto.getGroupId());
+        if (hasGroup) {
+            throw new InvalidException("groupId", profileByGroupDto.getUserId(), Error.GROUP_DUPLICATION);
+        }
+    }
+
     private Users getUserBuilder(CreateProfileByUserDto profileByUserDto) {
         return Users.builder()
                 .userId(profileByUserDto.getUserId())
@@ -62,8 +81,26 @@ public class ProfileService {
                 .build();
     }
 
+    private Users getUserBuilder(CreateProfileByGroupDto profileByGroupDto) {
+        return Users.builder()
+                .userId(profileByGroupDto.getUserId())
+                .name(profileByGroupDto.getName())
+                .gender(profileByGroupDto.getGender())
+                .birth(profileByGroupDto.getBirth())
+                .build();
+    }
+
     private Profiles getProfileBuilder(CreateProfileByUserDto profileByUserDto) {
         return Profiles.builder()
+                .nickname(profileByUserDto.getNickName())
+                .profileImageUrl(profileByUserDto.getProfileImageUrl())
+                .build();
+    }
+
+    private Profiles getProfileBuilder(CreateProfileByGroupDto profileByUserDto) {
+        return Profiles.builder()
+                .group(groupRepository.findById(profileByUserDto.getGroupId())
+                        .orElseThrow(() -> new InvalidException("id", profileByUserDto.getGroupId(), Error.GROUP_NOT_FOUND)))
                 .nickname(profileByUserDto.getNickName())
                 .profileImageUrl(profileByUserDto.getProfileImageUrl())
                 .build();
@@ -81,9 +118,20 @@ public class ProfileService {
                 .collect(Collectors.toList());
     }
 
+    private List<ProfileQuestions> getProfileQuestionsBuilder(CreateProfileByGroupDto profileByGroupDto, Profiles profile) {
+        return profileByGroupDto.getQuestions().stream()
+                .map(question -> ProfileQuestions.builder()
+                        .profile(profile)
+                        .sid(question.getSid())
+                        .question(question.getQuestion())
+                        .questionType(question.getQuestionType())
+                        .answers(question.getAnswers())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public void saveProfileByUser(CreateProfileByUserDto profileByUserDto) {
-
         Users user = this.getUserBuilder(profileByUserDto);
         userRepository.save(user);
 
@@ -95,6 +143,25 @@ public class ProfileService {
                 .orElseThrow(() -> new ProfileNotFoundException("id", profileId));
 
         List<ProfileQuestions> profileQuestions = getProfileQuestionsBuilder(profileByUserDto, profileRaw);
+
+        for (val question : profileQuestions) {
+            profileQuestionsRepository.save(question);
+        }
+    }
+
+    @Transactional
+    public void saveProfileByGroup(CreateProfileByGroupDto profileByGroupDto) {
+        Users user = this.getUserBuilder(profileByGroupDto);
+        userRepository.save(user);
+
+        Profiles profile = this.getProfileBuilder(profileByGroupDto);
+
+        Long profileId = profileRepository.save(profile).getId();
+
+        Profiles profileRaw = profileRepository.findById(profileId)
+                .orElseThrow(() -> new ProfileNotFoundException("id", profileId));
+
+        List<ProfileQuestions> profileQuestions = getProfileQuestionsBuilder(profileByGroupDto, profileRaw);
 
         for (val question : profileQuestions) {
             profileQuestionsRepository.save(question);

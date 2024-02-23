@@ -9,9 +9,10 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 @Table(name = "profiles", indexes = @Index(name = "profiles_user_group_unique_index", columnList = "user_id, group_id", unique = true))
 public class Profiles extends BaseTimeEntity {

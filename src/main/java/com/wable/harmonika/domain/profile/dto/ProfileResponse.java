@@ -2,7 +2,7 @@ package com.wable.harmonika.domain.profile.dto;
 
 public class ProfileResponse {
     private GetUserProfileDto userProfileDto;
-    private GroupProfileDto groupProfileDto;
+    private CreateProfileByGroupDto groupProfileDto;
 
     // 생성자, getter 및 setter 메서드 생략
 
@@ -10,7 +10,7 @@ public class ProfileResponse {
         this.userProfileDto = userProfileDto;
     }
 
-    public ProfileResponse(GroupProfileDto groupProfileDto) {
+    public ProfileResponse(CreateProfileByGroupDto groupProfileDto) {
         this.groupProfileDto = groupProfileDto;
     }
 }
