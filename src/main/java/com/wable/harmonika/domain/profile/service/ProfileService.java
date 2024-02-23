@@ -99,8 +99,10 @@ public class ProfileService {
 
     private Profiles getProfileBuilder(CreateProfileByGroupDto profileByUserDto) {
         return Profiles.builder()
+                .user(userRepository.findByUserId(profileByUserDto.getUserId())
+                        .orElseThrow(() -> new InvalidException("userId", profileByUserDto.getUserId(), Error.ACCOUNT_NOT_FOUND)))
                 .group(groupRepository.findById(profileByUserDto.getGroupId())
-                        .orElseThrow(() -> new InvalidException("id", profileByUserDto.getGroupId(), Error.GROUP_NOT_FOUND)))
+                        .orElseThrow(() -> new InvalidException("groupId", profileByUserDto.getGroupId(), Error.GROUP_NOT_FOUND)))
                 .nickname(profileByUserDto.getNickName())
                 .profileImageUrl(profileByUserDto.getProfileImageUrl())
                 .build();
@@ -151,9 +153,6 @@ public class ProfileService {
 
     @Transactional
     public void saveProfileByGroup(CreateProfileByGroupDto profileByGroupDto) {
-        Users user = this.getUserBuilder(profileByGroupDto);
-        userRepository.save(user);
-
         Profiles profile = this.getProfileBuilder(profileByGroupDto);
 
         Long profileId = profileRepository.save(profile).getId();

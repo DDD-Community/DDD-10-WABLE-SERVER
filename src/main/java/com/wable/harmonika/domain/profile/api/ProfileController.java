@@ -60,7 +60,7 @@ public class ProfileController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public void saveProfile(@Valid @RequestBody CreateProfileByGroupDto profileByGroupDto) {
         profileService.validateProfileByGroup(profileByGroupDto);
-//        profileService.saveProfileByGroup(profileByGroupDto);
+        profileService.saveProfileByGroup(profileByGroupDto);
     }
 
 //    @Operation(summary = "프로필의 이미지 업로드 URL", description = "프로필의 이미지 업로드 URL 을 생성해서 준다")
