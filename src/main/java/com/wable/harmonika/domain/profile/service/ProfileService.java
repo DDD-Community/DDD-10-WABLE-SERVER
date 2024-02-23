@@ -179,15 +179,14 @@ public class ProfileService {
                 .orElseThrow(() -> new ProfileNotFoundException("id", id));
     }
 
-    public Map<String, String> getSignedUrl(Long userId, String fileName) {
+    public Map<String, String> getSignedUrl(String fileName) {
         validateImageExtension(fileName);
 
-        val keyName = "/" + userId + "/" + UUID.randomUUID() + "-" + fileName;
         val contentType = "image/" + getFileExtension(fileName);
 
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(imageBucketName)
-                .key(keyName)
+                .key(fileName)
                 .contentType(contentType)
                 .build();
 
@@ -199,11 +198,11 @@ public class ProfileService {
         val preSignedRequest = s3Presigner.presignPutObject(presignRequest);
         val signedUrl = preSignedRequest.url().toString();
 
-        return Map.of("signedUrl", signedUrl, "filename", keyName);
+        return Map.of("signedUrl", signedUrl, "filename", fileName);
     }
 
     private void validateImageExtension(String fileName) {
-        val regExp = "^(jpeg|png|gif|bmp)$";
+        val regExp = "^(jpeg|jpg|png|gif|bmp)$";
         val extension = getFileExtension(fileName).toLowerCase();
         if (!Pattern.matches(regExp, extension)) {
             throw new IllegalArgumentException("Invalid image extension");
