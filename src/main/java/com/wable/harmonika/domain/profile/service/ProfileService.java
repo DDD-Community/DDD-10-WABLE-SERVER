@@ -168,15 +168,14 @@ public class ProfileService {
     }
 
     @Transactional(readOnly = true)
-    public Profiles getGroupProfileById(Long id) {
+    public Profiles getProfileGroupById(Long id) {
         return profileRepository.findById(id)
                 .orElseThrow(() -> new ProfileNotFoundException("id", id));
     }
 
     @Transactional(readOnly = true)
-    public Users getUserProfileByUserId(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ProfileNotFoundException("id", id));
+    public Profiles getProfileByUserId(String userId) {
+        return profileRepository.getProfileByUserId(userId);
     }
 
     public Map<String, String> getSignedUrl(String fileName) {
@@ -210,7 +209,35 @@ public class ProfileService {
     }
 
     private String getFileExtension(String fileName) {
-        val splittedFileName = fileName.split("\\.");
-        return splittedFileName[splittedFileName.length - 1];
+        val splitFileName = fileName.split("\\.");
+        return splitFileName[splitFileName.length - 1];
+    }
+
+    public void validateProfileGroupByUserIdAndGroupId(String userId, Long groupId) {
+        boolean isRegisterUser = userRepository.existsByUserId(userId);
+        if (isRegisterUser == false) {
+            throw new InvalidException("userId", userId, Error.ACCOUNT_NOT_FOUND);
+        }
+
+        boolean isJoinGroup = profileRepository.existsByUserIdAndGroupId(userId, groupId);
+        if (isJoinGroup == false) {
+            throw new InvalidException("groupId", groupId, Error.GROUP_NOT_FOUND);
+        }
+    }
+
+    public void validateProfileByUserId(String userId) {
+        boolean isRegisterUser = userRepository.existsByUserId(userId);
+        if (isRegisterUser == false) {
+            throw new InvalidException("userId", userId, Error.ACCOUNT_NOT_FOUND);
+        }
+
+        boolean isJoinGroup = profileRepository.existsByUserIdAndGroupIdIsNull(userId);
+        if (isJoinGroup) {
+            throw new InvalidException("userId", userId, Error.PROFILE_NOT_FOUND);
+        }
+    }
+
+    public Profiles getProfileByGroupId(Long groupId) {
+        return profileRepository.getProfileByGroupId(groupId);
     }
 }

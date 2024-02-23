@@ -29,7 +29,6 @@ public class Users extends BaseTimeEntity {
 
     private LocalDate birth;
 
-
     @Builder
     public Users(String userId, String gender, String name, LocalDate birth) {
         this.userId = userId;

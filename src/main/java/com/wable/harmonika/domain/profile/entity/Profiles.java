@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter @Setter
 @NoArgsConstructor
@@ -32,6 +34,9 @@ public class Profiles extends BaseTimeEntity {
     private String nickname;
 
     private String profileImageUrl;
+
+    @OneToMany(mappedBy = "profile", fetch = FetchType.LAZY)
+    private List<ProfileQuestions> profileQuestions;
 
     @Builder
     public Profiles(Users user, Groups group, String nickname, String profileImageUrl) {
