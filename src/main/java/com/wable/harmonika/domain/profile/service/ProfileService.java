@@ -40,6 +40,7 @@ public class ProfileService {
     @Value("${cloud.aws.bucket}")
     private String imageBucketName;
 
+    // NOTE: User, Profile 테이블에 데이터 있으면 이미 가입된 유저
     public void validateProfileByUser(CreateProfileByUserDto profileByUserDto) {
         boolean isRegisterUser = userRepository.existsByUserId(profileByUserDto.getUserId());
         if (isRegisterUser) {
@@ -48,7 +49,7 @@ public class ProfileService {
 
         boolean hasGroup = profileRepository.existsByUserIdAndGroupIdIsNull(profileByUserDto.getUserId());
         if (hasGroup) {
-            throw new EntityNotFoundException("Profile already exists");
+            throw new InvalidException("userId", profileByUserDto.getUserId(), Error.PROFILE_DUPLICATION);
         }
     }
 
