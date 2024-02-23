@@ -8,6 +8,9 @@ import com.wable.harmonika.domain.profile.repository.ProfileQuestionsRepository;
 import com.wable.harmonika.domain.profile.repository.ProfileRepository;
 import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.domain.user.repository.UserRepository;
+import com.wable.harmonika.global.error.Error;
+import com.wable.harmonika.global.error.exception.InvalidException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -40,12 +43,12 @@ public class ProfileService {
     public void validateProfileByUser(CreateProfileByUserDto profileByUserDto) {
         boolean isRegisterUser = userRepository.existsByUserId(profileByUserDto.getUserId());
         if (isRegisterUser) {
-            throw new IllegalArgumentException("User already exists");
+            throw new InvalidException("userId", profileByUserDto.getUserId(), Error.PROFILE_DUPLICATION);
         }
 
         boolean hasGroup = profileRepository.existsByUserIdAndGroupIdIsNull(profileByUserDto.getUserId());
         if (hasGroup) {
-            throw new IllegalArgumentException("Profile already exists");
+            throw new EntityNotFoundException("Profile already exists");
         }
     }
 

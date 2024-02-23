@@ -1,24 +1,14 @@
 package com.wable.harmonika.domain.profile.api;
 
 import com.wable.harmonika.domain.profile.dto.CreateProfileByUserDto;
-import com.wable.harmonika.domain.profile.dto.GroupProfileDto;
-import com.wable.harmonika.domain.profile.dto.CreateUserProfileDtoBack;
-import com.wable.harmonika.domain.profile.entity.ProfileQuestions;
-import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.domain.profile.service.ProfileService;
-import com.wable.harmonika.domain.user.entity.Users;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 
 @Tag(name = "프로필 API", description = "프로필 API")

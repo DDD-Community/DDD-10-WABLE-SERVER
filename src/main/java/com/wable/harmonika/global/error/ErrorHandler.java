@@ -2,6 +2,7 @@ package com.wable.harmonika.global.error;
 
 import com.wable.harmonika.domain.user.exception.EmailDuplicationException;
 import com.wable.harmonika.domain.user.exception.UserNotFoundException;
+import com.wable.harmonika.global.error.exception.InvalidException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -28,6 +29,18 @@ public class ErrorHandler {
         final Error error = Error.INVALID_INPUT_VALUE;
         final List<ErrorResponse.FieldError> fieldErrors = getFieldErrorsByBindingResult(e.getBindingResult());
         return buildFieldErrors(error, fieldErrors);
+    }
+
+    // NOTE: 400 에러는 InvalidException 을 사용함
+    @ExceptionHandler({InvalidException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected ErrorResponse handleInvalidException(InvalidException e) {
+        log.error("{} {} : {}", e.getMessage(), e.getField(), e.getValue());
+        List<ErrorResponse.FieldError> fieldError = getFieldError(e.getField(), e.getValue(), e.getMessage());
+        return ErrorResponse.builder()
+                .message(e.getMessage())
+                .detail(fieldError)
+                .build();
     }
 
     @ExceptionHandler({AccountNotFoundException.class})

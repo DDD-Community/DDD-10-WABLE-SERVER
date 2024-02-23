@@ -1,9 +1,6 @@
 package com.wable.harmonika.domain.profile.dto;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -17,15 +14,13 @@ public class CreateProfileByUserDto {
     @NotBlank
     private String name;
 
-
     @Pattern(regexp = "^(male|female)$", message = "invalid")
     private String gender;
 
-
-    @NotBlank
-    @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "invalid_date_format")
+    @NotNull(message = "empty")
+    @Past(message = "invalid")
     private LocalDate birth;
-
+    // TODO: 타입에 대한 에러 핸들링은 어떻게하냐..
 
     @NotBlank
     private String nickName;
