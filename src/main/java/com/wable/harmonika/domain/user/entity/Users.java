@@ -22,6 +22,8 @@ public class Users extends BaseTimeEntity {
     @Column(name="user_id" , unique=true)
     private String userId;
 
+    private String gender;
+
     @NotNull(message = "이름은 필수로 입력되어야 합니다.")
     private String name;
 
@@ -29,7 +31,10 @@ public class Users extends BaseTimeEntity {
 
 
     @Builder
-    public Users(String userId) {
+    public Users(String userId, String gender, String name, LocalDate birth) {
         this.userId = userId;
+        this.gender = gender;
+        this.name = name;
+        this.birth = birth;
     }
 }
