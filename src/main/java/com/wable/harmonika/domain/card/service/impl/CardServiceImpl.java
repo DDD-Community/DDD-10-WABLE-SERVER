@@ -9,6 +9,7 @@ import com.wable.harmonika.domain.card.service.CardService;
 import com.wable.harmonika.domain.group.entity.Groups;
 import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.domain.user.repository.UserRepository;
+import org.apache.catalina.Group;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -29,15 +30,9 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public void create(CardsRequest vo, Users fromUser) throws Exception {
-        // TODO : token에서 까서 넣기
-        System.out.println("vo = " + vo);
 
-        Cards cards = new Cards.Builder()
-                .sid(vo.getSid())
-                .content(vo.getContent())
-                .isVisible(vo.isVisible())
-
-                .build();
+        Cards cards = new Cards(vo.getSid(), vo.getContent());
+        new Groups();
 
         cards.setFromUser(fromUser);
         cards.setToUser(new Users(vo.getToUserId()));

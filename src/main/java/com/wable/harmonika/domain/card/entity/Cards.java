@@ -34,39 +34,7 @@ public class Cards extends BaseTimeEntity {
 
     private String content;
 
-
-
-    public Cards(CardNames sid, String content, boolean isVisible) {
-        this.sid = sid;
-        this.content = content;
-    }
-
-    // 빌더 클래스 정의
-    public static class Builder {
-        private CardNames sid;
-        private Users fromUser;
-        private Users toUser;
-        private Groups group;
-        private String content;
-        private boolean isVisible;
-
-        public Builder sid(CardNames sid) {
-            this.sid = sid;
-            return this;
-        }
-
-        public Builder content(String content) {
-            this.content = content;
-            return this;
-        }
-
-        public Builder isVisible(boolean isVisible) {
-            this.isVisible = isVisible;
-            return this;
-        }
-
-        public Cards build() {
-            return new Cards(sid, content, isVisible);
-        }
+    public Cards(CardNames sid, String content) {
+        super();
     }
 }

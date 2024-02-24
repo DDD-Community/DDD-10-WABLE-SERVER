@@ -26,18 +26,24 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception{
-        // 예시로, 세션에서 사용자 객체를 가져오는 방법
-        HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
-        String authorization = httpServletRequest.getHeader("Authorization");
-        String token = authorization.replaceAll("^Bearer( )*", "");
-        if (authorization == "" || !VerifyToken.verify(token)){
+        try {
+            // 예시로, 세션에서 사용자 객체를 가져오는 방법
+            HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
+            String authorization = httpServletRequest.getHeader("Authorization");
+            if (authorization == null || authorization.equals("")){
+                throw new UnauthorizedException("401 Unauthorized !!");
+            }
+            String token = authorization.replaceAll("^Bearer( )*", "");
+            if (!VerifyToken.verify(token)){
+                throw new UnauthorizedException("401 Unauthorized !!");
+            }
+            String username = AwsCognitoJwtParserUtil.getClaim(token, "cognito:username");
+
+            return   Users.builder()
+                    .userId(username)
+                    .build(); // Users 객체를 빌드
+        } catch (Exception e) {
             throw new UnauthorizedException("401 Unauthorized !!");
         }
-        String username = AwsCognitoJwtParserUtil.getClaim(token, "cognito:username");
-
-        return   Users.builder()
-                .userId(username)
-                .build(); // Users 객체를 빌드
-
     }
 }

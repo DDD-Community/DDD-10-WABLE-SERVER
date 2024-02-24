@@ -34,7 +34,6 @@ public class CardController {
 
     @PostMapping()
     public void createCards(Users user, @Valid @RequestBody CardsRequest request) throws Exception {
-        System.out.println("user.get() = " + user.getUserId());
         cardService.create(request, user);
     }
 
