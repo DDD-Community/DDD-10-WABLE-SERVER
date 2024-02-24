@@ -9,6 +9,7 @@ import com.wable.harmonika.domain.card.service.CardService;
 import com.wable.harmonika.domain.group.entity.Groups;
 import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.domain.user.repository.UserRepository;
+import org.apache.catalina.Group;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -28,31 +29,13 @@ public class CardServiceImpl implements CardService {
     private UserRepository userRepository;
 
     @Override
-    public void create(CardsRequest vo) throws Exception {
-        // TODO : token에서 까서 넣기
-        Long fromUserId = 2L;
-        List<Users> users = userRepository.findAllById(List.of(vo.getToUserId(), fromUserId));
+    public void create(CardsRequest vo, Users fromUser) throws Exception {
 
-        Users toUser = users.stream()
-                .filter(user -> user.getId().equals(vo.getToUserId()))
-                .findFirst().orElseThrow(() -> new NoSuchElementException("User not found with ID: " + vo.getToUserId()));
-        Users fromUser = users.stream()
-                .filter(user -> user.getId().equals(fromUserId))
-                .findFirst().orElseThrow(() -> new NoSuchElementException("User not found with ID: " + vo.getToUserId()));
-
-        System.out.println("vo = " + vo);
-
-        // TODO : group repo 완료시 가져와서 넣기
-        Groups groups = new Groups();
-        // TODO : UserName 따로 필요없어보임
-        Cards cards = new Cards.Builder()
-                .sid(vo.getSid())
-                .content(vo.getContent())
-                .isVisible(vo.isVisible())
-                .build();
+        Cards cards = new Cards(vo.getSid(), vo.getContent());
+        new Groups();
 
         cards.setFromUser(fromUser);
-        cards.setToUser(toUser);
+        cards.setToUser(new Users(vo.getToUserId()));
 
         cardRepository.save(cards);
     }

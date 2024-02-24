@@ -33,9 +33,8 @@ public class CardController {
     private final CardService cardService;
 
     @PostMapping()
-    public void createCards(@Valid @RequestBody CardsRequest request, Users user) throws Exception {
-        System.out.println("user.get() = " + user.getUserId());
-        cardService.create(request);
+    public void createCards(Users user, @Valid @RequestBody CardsRequest request) throws Exception {
+        cardService.create(request, user);
     }
 
     @GetMapping("/{cardId}")
@@ -45,27 +44,24 @@ public class CardController {
     }
 
     @RequestMapping(value="/{cardId}", method=RequestMethod.PUT)
-    public void updateCards(@Valid UpdateCardsRequest request) throws Exception {
+    public void updateCards(Users user, @Valid UpdateCardsRequest request) throws Exception {
 //        Cards cards =  cardService.update();
     }
 
     @RequestMapping(value="/received", method=RequestMethod.GET)
-    public ResponseEntity<List<Cards>> listReceivedCards(@Valid ListCardsRequest request) throws Exception {
+    public ResponseEntity<List<Cards>> listReceivedCards(Users user, @Valid ListCardsRequest request) throws Exception {
         List<Cards> cards =  cardService.findAllReceivedCards(request);
         return new ResponseEntity<>(cards, HttpStatus.OK);
     }
 
     @RequestMapping(value="/sent", method=RequestMethod.GET)
-    public ResponseEntity<List<Cards>> listSentCards(@Valid ListCardsRequest request, Authentication authentication) throws Exception {
-        if (authentication == null || authentication.isAuthenticated()) {
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-        }
+    public ResponseEntity<List<Cards>> listSentCards(Users user, @Valid ListCardsRequest request) throws Exception {
         List<Cards> cards =  cardService.findAllSentCards(request);
         return new ResponseEntity<>(cards, HttpStatus.OK);
     }
 
     @RequestMapping(value="/", method=RequestMethod.GET)
-    public ResponseEntity<List<Cards>> listCardsByGroup(@Valid ListCardsRequest request) throws Exception {
+    public ResponseEntity<List<Cards>> listCardsByGroup(Users user, @Valid ListCardsRequest request) throws Exception {
         List<Cards> cards =  cardService.findAllCardsByGroup(request);
         return new ResponseEntity<>(cards, HttpStatus.OK);
     }

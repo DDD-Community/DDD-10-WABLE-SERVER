@@ -10,7 +10,9 @@ import org.springframework.core.MethodParameter;
 import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 
 import static com.wable.harmonika.global.auth.AwsCognitoJwtValidatorUtil.validateAWSJwtToken;
 
@@ -20,19 +22,21 @@ public class VerifyToken {
         JWTClaimsSet jwtSet = validateAWSJwtToken(IDToken);
 
         // check exp in claim
-        String exp = jwtSet.getStringClaim("exp");
-        long unixTime = Long.parseLong(exp);
-        if (unixTime > Instant.now().getEpochSecond()) {
+        Object exp = jwtSet.getClaim("exp");
+        Date expDate = (Date) exp;
+        if (expDate.before(Date.from(Instant.now()))) {
             return false;
         }
         // aud in ID token, client_id in access token = client_id user pool
-        String aud = jwtSet.getStringClaim("aud");
-        if (aud != "pphu5ge7ch41s2nhqmo1v5te8") {
+        Object aud = jwtSet.getClaim("aud");
+        ArrayList audArrayList = (ArrayList) aud;
+        if (!audArrayList.contains("pphu5ge7ch41s2nhqmo1v5te8")) {
             return false;
         }
         // issuer (iss) = https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_80Se4Ok5g
         String iss = jwtSet.getStringClaim("iss");
-        if (iss != "https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_80Se4Ok5g") {
+        System.out.println("iss = " + iss);
+        if (!iss.equals("https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_80Se4Ok5g")) {
             return false;
         }
         return true;

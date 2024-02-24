@@ -1,5 +1,6 @@
 package com.wable.harmonika.domain.group;
 
+import com.wable.harmonika.domain.user.entity.Users;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +22,7 @@ public class GroupController {
 
     // 그룹 리스트
     @GetMapping
-    public ResponseEntity<GroupListResponse> findAllGroup(Long userId) {
+    public ResponseEntity<GroupListResponse> findAllGroup(Users user,Long userId) {
         GroupListResponse groupListResponse = groupService.findAll(userId);
 
         return ResponseEntity.ok(groupListResponse);
@@ -30,6 +31,7 @@ public class GroupController {
     // 그룹 생일 리스트
     @GetMapping("/{groupId}/birthday")
     public ResponseEntity<GroupUserBirthdayListResponse> findAllBirthday(
+            Users user,
             @PathVariable("groupId") Long groupId) {
         GroupUserBirthdayListResponse groupBirthdays = groupService.findAllBirthday(groupId);
 
@@ -39,6 +41,7 @@ public class GroupController {
     // 팀원 목록
     @GetMapping("/{groupId}/members")
     public ResponseEntity<GroupMemberListResponse> findAllMember(
+            Users user,
             @PathVariable("groupId") Long groupId, @RequestParam("name") String name, // todo 팀원 검색
             PagingMemberRequest request) {
 
@@ -51,7 +54,7 @@ public class GroupController {
     // 팀원 역할 수정
     // todo 관리자 권한 체크
     @PutMapping("/{groupId}/role")
-    public ResponseEntity<String> updateUserRole(@PathVariable("groupId") Long groupId, @RequestBody UserRoleUpdateRequest request) {
+    public ResponseEntity<String> updateUserRole(Users user,@PathVariable("groupId") Long groupId, @RequestBody UserRoleUpdateRequest request) {
         groupService.updateUserRole(groupId, request);
 
         return ResponseEntity.ok().build();
