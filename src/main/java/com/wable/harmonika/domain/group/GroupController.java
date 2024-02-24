@@ -22,7 +22,7 @@ public class GroupController {
 
     // 그룹 리스트
     @GetMapping
-    public ResponseEntity<GroupListResponse> findAllGroup(Long userId, Users user) {
+    public ResponseEntity<GroupListResponse> findAllGroup(Users user,Long userId) {
         GroupListResponse groupListResponse = groupService.findAll(userId);
 
         return ResponseEntity.ok(groupListResponse);
@@ -31,7 +31,8 @@ public class GroupController {
     // 그룹 생일 리스트
     @GetMapping("/{groupId}/birthday")
     public ResponseEntity<GroupUserBirthdayListResponse> findAllBirthday(
-            @PathVariable("groupId") Long groupId, Users user) {
+            Users user,
+            @PathVariable("groupId") Long groupId) {
         GroupUserBirthdayListResponse groupBirthdays = groupService.findAllBirthday(groupId);
 
         return ResponseEntity.ok(groupBirthdays);
@@ -40,8 +41,9 @@ public class GroupController {
     // 팀원 목록
     @GetMapping("/{groupId}/members")
     public ResponseEntity<GroupMemberListResponse> findAllMember(
+            Users user,
             @PathVariable("groupId") Long groupId, @RequestParam("name") String name, // todo 팀원 검색
-            PagingMemberRequest request, Users user) {
+            PagingMemberRequest request) {
 
         GroupMemberListResponse members = groupService.findAllMember(groupId, request.getLastName(),
                 request.getSize());
@@ -52,7 +54,7 @@ public class GroupController {
     // 팀원 역할 수정
     // todo 관리자 권한 체크
     @PutMapping("/{groupId}/role")
-    public ResponseEntity<String> updateUserRole(@PathVariable("groupId") Long groupId, @RequestBody UserRoleUpdateRequest request, Users user) {
+    public ResponseEntity<String> updateUserRole(Users user,@PathVariable("groupId") Long groupId, @RequestBody UserRoleUpdateRequest request) {
         groupService.updateUserRole(groupId, request);
 
         return ResponseEntity.ok().build();
