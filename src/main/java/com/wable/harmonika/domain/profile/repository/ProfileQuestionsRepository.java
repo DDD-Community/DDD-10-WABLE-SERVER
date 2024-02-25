@@ -6,6 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ProfileQuestionsRepository extends JpaRepository<ProfileQuestions, Long> {
-    void updateProfileQuestionsByProfileId(ProfileQuestions questions, Long id);
+public interface ProfileQuestionsRepository extends JpaRepository<ProfileQuestions, Long>, ProfileQuestionsCustomRepository {
 }

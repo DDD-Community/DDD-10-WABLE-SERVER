@@ -262,7 +262,7 @@ public class ProfileService {
         List<ProfileQuestions> profileQuestions = getProfileQuestionsBuilder(profileDto.getQuestions(), profile);
 
         for (ProfileQuestions question : profileQuestions) {
-            profileQuestionsRepository.updateProfileQuestionsByProfileId(question, question.getId());
+            profileQuestionsRepository.updateProfileQuestionsByProfileId(question.getId(), question);
         }
     }
 }
