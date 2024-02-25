@@ -24,7 +24,7 @@ public class GroupController {
         this.groupService = groupService;
     }
 
-    @Operation(summary = "그룹 리스트", description = "그룹 리스트")
+    @Operation(summary = "내가 속한 그룹 리스트", description = "내가 속한 그룹 리스트")
     @GetMapping()
     public ResponseEntity<GroupListResponse> findAllGroup(Users user) {
         GroupListResponse groupListResponse = groupService.findAll(user);
