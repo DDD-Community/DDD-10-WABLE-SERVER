@@ -1,6 +1,7 @@
-package com.wable.harmonika.domain.group;
+package com.wable.harmonika.domain.group.dto;
 
 import java.util.List;
+
 import lombok.Getter;
 
 @Getter

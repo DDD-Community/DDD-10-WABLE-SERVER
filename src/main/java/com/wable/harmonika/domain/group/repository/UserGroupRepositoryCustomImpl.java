@@ -1,4 +1,4 @@
-package com.wable.harmonika.domain.group;
+package com.wable.harmonika.domain.group.repository;
 
 import static com.wable.harmonika.domain.group.entity.QUserGroups.*;
 import static com.wable.harmonika.domain.user.entity.QUsers.users;

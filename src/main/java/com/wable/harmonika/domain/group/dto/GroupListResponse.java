@@ -1,4 +1,4 @@
-package com.wable.harmonika.domain.group;
+package com.wable.harmonika.domain.group.dto;
 
 import com.wable.harmonika.domain.group.entity.Groups;
 import java.util.List;

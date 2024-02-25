@@ -1,4 +1,4 @@
-package com.wable.harmonika.domain.group;
+package com.wable.harmonika.domain.group.dto;
 
 import lombok.Getter;
 

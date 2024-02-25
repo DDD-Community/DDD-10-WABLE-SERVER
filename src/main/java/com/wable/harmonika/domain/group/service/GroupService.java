@@ -1,13 +1,20 @@
-package com.wable.harmonika.domain.group;
+package com.wable.harmonika.domain.group.service;
 
-import com.wable.harmonika.domain.group.GroupModifyRequest.FixedQuestion;
-import com.wable.harmonika.domain.group.GroupUserBirthdayListResponse.UserBirthday;
+import com.wable.harmonika.domain.group.dto.UserResponse;
+import com.wable.harmonika.domain.group.dto.UserRoleUpdateRequest;
+import com.wable.harmonika.domain.group.dto.GroupListResponse;
+import com.wable.harmonika.domain.group.dto.GroupModifyRequest;
+import com.wable.harmonika.domain.group.dto.GroupModifyRequest.FixedQuestion;
+import com.wable.harmonika.domain.group.dto.GroupUserBirthdayListResponse;
+import com.wable.harmonika.domain.group.dto.GroupUserBirthdayListResponse.UserBirthday;
+import com.wable.harmonika.domain.group.dto.GroupUserListResponse;
 import com.wable.harmonika.domain.group.entity.GroupQuestion;
 import com.wable.harmonika.domain.group.entity.Groups;
 import com.wable.harmonika.domain.group.entity.QuestionNames;
 import com.wable.harmonika.domain.group.entity.QuestionTypes;
 import com.wable.harmonika.domain.group.entity.Questions;
 import com.wable.harmonika.domain.group.entity.UserGroups;
+import com.wable.harmonika.domain.group.repository.*;
 import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.domain.user.repository.UserRepository;
@@ -63,7 +70,7 @@ public class GroupService {
     }
 
     public GroupUserListResponse findAllMember(Long groupId, String lastName, String searchName,
-            int size) {
+                                               int size) {
         List<Users> users = userGroupRepository.findAllUserWithPaging(groupId, lastName, searchName,
                 size);
 
