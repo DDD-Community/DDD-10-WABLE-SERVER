@@ -2,13 +2,15 @@ package com.wable.harmonika.domain.profile.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Getter
+@Setter
 public class UpdateProfileDto {
-    @NotBlank
+    @Null
     private String userId;
 
     @NotBlank

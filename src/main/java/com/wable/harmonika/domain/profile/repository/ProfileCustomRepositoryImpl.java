@@ -6,6 +6,8 @@ import com.wable.harmonika.domain.profile.entity.Profiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import static com.wable.harmonika.domain.group.entity.QGroups.groups;
 import static com.wable.harmonika.domain.profile.entity.QProfiles.profiles;
 import static com.wable.harmonika.domain.user.entity.QUsers.users;
@@ -37,21 +39,33 @@ public class ProfileCustomRepositoryImpl implements ProfileCustomRepository {
     }
 
     @Override
-    public Profiles getProfileByGroupId(Long groupId) {
+    public List<Profiles> getOtherProfileByUserAndGroupId(String toUserId, List<Long> groupId) {
         return jpaQueryFactory.selectFrom(profiles)
-                .where(profiles.group.id.eq(groupId))
-                .join(profiles.group)
-                .fetchFirst();
+                .join(profiles.user, users)
+                .leftJoin(profiles.group, groups)
+                .where(profiles.user.userId.eq(toUserId))
+                .where(profiles.group.id.in(groupId))
+                .fetch();
     }
 
     @Override
-    public Profiles getProfileByUserId(String userId) {
-        Profiles result = jpaQueryFactory
+    public List<Profiles> getProfileByGroupId(String userId, Long groupId) {
+        return jpaQueryFactory.selectFrom(profiles)
+                .join(profiles.user, users)
+                .leftJoin(profiles.group, groups )
+                .where(profiles.group.id.eq(groupId))
+                .where(profiles.user.userId.eq(userId))
+                .fetch();
+    }
+
+    @Override
+    public List<Profiles> getProfileByUserId(String userId) {
+        List<Profiles> result = jpaQueryFactory
                 .selectFrom(profiles)
                 .join(profiles.user, users)
                 .leftJoin(profiles.group, groups)
                 .where(profiles.user.userId.eq(userId))
-                .fetchOne();
+                .fetch();
 
         return result;
     }

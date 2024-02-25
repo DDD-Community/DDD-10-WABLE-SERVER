@@ -16,6 +16,7 @@ import com.wable.harmonika.global.error.exception.InvalidException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import net.minidev.asm.ConvertDate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Value;
@@ -180,11 +181,29 @@ public class ProfileService {
         }
     }
 
-    @Transactional(readOnly = true)
-    public Profiles getProfileByUserId(String userId) {
-        Profiles profiles = profileRepository.getProfileByUserId(userId);
 
-        return profiles;
+    @Transactional(readOnly = true)
+    public List<Profiles> getOtherProfileByUser(String userId, String toUserId) {
+        List<Profiles> myProfiles = profileRepository.getProfileByUserId(userId);
+        if (myProfiles == null) {
+            throw new InvalidException("userId", userId, Error.PROFILE_NOT_FOUND);
+        }
+
+        List<Long> groupIds = myProfiles.stream()
+                .map(profile -> profile.getGroup().getId())
+                .collect(Collectors.toList());
+
+        List<Profiles> toProfile = profileRepository.getOtherProfileByUserAndGroupId(toUserId, groupIds);
+        if (toProfile == null) {
+            throw new InvalidException("toUserId", toUserId, Error.PROFILE_NOT_FOUND);
+        }
+
+        return toProfile;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Profiles> getProfileByUserId(String userId) {
+        return profileRepository.getProfileByUserId(userId);
     }
 
     public Map<String, String> getSignedUrl(String fileName) {
@@ -248,8 +267,8 @@ public class ProfileService {
         }
     }
 
-    public Profiles getProfileByGroupId(Long groupId) {
-        return profileRepository.getProfileByGroupId(groupId);
+    public List<Profiles> getProfileByGroupId(String userId, Long groupId) {
+        return profileRepository.getProfileByGroupId(userId, groupId);
     }
 
     @Transactional

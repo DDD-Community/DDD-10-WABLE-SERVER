@@ -6,6 +6,7 @@ import com.wable.harmonika.domain.profile.dto.GetProfileResponseDto;
 import com.wable.harmonika.domain.profile.dto.UpdateProfileDto;
 import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.domain.profile.service.ProfileService;
+import com.wable.harmonika.domain.user.entity.Users;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -28,41 +30,43 @@ public class ProfileController {
 
     @Operation(summary = "프로필 조회", description = "프로필을 조회한다")
     @GetMapping()
-    @ResponseStatus(value = HttpStatus.OK)
-    public GetProfileResponseDto getProfile(
+    public ResponseEntity<GetProfileResponseDto[]> getProfile(
+            Users user,
             @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestParam(value = "userId", required = false) String toUserId
     ) {
-        String userId = "1234";
+        String userId = user.getUserId();
 
         if (groupId != null) {
             // 그룹 내 프로필 전달
             profileService.validateProfileGroupByUserIdAndGroupId(userId, groupId);
-            Profiles userProfile = profileService.getProfileByGroupId(groupId);
-            GetProfileResponseDto response =  new GetProfileResponseDto(userProfile);
-            return response;
+            List<Profiles> userProfile = profileService.getProfileByGroupId(userId, groupId);
+            GetProfileResponseDto[] response = userProfile.stream().map(GetProfileResponseDto::new).toArray(GetProfileResponseDto[]::new);
+            return ResponseEntity.ok(response);
         }
 
         if (toUserId != null) {
             // 유저 프로필 전달
             profileService.validateProfileByUserId(toUserId);
-            Profiles userProfile = profileService.getProfileByUserId(toUserId);
-            GetProfileResponseDto response = new GetProfileResponseDto(userProfile);
-            return response;
+            List<Profiles> userProfile = profileService.getOtherProfileByUser(userId, toUserId);
+
+            GetProfileResponseDto[] response = userProfile.stream().map(GetProfileResponseDto::new).toArray(GetProfileResponseDto[]::new);
+            return ResponseEntity.ok(response);
         }
 
         // 내 프로필 전달
         profileService.validateProfileByUserId(userId);
-        Profiles userGroupProfile = profileService.getProfileByUserId(userId);
-        GetProfileResponseDto response = new GetProfileResponseDto(userGroupProfile);
-        return response;
+        List<Profiles> userGroupProfile = profileService.getProfileByUserId(userId);
+        GetProfileResponseDto[] response = userGroupProfile.stream().map(GetProfileResponseDto::new).toArray(GetProfileResponseDto[]::new);
+        return ResponseEntity.ok(response);
     }
 
     // 유저 프로필 생성
     @Operation(summary = "유저 프로필 등록", description = "유저 프로필을 작성한다")
     @PostMapping("/user")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void saveProfileByUser(@Valid @RequestBody CreateProfileByUserDto profileByUserDto) {
+    public void saveProfileByUser(Users users, @Valid @RequestBody CreateProfileByUserDto profileByUserDto) {
+        profileByUserDto.setUserId(users.getUserId());
         profileService.validateProfileByUser(profileByUserDto);
         profileService.saveProfileByUser(profileByUserDto);
     }
@@ -72,7 +76,8 @@ public class ProfileController {
     @Operation(summary = "그룹 프로필 등록", description = "그룹 프로필을 작성한다")
     @PostMapping("/group")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void saveProfile(@Valid @RequestBody CreateProfileByGroupDto profileByGroupDto) {
+    public void saveProfile(Users users, @Valid @RequestBody CreateProfileByGroupDto profileByGroupDto) {
+        profileByGroupDto.setUserId(users.getUserId());
         profileService.validateProfileByGroup(profileByGroupDto);
         profileService.saveProfileByGroup(profileByGroupDto);
     }
@@ -80,8 +85,11 @@ public class ProfileController {
     @Operation(summary = "프로필의 이미지 업로드 URL", description = "프로필의 이미지 업로드 URL 을 생성해서 준다 /profiles/{userId}.jpg or /profiles/{userId}/{groupId}.jpg")
     @GetMapping("/presigned-url")
     @ResponseStatus(value = HttpStatus.OK)
-    public Map<String, String> makeImageUploadURL(@RequestParam(value = "groupId", required = false) String groupId) {
-        String userId = "1234";
+    public Map<String, String> makeImageUploadURL(
+            Users users ,
+            @RequestParam(value = "groupId", required = false) String groupId
+    ) {
+        String userId = users.getUserId();
         if (groupId == null) {
             // 유저 프로필
             String filePath = "/profiles/" + userId + ".jpg";
@@ -98,7 +106,11 @@ public class ProfileController {
     @Operation(summary = "프로필 수정", description = "프로필을 수정한다")
     @PutMapping()
     @ResponseStatus(value = HttpStatus.OK)
-    public void updateProfile(@Valid @RequestBody UpdateProfileDto profileDto) {
+    public void updateProfile(
+            Users users,
+            @Valid @RequestBody UpdateProfileDto profileDto
+    ) {
+        profileDto.setUserId(users.getUserId());
         // Profile 을 수정할 때 중요한건... GroupId 가 Null 인지 아닌지만 알면 된다.
         if (profileDto.getGroupId() == null) {
             profileService.validateProfileByUserId(profileDto.getUserId());
@@ -107,7 +119,5 @@ public class ProfileController {
 
         profileService.validateProfileGroupByUserIdAndGroupId(profileDto.getUserId(), profileDto.getGroupId());
         profileService.updateProfile(profileDto);
-
-
     }
 }
