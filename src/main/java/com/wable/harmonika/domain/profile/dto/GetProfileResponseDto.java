@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wable.harmonika.domain.group.entity.Groups;
 import com.wable.harmonika.domain.group.entity.QuestionTypes;
 import com.wable.harmonika.domain.profile.entity.Profiles;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +19,12 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Success"),
+        @ApiResponse(responseCode = "201", description = "Success"),
+        @ApiResponse(responseCode = "400", description = "값 잘못됨"),
+        @ApiResponse(responseCode = "401", description = "토큰 없음"),
+})
 public class GetProfileResponseDto {
     private String userId;
 

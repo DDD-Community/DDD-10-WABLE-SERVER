@@ -1,5 +1,6 @@
 package com.wable.harmonika.domain.profile.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wable.harmonika.domain.profile.dto.CreateProfileByGroupDto;
 import com.wable.harmonika.domain.profile.dto.CreateProfileByUserDto;
 import com.wable.harmonika.domain.profile.dto.GetProfileResponseDto;
@@ -8,6 +9,10 @@ import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.domain.profile.service.ProfileService;
 import com.wable.harmonika.domain.user.entity.Users;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +34,6 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @Operation(summary = "프로필 조회", description = "프로필을 조회한다")
-    @GetMapping()
     public ResponseEntity<GetProfileResponseDto[]> getProfile(
             Users user,
             @RequestParam(value = "groupId", required = false) Long groupId,

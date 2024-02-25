@@ -12,6 +12,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh """
+                export ENCRYPTOR_PASSWORD=${env.ENCRYPTOR_PASSWORD}
                 ./gradlew clean build
                 """
             }
