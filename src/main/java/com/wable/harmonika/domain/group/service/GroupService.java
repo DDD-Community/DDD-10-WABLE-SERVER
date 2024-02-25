@@ -113,7 +113,7 @@ public class GroupService {
     }
 
     public void updateUserRole(Long groupId, UserRoleUpdateRequest request, Users users) {
-        Users findUser = userRepository.findById(request.getUserId())
+        Users findUser = userRepository.findByUserId(request.getUserId())
                 .orElseThrow(); // TODO: argument resolver 제거 예정
         Groups group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new InvalidException("groupId", groupId, Error.GROUP_NOT_FOUND));
@@ -180,7 +180,7 @@ public class GroupService {
         groupQuestionRepository.saveAll(groupQuestions);
     }
 
-    public void validatorGroup(Users user, Long groupId) {
+    public void validatorGroupOwner(Users user, Long groupId) {
         Groups group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new InvalidException("groupId", groupId, Error.GROUP_NOT_FOUND));
 

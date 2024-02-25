@@ -4,6 +4,10 @@ import com.wable.harmonika.domain.group.dto.*;
 import com.wable.harmonika.domain.group.service.GroupService;
 import com.wable.harmonika.domain.user.entity.Users;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,15 +18,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+
+@Tag(name = "프로필 API", description = "프로필 API")
+@Slf4j
 @RestController
 @RequestMapping("/v1/groups")
+@RequiredArgsConstructor
 public class GroupController {
-
     private final GroupService groupService;
-
-    public GroupController(GroupService groupService) {
-        this.groupService = groupService;
-    }
 
     @Operation(summary = "내가 속한 그룹 리스트", description = "내가 속한 그룹 리스트")
     @GetMapping()
@@ -72,9 +75,9 @@ public class GroupController {
     public ResponseEntity<String> updateGroup(
             Users user,
             @PathVariable Long groupId,
-            @RequestBody GroupModifyRequest request) {
+            @Valid @RequestBody GroupModifyRequest request) {
 
-        groupService.validatorGroup(user, groupId);
+        groupService.validatorGroupOwner(user, groupId);
         groupService.updateGroup(request, groupId);
 
         return ResponseEntity.ok().build();
@@ -85,7 +88,11 @@ public class GroupController {
     @PutMapping("/{groupId}/role")
     public ResponseEntity<String> updateUserRole(
             Users user,
-            @PathVariable("groupId") Long groupId, @RequestBody UserRoleUpdateRequest request) {
+            @PathVariable("groupId") Long groupId,
+            @Valid @RequestBody UserRoleUpdateRequest request
+    ) {
+        // TODO: MEMBER, ADMIN 에 대한 핸들링 필요
+        groupService.validatorGroupOwner(user, groupId);
         groupService.updateUserRole(groupId, request, user);
 
         return ResponseEntity.ok().build();
