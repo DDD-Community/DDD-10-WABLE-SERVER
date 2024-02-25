@@ -1,4 +1,4 @@
-package com.wable.harmonika.domain.group;
+package com.wable.harmonika.domain.group.dto;
 
 import com.wable.harmonika.domain.user.entity.Users;
 import java.time.LocalDate;

@@ -1,5 +1,7 @@
-package com.wable.harmonika.domain.group;
+package com.wable.harmonika.domain.group.api;
 
+import com.wable.harmonika.domain.group.dto.*;
+import com.wable.harmonika.domain.group.service.GroupService;
 import com.wable.harmonika.domain.user.entity.Users;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

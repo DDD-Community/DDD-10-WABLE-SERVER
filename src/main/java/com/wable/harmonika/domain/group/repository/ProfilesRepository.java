@@ -1,4 +1,4 @@
-package com.wable.harmonika.domain.group;
+package com.wable.harmonika.domain.group.repository;
 
 import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.domain.user.entity.Users;
