@@ -1,8 +1,8 @@
 package com.wable.harmonika.domain.profile.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.wable.harmonika.domain.group.entity.Groups;
 import com.wable.harmonika.domain.group.entity.QuestionTypes;
-import com.wable.harmonika.domain.profile.entity.ProfileQuestions;
 import com.wable.harmonika.domain.profile.entity.Profiles;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,6 +32,8 @@ public class GetProfileResponseDto {
 
     private List<QuestionDTO> questions;
 
+    private GroupDTO group;
+
     public GetProfileResponseDto(Profiles profiles) {
         this.userId = profiles.getUser().getUserId();
         this.name = profiles.getUser().getName();
@@ -40,6 +42,10 @@ public class GetProfileResponseDto {
 
         this.nickName = profiles.getNickname();
         this.profileImageUrl = profiles.getProfileImageUrl();
+
+        if (profiles.getGroup() != null) {
+            this.group = new GroupDTO(profiles.getGroup());
+        }
 
         this.questions = profiles.getProfileQuestions().stream().map(
             profileQuestions -> new QuestionDTO(
@@ -52,6 +58,30 @@ public class GetProfileResponseDto {
                 profileQuestions.getUpdatedAt()
             )
         ).toList();
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class GroupDTO {
+        @JsonProperty("id")
+        private Long id;
+
+        @JsonProperty("name")
+        private String name;
+
+        @JsonProperty("createdAt")
+        private LocalDateTime createdAt;
+
+        @JsonProperty("updatedAt")
+        private LocalDateTime updatedAt;
+
+        public GroupDTO(Groups group) {
+            this.id = group.getId();
+            this.name = group.getName();
+            this.createdAt = group.getCreatedAt();
+            this.updatedAt = group.getUpdatedAt();
+        }
     }
 
     @Getter
