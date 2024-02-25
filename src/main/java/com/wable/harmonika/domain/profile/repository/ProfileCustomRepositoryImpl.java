@@ -62,7 +62,6 @@ public class ProfileCustomRepositoryImpl implements ProfileCustomRepository {
     public List<Profiles> getProfileByUserId(String userId) {
         List<Profiles> result = jpaQueryFactory
                 .selectFrom(profiles)
-                .join(profiles.user, users)
                 .where(profiles.user.userId.eq(userId))
                 .fetch();
 
