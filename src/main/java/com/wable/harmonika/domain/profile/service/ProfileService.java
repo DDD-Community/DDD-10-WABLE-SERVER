@@ -102,6 +102,8 @@ public class ProfileService {
     private Profiles getProfileBuilder(CreateProfileByUserDto profileByUserDto) {
         return Profiles.builder()
                 .nickname(profileByUserDto.getNickName())
+                .user(userRepository.findByUserId(profileByUserDto.getUserId())
+                        .orElseThrow(() -> new InvalidException("userId", profileByUserDto.getUserId(), Error.ACCOUNT_NOT_FOUND)))
                 .profileImageUrl(profileByUserDto.getProfileImageUrl())
                 .build();
     }
