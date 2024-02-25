@@ -22,12 +22,12 @@ public class Profiles extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne()
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private Users user;
 
     @Nullable
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne()
     @JoinColumn(name = "group_id")
     private Groups group;
 

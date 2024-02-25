@@ -34,6 +34,7 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @Operation(summary = "프로필 조회", description = "프로필을 조회한다")
+    @GetMapping()
     public ResponseEntity<GetProfileResponseDto[]> getProfile(
             Users user,
             @RequestParam(value = "groupId", required = false) Long groupId,
