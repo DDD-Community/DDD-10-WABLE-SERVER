@@ -48,14 +48,16 @@ public class ProfileController {
     public ResponseEntity<GetProfileResponseDto[]> getProfile(
             Users user,
             @Parameter(in = ParameterIn.PATH, description = "그룹 ID", required = true) @PathVariable Long groupId,
-            @RequestParam(value = "userId", required = false) String toUserId
+            @RequestParam(value = "userId", required = false) String targetUserId
     ) {
         String userId = user.getUserId();
 
-        if (toUserId != null) {
+        if (targetUserId != null) {
             // 유저 프로필 전달
-            profileService.validateProfileByUserId(toUserId);
-            List<Profiles> userProfile = profileService.getOtherProfileByUser(userId, toUserId);
+            profileService.validateProfileGroupByUserIdAndGroupId(targetUserId, groupId);
+            profileService.validateProfileGroupByUserIdAndGroupId(userId, groupId);
+            profileService.validateProfileByUserId(targetUserId);
+            List<Profiles> userProfile = profileService.getOtherProfileByUser(userId, targetUserId);
 
             GetProfileResponseDto[] response = userProfile.stream().map(GetProfileResponseDto::new).toArray(GetProfileResponseDto[]::new);
             return ResponseEntity.ok(response);
