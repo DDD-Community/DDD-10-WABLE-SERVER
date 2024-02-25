@@ -34,7 +34,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
                 throw new UnauthorizedException("401 Unauthorized !!");
             }
             String token = authorization.replaceAll("^Bearer( )*", "");
-            if (!VerifyToken.verify(token)){
+            if (VerifyToken.verify(token) == false){
                 throw new UnauthorizedException("401 Unauthorized !!");
             }
             String username = AwsCognitoJwtParserUtil.getClaim(token, "cognito:username");

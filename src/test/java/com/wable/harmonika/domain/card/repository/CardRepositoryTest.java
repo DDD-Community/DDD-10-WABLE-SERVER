@@ -27,7 +27,7 @@ class CardRepositoryTest {
 
     @Test
     public void testMember() {
-        Cards cards = new Cards(CardNames.GREETING, "안녕", true);
+        Cards cards = new Cards(CardNames.GREETING, "안녕");
         Cards savedCards = cardRepository.save(cards);
         Cards findCards = cardRepository.findById(savedCards.getId()).get();
         assertThat(findCards.getId()).isEqualTo(cards.getId());

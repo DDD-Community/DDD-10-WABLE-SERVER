@@ -3,13 +3,16 @@ package com.wable.harmonika.domain.profile.entity;
 import com.wable.harmonika.domain.group.entity.QuestionTypes;
 import com.wable.harmonika.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class ProfileQuestions extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +31,15 @@ public class ProfileQuestions extends BaseTimeEntity {
 
     @ElementCollection
     private List<String> answers;
+
+    @Builder
+    public ProfileQuestions(Profiles profile, String sid, String question, QuestionTypes questionType, List<String> answers) {
+        this.profile = profile;
+        this.sid = sid;
+        this.question = question;
+        this.questionType = questionType;
+        this.answers = answers;
+    }
 }
 
 
