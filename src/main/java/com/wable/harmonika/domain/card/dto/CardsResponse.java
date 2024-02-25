@@ -2,10 +2,11 @@ package com.wable.harmonika.domain.card.dto;
 
 import com.wable.harmonika.domain.group.entity.Groups;
 import com.wable.harmonika.domain.profile.dto.GroupProfileDto;
-import com.wable.harmonika.domain.profile.dto.UserProfileDto;
 import com.wable.harmonika.domain.user.entity.Users;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+
+import java.util.Map;
 
 public class CardsResponse {
     private Long id;
@@ -24,14 +25,14 @@ public class CardsResponse {
 
     private String toUserProfileImageUrl;
 
-    public CardsResponse(CardsDto cardsDto, UserProfileDto fromUserProfileDto, UserProfileDto toUserProfileDto) {
+    public CardsResponse(CardsDto cardsDto, Map<String, GroupProfileDto> groupProfileMap) {
         this.id = cardsDto.getId();
         this.content = cardsDto.getContent();
         this.fromUserId = cardsDto.getFromUserId();
         this.toUserId = cardsDto.getToUserId();
-        this.fromUserNickname = fromUserProfileDto.getNickname();
-        this.fromUserProfileImageUrl = fromUserProfileDto.getProfileImageUrl();
-        this.toUserNickname = toUserProfileDto.getNickname();
-        this.toUserProfileImageUrl = toUserProfileDto.getProfileImageUrl();
+        this.fromUserNickname = groupProfileMap.get(cardsDto.getFromUserId()).getNickname();
+        this.toUserNickname = groupProfileMap.get(cardsDto.getToUserId()).getNickname();
+        this.fromUserProfileImageUrl = groupProfileMap.get(cardsDto.getFromUserId()).getProfileImageUrl();
+        this.toUserProfileImageUrl = groupProfileMap.get(cardsDto.getToUserId()).getProfileImageUrl();
     }
 }

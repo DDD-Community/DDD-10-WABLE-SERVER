@@ -4,6 +4,7 @@ import com.wable.harmonika.domain.card.dto.*;
 import com.wable.harmonika.domain.card.entity.CardNames;
 import com.wable.harmonika.domain.card.entity.Cards;
 import com.wable.harmonika.domain.card.service.CardService;
+import com.wable.harmonika.domain.profile.dto.GroupProfileDto;
 import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.domain.profile.service.ProfileService;
 import com.wable.harmonika.domain.user.entity.Users;
@@ -20,7 +21,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import software.amazon.awssdk.http.HttpStatusCode;
+import software.amazon.awssdk.profiles.Profile;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,40 +42,37 @@ public class CardController {
 
     @PostMapping()
     public void createCards(Users user, @Valid @RequestBody CardsRequest request) throws Exception {
-//        profileService.save(new Profiles().set);
-        cardService.create(request, user);
+        // 보낸 유저 아이디는 토큰에서 가져오기
+        request.setFromUserId(user.getUserId());
+        cardService.create(request);
     }
 
-    @GetMapping("/{cardId}")
-    public ResponseEntity<Cards> getCards(@PathVariable(name = "cardId") Long id) throws Exception {
-        Cards cards =  cardService.findById(id);
-        return new ResponseEntity<>(cards, HttpStatus.OK);
-    }
-
-    @RequestMapping(value="/", method=RequestMethod.PUT)
-    public void updateCards(Users user, @Valid UpdateCardsRequest request) throws Exception {
-//        cardService.update();
+    @RequestMapping(method=RequestMethod.PUT)
+    public void updateCards(Users user, @Valid @RequestBody UpdateCardsRequest request) throws Exception {
+        cardService.update(request);
     }
 
     @RequestMapping(value="/received", method=RequestMethod.GET)
-    public ResponseEntity<List<CardsResponse>> listReceivedCards(Users user, @Valid ListCardsRequest request) throws Exception {
+    public ResponseEntity<List<CardsDto>> listReceivedCards(Users user, @Valid ListCardsRequest request) throws Exception {
+        // 받을 유저의 아이디 설정
+        request.setUserId(user.getUserId());
+        // 받은 카드 조회
         List<CardsDto> cards =  cardService.findAllReceivedCards(request);
-        List<CardsResponse> collect = cards.stream()
-                .map(m -> new CardsResponse(m))
-                .collect(Collectors.toList());
 
-        return new ResponseEntity<>(collect, HttpStatus.OK);
-    }
-
-    @RequestMapping(value="/sent", method=RequestMethod.GET)
-    public ResponseEntity<List<Cards>> listSentCards(Users user, @Valid ListCardsRequest request) throws Exception {
-        List<Cards> cards =  cardService.findAllSentCards(request);
         return new ResponseEntity<>(cards, HttpStatus.OK);
     }
 
-    @RequestMapping(value="/", method=RequestMethod.GET)
-    public ResponseEntity<List<Cards>> listCardsByGroup(Users user, @Valid ListCardsRequest request) throws Exception {
-        List<Cards> cards =  cardService.findAllCardsByGroup(request);
+    @RequestMapping(value="/sent", method=RequestMethod.GET)
+    public ResponseEntity<List<CardsDto>> listSentCards(Users user, @Valid ListCardsRequest request) throws Exception {
+        request.setUserId(user.getUserId());
+        // 보낸 카드 조회
+        List<CardsDto> cards =  cardService.findAllSentCards(request);
+        return new ResponseEntity<>(cards, HttpStatus.OK);
+    }
+
+    @RequestMapping(method=RequestMethod.GET)
+    public ResponseEntity<List<CardsDto>> listCardsByGroup(Users user, @Valid ListCardsByGroupRequest request) throws Exception {
+        List<CardsDto> cards =  cardService.findAllCardsByGroup(request);
         return new ResponseEntity<>(cards, HttpStatus.OK);
     }
 }

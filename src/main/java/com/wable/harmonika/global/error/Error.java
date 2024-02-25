@@ -4,6 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum Error {
+    UPDATE_FORBIDDEN("수정 권한이 없습니다."),
+    CARD_NOT_FOUND("카드를 찾을 수 없습니다."),
     INVALID_INPUT_VALUE("입력값이 올바르지 않습니다."),
     EMAIL_DUPLICATION("중복된 이메일입니다."),
     ACCOUNT_NOT_FOUND("계정을 찾을 수 없습니다."),
@@ -18,6 +20,8 @@ public enum Error {
     COMMENT_NOT_FOUND("댓글을 찾을 수 없습니다."),
 
     POST_LIKE_ERROR("잘못된 좋아요 요청입니다.");
+
+
 
     private final String message;
 

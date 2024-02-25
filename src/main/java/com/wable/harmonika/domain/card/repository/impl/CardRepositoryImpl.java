@@ -19,27 +19,27 @@ public class CardRepositoryImpl implements CardRepositoryCustom {
         this.query = query;
     }
 
-    public List<Cards> findAllCards(List<Long> groupIds, List<CardNames> sids, Long toUserId, Long fromUserId, Long lastId, Integer limit) {
+    public List<Cards> findAllCards(List<Long> groupIds, List<CardNames> sids, String toUserId, String fromUserId, Long lastId, Integer limit) {
         BooleanBuilder builder = new BooleanBuilder();
 
         if (lastId != 0) {
             builder.and(cards.id.lt(lastId)); // paging
         }
 
-        if (toUserId != 0) {
-            builder.and(cards.toUser.id.eq(toUserId));
+        if (!toUserId.equals("")) {
+            builder.and(cards.toUser.userId.eq(toUserId));
         }
 
-        if (fromUserId != 0) {
-            builder.and(cards.fromUser.id.eq(fromUserId));
+        if (!fromUserId.equals("")) {
+            builder.and(cards.fromUser.userId.eq(fromUserId));
         }
 
         // groupId가 있으면 필터
-        if (groupIds != null || groupIds.isEmpty()) {
+        if (groupIds != null && !groupIds.isEmpty()) {
             builder.and(cards.group.id.in(groupIds));
         }
         // sid가 있으면 필터
-        if (sids != null || sids.isEmpty()) {
+        if (sids != null && !sids.isEmpty()) {
             builder.and(cards.sid.in(sids));
         }
 

@@ -17,9 +17,8 @@ public class UpdateCardsRequest {
     @Size(min = 5)
     private String content;
 
-    @JsonProperty("isVisible")
-    private boolean isVisible;
-
     @Enumerated(EnumType.STRING)
     private CardNames sid;
+
+    private String requestUserId;
 }

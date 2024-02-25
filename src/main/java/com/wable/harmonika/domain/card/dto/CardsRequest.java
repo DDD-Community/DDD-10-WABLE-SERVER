@@ -26,5 +26,7 @@ public class CardsRequest {
 
     private String toUserId;
 
+    private String fromUserId;
+
     private Long groupId;
 }

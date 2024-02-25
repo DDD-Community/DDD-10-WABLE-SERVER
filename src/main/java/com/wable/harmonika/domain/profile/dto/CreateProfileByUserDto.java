@@ -2,6 +2,7 @@ package com.wable.harmonika.domain.profile.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class CreateProfileByUserDto {
     @Null
     private String userId;

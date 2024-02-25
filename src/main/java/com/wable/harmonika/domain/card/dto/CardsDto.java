@@ -11,12 +11,25 @@ public class CardsDto {
 
     private String fromUserId;
 
+    private    String fromUserNickname;
+
+    private String fromUserProfileImageUrl;
+
     private String toUserId;
+
+    private String toUserNickname;
+
+    private String toUserProfileImageUrl;
 
     public CardsDto(Cards cards) {
         this.id = cards.getId();
         this.content = cards.getContent();
         this.fromUserId = cards.getFromUser().getUserId();
         this.toUserId = cards.getToUser().getUserId();
+        this.fromUserNickname = cards.getFromUserProfile().getNickname();
+        this.toUserNickname = cards.getToUserProfile().getNickname();
+        this.fromUserProfileImageUrl = cards.getFromUserProfile().getProfileImageUrl();
+        this.toUserProfileImageUrl = cards.getToUserProfile().getProfileImageUrl();
+
     }
 }

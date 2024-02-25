@@ -1,16 +1,19 @@
 package com.wable.harmonika.domain.card.service.impl;
 
-import com.wable.harmonika.domain.card.dto.CardsRequest;
-import com.wable.harmonika.domain.card.dto.ListCardsRequest;
-import com.wable.harmonika.domain.card.dto.UpdateCardsRequest;
+import com.wable.harmonika.domain.card.dto.*;
 import com.wable.harmonika.domain.card.entity.CardNames;
 import com.wable.harmonika.domain.card.entity.Cards;
 import com.wable.harmonika.domain.card.repository.CardRepository;
 import com.wable.harmonika.domain.card.service.CardService;
 import com.wable.harmonika.domain.group.GroupRepository;
 import com.wable.harmonika.domain.group.entity.Groups;
+import com.wable.harmonika.domain.profile.entity.Profiles;
+import com.wable.harmonika.domain.profile.repository.ProfileRepository;
 import com.wable.harmonika.domain.user.entity.Users;
+import com.wable.harmonika.domain.user.exception.UserNotFoundException;
 import com.wable.harmonika.domain.user.repository.UserRepository;
+import com.wable.harmonika.global.error.Error;
+import com.wable.harmonika.global.error.exception.InvalidException;
 import org.apache.catalina.Group;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,26 +28,36 @@ import java.util.stream.Collectors;
 
 @Service
 public class CardServiceImpl implements CardService {
-    Map<String, Object> firstData = new HashMap<>();
     @Autowired
     private CardRepository cardRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private GroupRepository groupRepository;
+    private ProfileRepository profileRepository;
 
 
     @Override
-    public void create(CardsRequest vo, Users fromUser) throws Exception {
-        Users user = userRepository.save(new Users(fromUser.getUserId(), "이름", LocalDate.of(1990, 1, 1)));
-        Users owner = userRepository.save(new Users("abc", "이름", LocalDate.of(1990, 1, 1)));
-        Groups group = groupRepository.save(new Groups("그룹명", owner));
-        Cards cards = new Cards(vo.getSid(), vo.getContent());
+    public void create(CardsRequest vo) throws Exception {
+        // 해당 그룹의 프로필들이 있는지 확인
+        Profiles ToUserProfile = profileRepository.findByUserIdAndGroupId(vo.getToUserId(), vo.getGroupId());
+        if (ToUserProfile == null) {
+            throw new InvalidException("user_id", vo.getToUserId(), Error.PROFILE_NOT_FOUND);
+        }
 
+        Profiles FromUserProfile = profileRepository.findByUserIdAndGroupId(vo.getFromUserId(), vo.getGroupId());
+        if (FromUserProfile == null) {
+            throw new InvalidException("user_id", vo.getToUserId(), Error.PROFILE_NOT_FOUND);
+        }
 
-        cards.setFromUser(user);
-        cards.setToUser(owner);
-        cards.setGroup(new Groups(group.getId()));
+        Cards cards = Cards.builder()
+                .sid(vo.getSid())
+                .content(vo.getContent())
+                .fromUser(userRepository.findByUserId(vo.getFromUserId()).orElseThrow(() -> new UserNotFoundException("userId", vo.getFromUserId())))
+                .toUser(userRepository.findByUserId(vo.getToUserId()).orElseThrow(() -> new UserNotFoundException("userId", vo.getToUserId())))
+                .groupId(vo.getGroupId())
+                .fromUserProfile(FromUserProfile)
+                .toUserProfile(profileRepository.findByUserIdAndGroupId(vo.getToUserId(), vo.getGroupId()))
+                .build();
 
         cardRepository.save(cards);
     }
@@ -56,7 +69,21 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public void update(UpdateCardsRequest vo) throws Exception {
-        System.out.println("vo = " + vo);
+        Cards card = cardRepository.findById(vo.getCardId())
+                .orElseThrow(() -> new InvalidException("card_id", vo.getCardId(), Error.CARD_NOT_FOUND));
+
+        if (card.getFromUser().getUserId() != vo.getRequestUserId()) {
+            throw new InvalidException("user_id", vo.getRequestUserId(), Error.UPDATE_FORBIDDEN);
+        }
+
+        if (vo.getContent() != null) {
+            card.setContent(vo.getContent());
+        }
+        if (vo.getSid() != null) {
+            card.setSid(vo.getSid());
+        }
+
+        cardRepository.save(card);
     }
 
     @Override
@@ -65,44 +92,55 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public List<Cards> findAllReceivedCards(ListCardsRequest request) throws Exception {
-
-        Long userId = 2L;
-
-        return cardRepository.findAllCards(
+    public List<CardsDto> findAllReceivedCards(ListCardsRequest request) throws Exception {
+        List<Cards> allCards = cardRepository.findAllCards(
                 request.getGroupIds(),
                 request.getSids(),
-                userId,
-                0L,
+                request.getUserId(),
+                "",
                 request.getLastId(),
-                request.getSize()
-        );
+                request.getSize());
+
+
+        List<CardsDto> collect = allCards.stream()
+                .map(m -> new CardsDto(m))
+                .collect(Collectors.toList());
+
+        return collect;
     }
 
     @Override
-    public List<Cards> findAllSentCards(ListCardsRequest request) throws Exception {
-
-        Long userId = 2L;
-
-        return cardRepository.findAllCards(
+    public List<CardsDto> findAllSentCards(ListCardsRequest request) throws Exception {
+        List<Cards> allCards = cardRepository.findAllCards(
                 request.getGroupIds(),
                 request.getSids(),
-                0L,
-                userId,
+                "",
+                request.getUserId(),
                 request.getLastId(),
                 request.getSize()
         );
+        List<CardsDto> collect = allCards.stream()
+                .map(m -> new CardsDto(m))
+                .collect(Collectors.toList());
+
+        return collect;
     }
 
     @Override
-    public List<Cards> findAllCardsByGroup(ListCardsRequest request) throws Exception {
-        return cardRepository.findAllCards(
+    public List<CardsDto> findAllCardsByGroup(ListCardsByGroupRequest request) throws Exception {
+        // TODO validate (해당 그룹원인지 확인)
+        List<Cards> allCards = cardRepository.findAllCards(
                 request.getGroupIds(),
                 request.getSids(),
-                0L,
-                0L,
+                "",
+                "",
                 request.getLastId(),
                 request.getSize()
         );
+        List<CardsDto> collect = allCards.stream()
+                .map(m -> new CardsDto(m))
+                .collect(Collectors.toList());
+
+        return collect;
     }
 }
