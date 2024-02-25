@@ -21,6 +21,7 @@ import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.domain.user.repository.UserRepository;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.wable.harmonika.global.error.Error;
@@ -60,8 +61,12 @@ public class GroupService {
     }
 
     public GroupUserBirthdayListResponse findAllBirthday(Long groupId) {
-        List<UserGroups> userGroups = userGroupRepository.findAllByGroup(
-                new Groups(groupId, null, null));
+        Optional<Groups> group = groupRepository.findById(groupId);
+        if (group.isEmpty()) {
+            throw new InvalidException("groupId", groupId, Error.GROUP_NOT_FOUND);
+        }
+
+        List<UserGroups> userGroups = userGroupRepository.findAllByGroup(group.get());
         List<Users> users = userGroups.stream()
                 .map(UserGroups::getUser)
                 .toList();
