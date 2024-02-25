@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -38,20 +39,23 @@ public class ProfileController {
             // 그룹 내 프로필 전달
             profileService.validateProfileGroupByUserIdAndGroupId(userId, groupId);
             Profiles userProfile = profileService.getProfileByGroupId(groupId);
-            return new GetProfileResponseDto(userProfile);
+            GetProfileResponseDto response =  new GetProfileResponseDto(userProfile);
+            return response;
         }
 
         if (toUserId != null) {
             // 유저 프로필 전달
             profileService.validateProfileByUserId(toUserId);
             Profiles userProfile = profileService.getProfileByUserId(toUserId);
-            return new GetProfileResponseDto(userProfile);
+            GetProfileResponseDto response = new GetProfileResponseDto(userProfile);
+            return response;
         }
 
         // 내 프로필 전달
         profileService.validateProfileByUserId(userId);
         Profiles userGroupProfile = profileService.getProfileByUserId(userId);
-        return new GetProfileResponseDto(userGroupProfile);
+        GetProfileResponseDto response = new GetProfileResponseDto(userGroupProfile);
+        return response;
     }
 
     // 유저 프로필 생성

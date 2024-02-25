@@ -34,17 +34,16 @@ public class GetProfileResponseDto {
         this.nickName = profiles.getNickname();
         this.profileImageUrl = profiles.getProfileImageUrl();
 
-        for (ProfileQuestions profileQuestion : profiles.getProfileQuestions()) {
-            QuestionDTO questionDTO = new QuestionDTO(
-                    profileQuestion.getSid(),
-                    profileQuestion.getQuestion(),
-                    profileQuestion.getQuestionType(),
-                    profileQuestion.getAnswers(),
-                    profileQuestion.getCreatedAt(),
-                    profileQuestion.getUpdatedAt()
-            );
-            this.questions.add(questionDTO);
-        }
+        this.questions = profiles.getProfileQuestions().stream().map(
+            profileQuestions -> new QuestionDTO(
+                profileQuestions.getSid(),
+                profileQuestions.getQuestion(),
+                profileQuestions.getQuestionType(),
+                profileQuestions.getAnswers(),
+                profileQuestions.getCreatedAt(),
+                profileQuestions.getUpdatedAt()
+            )
+        ).toList();
     }
 
     public static class QuestionDTO {

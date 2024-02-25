@@ -3,14 +3,17 @@ package com.wable.harmonika.domain.profile.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wable.harmonika.domain.profile.entity.Profiles;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import static com.wable.harmonika.domain.group.entity.QGroups.groups;
 import static com.wable.harmonika.domain.profile.entity.QProfiles.profiles;
+import static com.wable.harmonika.domain.user.entity.QUsers.users;
 
 @Repository
-
 public class ProfileCustomRepositoryImpl implements ProfileCustomRepository {
 
+    @Autowired
     private final JPAQueryFactory jpaQueryFactory;
 
     public ProfileCustomRepositoryImpl(JPAQueryFactory jpaQueryFactory) {
@@ -42,13 +45,15 @@ public class ProfileCustomRepositoryImpl implements ProfileCustomRepository {
     }
 
     @Override
-    public Profiles getProfileByUserId(String uesrId) {
-        return jpaQueryFactory.selectFrom(profiles)
-                .where(profiles.user.userId.eq(uesrId))
-                .join(profiles.group)
-                .fetchAll()
-                .join(profiles.profileQuestions)
-                .fetchOne(); // Assuming you expect only one profile to be returned
+    public Profiles getProfileByUserId(String userId) {
+        Profiles result = jpaQueryFactory
+                .selectFrom(profiles)
+                .join(profiles.user, users)
+                .leftJoin(profiles.group, groups)
+                .where(profiles.user.userId.eq(userId))
+                .fetchOne();
+
+        return result;
     }
 
     @Override

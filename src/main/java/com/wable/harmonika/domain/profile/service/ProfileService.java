@@ -182,7 +182,9 @@ public class ProfileService {
 
     @Transactional(readOnly = true)
     public Profiles getProfileByUserId(String userId) {
-        return profileRepository.getProfileByUserId(userId);
+        Profiles profiles = profileRepository.getProfileByUserId(userId);
+
+        return profiles;
     }
 
     public Map<String, String> getSignedUrl(String fileName) {

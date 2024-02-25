@@ -1,10 +1,13 @@
 package com.wable.harmonika.domain.user.entity;
 
+import com.wable.harmonika.domain.group.entity.Groups;
+import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.List;
 
 import lombok.*;
 
@@ -28,6 +31,12 @@ public class Users extends BaseTimeEntity {
     private String name;
 
     private LocalDate birth;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Profiles> profiles;
+
+//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = Groups.class)
+//    private List<Groups> groups;
 
     @Builder
     public Users(String userId, String gender, String name, LocalDate birth) {
