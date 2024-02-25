@@ -10,4 +10,9 @@ public interface ProfileCustomRepository {
     Profiles getProfileByGroupId(Long groupId);
 
     Profiles getProfileByUserId(String userId);
+
+    Profiles findByUserIdAndGroupId(String userId, Long groupId);
+
+    void saveProfileById(Long id, Profiles profile);
+
 }

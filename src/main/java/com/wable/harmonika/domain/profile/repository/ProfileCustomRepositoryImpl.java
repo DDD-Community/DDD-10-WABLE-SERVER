@@ -50,4 +50,20 @@ public class ProfileCustomRepositoryImpl implements ProfileCustomRepository {
                 .join(profiles.profileQuestions)
                 .fetchOne(); // Assuming you expect only one profile to be returned
     }
+
+    @Override
+    public Profiles findByUserIdAndGroupId(String userId, Long groupId) {
+        return jpaQueryFactory.selectFrom(profiles)
+                .where(profiles.user.userId.eq(userId))
+                .where(profiles.group.id.eq(groupId))
+                .fetchFirst();
+    }
+
+    @Override
+    public void saveProfileById(Long id, Profiles profile) {
+        jpaQueryFactory.update(profiles)
+                .where(profiles.id.eq(id))
+                .set(profiles, profile)
+                .execute();
+    }
 }

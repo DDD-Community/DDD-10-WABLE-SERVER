@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-public class ProfileResponseDto {
+public class GetProfileResponseDto {
     private String userId;
 
     private String name;
@@ -25,7 +25,7 @@ public class ProfileResponseDto {
 
     private List<QuestionDTO> questions;
 
-    public ProfileResponseDto(Profiles profiles) {
+    public GetProfileResponseDto(Profiles profiles) {
         this.userId = profiles.getUser().getUserId();
         this.name = profiles.getUser().getName();
         this.gender = profiles.getUser().getGender();

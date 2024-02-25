@@ -2,7 +2,8 @@ package com.wable.harmonika.domain.profile.api;
 
 import com.wable.harmonika.domain.profile.dto.CreateProfileByGroupDto;
 import com.wable.harmonika.domain.profile.dto.CreateProfileByUserDto;
-import com.wable.harmonika.domain.profile.dto.ProfileResponseDto;
+import com.wable.harmonika.domain.profile.dto.GetProfileResponseDto;
+import com.wable.harmonika.domain.profile.dto.UpdateProfileDto;
 import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.domain.profile.service.ProfileService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +28,7 @@ public class ProfileController {
     @Operation(summary = "프로필 조회", description = "프로필을 조회한다")
     @GetMapping()
     @ResponseStatus(value = HttpStatus.OK)
-    public ProfileResponseDto getProfile(
+    public GetProfileResponseDto getProfile(
             @RequestParam(value = "groupId", required = false) Long groupId,
             @RequestParam(value = "userId", required = false) String toUserId
     ) {
@@ -37,20 +38,20 @@ public class ProfileController {
             // 그룹 내 프로필 전달
             profileService.validateProfileGroupByUserIdAndGroupId(userId, groupId);
             Profiles userProfile = profileService.getProfileByGroupId(groupId);
-            return new ProfileResponseDto(userProfile);
+            return new GetProfileResponseDto(userProfile);
         }
 
         if (toUserId != null) {
             // 유저 프로필 전달
             profileService.validateProfileByUserId(toUserId);
             Profiles userProfile = profileService.getProfileByUserId(toUserId);
-            return new ProfileResponseDto(userProfile);
+            return new GetProfileResponseDto(userProfile);
         }
 
         // 내 프로필 전달
         profileService.validateProfileByUserId(userId);
         Profiles userGroupProfile = profileService.getProfileByUserId(userId);
-        return new ProfileResponseDto(userGroupProfile);
+        return new GetProfileResponseDto(userGroupProfile);
     }
 
     // 유저 프로필 생성
@@ -90,14 +91,19 @@ public class ProfileController {
         return response;
     }
 
-//    // profile update
-//    @Operation(summary = "프로필 수정", description = "프로필을 수정한다")
-//    @PutMapping()
-//    @ResponseStatus(value = HttpStatus.OK)
-//    public String updateProfile(@RequestParam(value = "group_id", required = false) Long groupId, @RequestBody GroupProfileDto profileDto) {
-//        // group_id 가 있는 경우 profile, profile_question 에 수정
-//        // group_id 가 없는 경우 user 테이블에 수정
-//
-//        return "UpdateProfileController";
-//    }
+    @Operation(summary = "프로필 수정", description = "프로필을 수정한다")
+    @PutMapping()
+    @ResponseStatus(value = HttpStatus.OK)
+    public void updateProfile(@Valid @RequestBody UpdateProfileDto profileDto) {
+        // Profile 을 수정할 때 중요한건... GroupId 가 Null 인지 아닌지만 알면 된다.
+        if (profileDto.getGroupId() == null) {
+            profileService.validateProfileByUserId(profileDto.getUserId());
+            profileService.updateProfile(profileDto);
+        }
+
+        profileService.validateProfileGroupByUserIdAndGroupId(profileDto.getUserId(), profileDto.getGroupId());
+        profileService.updateProfile(profileDto);
+
+
+    }
 }

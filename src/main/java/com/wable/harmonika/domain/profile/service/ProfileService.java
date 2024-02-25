@@ -3,9 +3,10 @@ package com.wable.harmonika.domain.profile.service;
 import com.wable.harmonika.domain.group.GroupRepository;
 import com.wable.harmonika.domain.profile.dto.CreateProfileByGroupDto;
 import com.wable.harmonika.domain.profile.dto.CreateProfileByUserDto;
+import com.wable.harmonika.domain.profile.dto.QuestionDataDto;
+import com.wable.harmonika.domain.profile.dto.UpdateProfileDto;
 import com.wable.harmonika.domain.profile.entity.ProfileQuestions;
 import com.wable.harmonika.domain.profile.entity.Profiles;
-import com.wable.harmonika.domain.profile.exception.ProfileNotFoundException;
 import com.wable.harmonika.domain.profile.repository.ProfileQuestionsRepository;
 import com.wable.harmonika.domain.profile.repository.ProfileRepository;
 import com.wable.harmonika.domain.user.entity.Users;
@@ -23,9 +24,9 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -120,6 +121,18 @@ public class ProfileService {
                 .collect(Collectors.toList());
     }
 
+    private List<ProfileQuestions> getProfileQuestionsBuilder(List<QuestionDataDto> profileByUserDto, Profiles profile) {
+        return profileByUserDto.stream()
+                .map(question -> ProfileQuestions.builder()
+                        .profile(profile)
+                        .sid(question.getSid())
+                        .question(question.getQuestion())
+                        .questionType(question.getQuestionType())
+                        .answers(question.getAnswers())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
     private List<ProfileQuestions> getProfileQuestionsBuilder(CreateProfileByGroupDto profileByGroupDto, Profiles profile) {
         return profileByGroupDto.getQuestions().stream()
                 .map(question -> ProfileQuestions.builder()
@@ -142,7 +155,7 @@ public class ProfileService {
         Long profileId = profileRepository.save(profile).getId();
 
         Profiles profileRaw = profileRepository.findById(profileId)
-                .orElseThrow(() -> new ProfileNotFoundException("id", profileId));
+                .orElseThrow(() -> new InvalidException("id", profileId, Error.PROFILE_NOT_FOUND));
 
         List<ProfileQuestions> profileQuestions = getProfileQuestionsBuilder(profileByUserDto, profileRaw);
 
@@ -158,19 +171,13 @@ public class ProfileService {
         Long profileId = profileRepository.save(profile).getId();
 
         Profiles profileRaw = profileRepository.findById(profileId)
-                .orElseThrow(() -> new ProfileNotFoundException("id", profileId));
+                .orElseThrow(() -> new InvalidException("id", profileId, Error.PROFILE_NOT_FOUND));
 
         List<ProfileQuestions> profileQuestions = getProfileQuestionsBuilder(profileByGroupDto, profileRaw);
 
         for (val question : profileQuestions) {
             profileQuestionsRepository.save(question);
         }
-    }
-
-    @Transactional(readOnly = true)
-    public Profiles getProfileGroupById(Long id) {
-        return profileRepository.findById(id)
-                .orElseThrow(() -> new ProfileNotFoundException("id", id));
     }
 
     @Transactional(readOnly = true)
@@ -230,14 +237,32 @@ public class ProfileService {
         if (isRegisterUser == false) {
             throw new InvalidException("userId", userId, Error.ACCOUNT_NOT_FOUND);
         }
+    }
 
+    public void validateIsSetProfileByUserId(String userId) {
         boolean isJoinGroup = profileRepository.existsByUserIdAndGroupIdIsNull(userId);
         if (isJoinGroup) {
-            throw new InvalidException("userId", userId, Error.PROFILE_NOT_FOUND);
+            throw new InvalidException("userId", userId, Error.PROFILE_DUPLICATION);
         }
     }
 
     public Profiles getProfileByGroupId(Long groupId) {
         return profileRepository.getProfileByGroupId(groupId);
+    }
+
+    @Transactional
+    public void updateProfile(UpdateProfileDto profileDto) {
+        Profiles profile = profileRepository.findByUserIdAndGroupId(profileDto.getUserId(), profileDto.getGroupId());
+        if (profile == null) {
+            throw new InvalidException("userId", profileDto.getUserId(), Error.PROFILE_NOT_FOUND);
+        }
+
+        profileRepository.saveProfileById(profile.getId(), profile);
+
+        List<ProfileQuestions> profileQuestions = getProfileQuestionsBuilder(profileDto.getQuestions(), profile);
+
+        for (ProfileQuestions question : profileQuestions) {
+            profileQuestionsRepository.updateProfileQuestionsByProfileId(question, question.getId());
+        }
     }
 }
