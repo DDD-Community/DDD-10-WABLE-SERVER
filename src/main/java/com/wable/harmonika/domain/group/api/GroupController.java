@@ -74,7 +74,8 @@ public class GroupController {
             @PathVariable Long groupId,
             @RequestBody GroupModifyRequest request) {
 
-        groupService.updateGroup(user, request, groupId);
+        groupService.validatorGroup(user, groupId);
+        groupService.updateGroup(request, groupId);
 
         return ResponseEntity.ok().build();
     }
