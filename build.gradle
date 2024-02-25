@@ -114,7 +114,7 @@ jib {
 }
 
 // QueryDSL
-def querydslDir = "$buildDir/generated/querydsl"
+def querydslDir = "$projectDir/generated/src/main"
 
 querydsl {
 	jpa = true
@@ -131,7 +131,6 @@ compileQuerydsl {
 	options.compilerArgs += ['-proc:none']
 	source = fileTree(querydslDir)
 	exclude(querydslDir + "/**/**")
-	exclude(querydslDir + "/**/Q*")
 }
 
 configurations {
