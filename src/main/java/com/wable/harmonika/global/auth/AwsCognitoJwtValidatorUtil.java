@@ -24,18 +24,16 @@ public class AwsCognitoJwtValidatorUtil {
     private AwsCognitoJwtValidatorUtil() {
     }
     public static JWTClaimsSet validateAWSJwtToken(String token) throws ParseException, JOSEException, BadJOSEException, MalformedURLException, UnauthorizedException {
-        String jsonWebKeyFileURL = AwsCognitoJwtParserUtil.getJsonWebKeyURL(token);
-
-        ConfigurableJWTProcessor jwtProcessor = new DefaultJWTProcessor();
-        JWKSource jwkSource = null;
-        jwkSource = new RemoteJWKSet(new URL(jsonWebKeyFileURL));
-        JWSAlgorithm jwsAlgorithm = JWSAlgorithm.RS256;
-        JWSKeySelector keySelector = new JWSVerificationKeySelector(jwsAlgorithm, jwkSource);
-        jwtProcessor.setJWSKeySelector(keySelector);
         try {
+            String jsonWebKeyFileURL = AwsCognitoJwtParserUtil.getJsonWebKeyURL(token);
+
+            ConfigurableJWTProcessor jwtProcessor = new DefaultJWTProcessor();
+            JWKSource jwkSource = new RemoteJWKSet(new URL(jsonWebKeyFileURL));
+            JWSAlgorithm jwsAlgorithm = JWSAlgorithm.RS256;
+            JWSKeySelector keySelector = new JWSVerificationKeySelector(jwsAlgorithm, jwkSource);
+            jwtProcessor.setJWSKeySelector(keySelector);
             JWTClaimsSet claimsSet = jwtProcessor.process(token, null);
             return claimsSet;
-
         }catch (BadJWTException e) {
             throw new UnauthorizedException(e.getLocalizedMessage());
         }
