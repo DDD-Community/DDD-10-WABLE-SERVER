@@ -96,10 +96,14 @@ public class AwsCognitoJwtParserUtil {
     public static String getClaim(String jwt, String claim) throws UnauthorizedException {
         try {
             final JsonObject payload = getPayload(jwt);
-            final Object claimValue = payload.get(claim);
 
-            if (claimValue != null) {
-                return claimValue.toString();
+            payload.entrySet().forEach(entry -> {
+                System.out.println(entry.getKey() + " : " + entry.getValue());
+            });
+
+            String sub = payload.get("sub").getAsString();
+            if (sub != null) {
+                return sub;
             }
 
         } catch (final Exception e) {
