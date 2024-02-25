@@ -33,7 +33,17 @@ import java.util.Map;
 public class ProfileController {
     private final ProfileService profileService;
 
-    @Operation(summary = "프로필 조회", description = "프로필을 조회한다")
+    @Operation(summary = "내 프로필 조회", description = "내 프로필을 조회한다")
+    @GetMapping("/me")
+    public ResponseEntity<GetProfileResponseDto[]> getProfileMe(Users user) {
+        String userId = user.getUserId();
+        profileService.validateProfileByUserId(userId);
+        List<Profiles> userGroupProfile = profileService.getProfileByUserId(userId);
+        GetProfileResponseDto[] response = userGroupProfile.stream().map(GetProfileResponseDto::new).toArray(GetProfileResponseDto[]::new);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "그룹 및 타인 프로필 조회", description = "그룹 및 타인 프로필을 조회한다")
     @GetMapping()
     public ResponseEntity<GetProfileResponseDto[]> getProfile(
             Users user,
