@@ -29,9 +29,6 @@ public class Groups extends BaseTimeEntity {
     @JoinColumn(name = "owner_id", referencedColumnName = "user_id")
     private Users owner;
 
-    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
-    private List<Profiles> profiles;
-
     public Groups(Long id, String name, Users owner) {
         this.id = id;
         this.name = name;

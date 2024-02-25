@@ -1,5 +1,7 @@
 package com.wable.harmonika.domain.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.wable.harmonika.domain.group.entity.Groups;
 import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.global.entity.BaseTimeEntity;

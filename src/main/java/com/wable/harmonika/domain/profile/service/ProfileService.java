@@ -90,15 +90,6 @@ public class ProfileService {
                 .build();
     }
 
-    private Users getUserBuilder(CreateProfileByGroupDto profileByGroupDto) {
-        return Users.builder()
-                .userId(profileByGroupDto.getUserId())
-                .name(profileByGroupDto.getName())
-                .gender(profileByGroupDto.getGender())
-                .birth(profileByGroupDto.getBirth())
-                .build();
-    }
-
     private Profiles getProfileBuilder(CreateProfileByUserDto profileByUserDto) {
         return Profiles.builder()
                 .nickname(profileByUserDto.getNickName())
