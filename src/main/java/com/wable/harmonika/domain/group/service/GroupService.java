@@ -124,7 +124,15 @@ public class GroupService {
 
     @Transactional
     public void createGroup(Users user, GroupModifyRequest request) {
-        Groups group = groupRepository.save(new Groups(null, request.getName(), user));
+        Users userBuilder = userRepository.findByUserId(user.getUserId())
+                .orElseThrow(() -> new InvalidException("userId", user.getUserId(), Error.ACCOUNT_NOT_FOUND));
+
+        Groups groupBuilder = Groups.builder()
+                .name(request.getName())
+                .owner(userBuilder)
+                .build();
+
+        Groups group = groupRepository.save(groupBuilder);
 
         saveGroupQuestions(request, group);
     }

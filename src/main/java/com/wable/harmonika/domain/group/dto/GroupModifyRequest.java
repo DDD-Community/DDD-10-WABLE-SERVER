@@ -8,9 +8,9 @@ public class GroupModifyRequest {
 
     private String name;
 
-    private List<FixedQuestion> fixedQuestions;
+    private List<FixedQuestion> fixedQuestions = List.of();
 
-    private List<String> requiredQuestions;
+    private List<String> requiredQuestions = List.of();
 
     @Getter
     public static class FixedQuestion {
