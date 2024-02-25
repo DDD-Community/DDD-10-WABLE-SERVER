@@ -142,8 +142,7 @@ public class GroupService {
     }
 
     @Transactional
-    public void updateGroup(Users users, GroupModifyRequest request, Long groupId) {
-        // TODO:  users 권한 체크
+    public void updateGroup(GroupModifyRequest request, Long groupId) {
         Groups group = groupRepository.findById(groupId).orElseThrow();
         groupQuestionRepository.deleteAllByGroup(group);
 
@@ -179,5 +178,20 @@ public class GroupService {
 
         groupQuestions.addAll(fixedGroupQuestions);
         groupQuestionRepository.saveAll(groupQuestions);
+    }
+
+    public void validatorGroup(Users user, Long groupId) {
+        Groups group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new InvalidException("groupId", groupId, Error.GROUP_NOT_FOUND));
+
+        Users findUser = userRepository.findByUserId(user.getUserId())
+                .orElseThrow(() -> new InvalidException("userId", user.getUserId(), Error.ACCOUNT_NOT_FOUND));
+
+        UserGroups userGroups = userGroupRepository.findByUserAndGroup(findUser, group)
+                .orElseThrow(() -> new InvalidException("groupId", groupId, Error.GROUP_USER_NOT_FOUND));
+
+        if (!userGroups.getPosition().equals("OWNER")) {
+            throw new InvalidException("groupId", groupId, Error.GROUP_NOT_OWNER);
+        }
     }
 }
