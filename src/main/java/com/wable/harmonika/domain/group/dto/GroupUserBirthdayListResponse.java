@@ -16,10 +16,12 @@ public class GroupUserBirthdayListResponse {
 
     @Getter
     public static class UserBirthday {
-
         private String userId;
+
         private String name;
+
         private Integer month;
+
         private Integer day;
 
         public UserBirthday(String userId, String name, Integer month, Integer day) {

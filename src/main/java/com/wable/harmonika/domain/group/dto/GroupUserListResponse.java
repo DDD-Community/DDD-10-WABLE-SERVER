@@ -8,6 +8,7 @@ import lombok.Getter;
 public class GroupUserListResponse {
 
     private Integer totalCount;
+
     private List<UserResponse> users;
 
     public GroupUserListResponse(Integer totalCount, List<UserResponse> users) {
