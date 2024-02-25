@@ -16,7 +16,7 @@ import lombok.*;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Users extends BaseTimeEntity {
 
     @Id
@@ -39,6 +39,13 @@ public class Users extends BaseTimeEntity {
 
     @OneToMany(targetEntity = Groups.class, fetch = FetchType.LAZY)
     private List<Groups> groups;
+
+    public Users(Long id, String userId, String name, LocalDate birth) {
+        this.id = id;
+        this.userId = userId;
+        this.name = name;
+        this.birth = birth;
+    }
 
     @Builder
     public Users(String userId, String gender, String name, LocalDate birth) {
