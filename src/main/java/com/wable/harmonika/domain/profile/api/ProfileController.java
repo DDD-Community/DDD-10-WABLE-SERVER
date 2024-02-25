@@ -1,99 +1,129 @@
 package com.wable.harmonika.domain.profile.api;
 
-import com.wable.harmonika.domain.profile.dto.GroupProfileDto;
-import com.wable.harmonika.domain.profile.dto.ProfileResponse;
-import com.wable.harmonika.domain.profile.dto.UserProfileDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wable.harmonika.domain.profile.dto.CreateProfileByGroupDto;
+import com.wable.harmonika.domain.profile.dto.CreateProfileByUserDto;
+import com.wable.harmonika.domain.profile.dto.GetProfileResponseDto;
+import com.wable.harmonika.domain.profile.dto.UpdateProfileDto;
 import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.domain.profile.service.ProfileService;
 import com.wable.harmonika.domain.user.entity.Users;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 
 @Tag(name = "프로필 API", description = "프로필 API")
 @Slf4j
 @RestController
-@RequestMapping("/profiles")
+@RequestMapping("/v1/profiles")
 @RequiredArgsConstructor
 public class ProfileController {
-    private final ProfileService ProfileService;
+    private final ProfileService profileService;
 
     @Operation(summary = "프로필 조회", description = "프로필을 조회한다")
     @GetMapping()
-    @ResponseStatus(value = HttpStatus.OK)
-    public ProfileResponse getProfile(Users user, @RequestParam(value = "group_id", required = false) Long groupId, @RequestParam(value = "user_id", required = false) Long toUserId) {
-        // 1. group_id 가 있는 경우 profile, profile_question 에서 가져 오기
-        // 1. group_id 가 없는 경우 user 테이블에서 가져 오기
+    public ResponseEntity<GetProfileResponseDto[]> getProfile(
+            Users user,
+            @RequestParam(value = "groupId", required = false) Long groupId,
+            @RequestParam(value = "userId", required = false) String toUserId
+    ) {
+        String userId = user.getUserId();
 
-        // 2.1 유저 ID 으로 그룹 있는지
-        if (groupId == null) {
-            Users userProfile = ProfileService.getUserProfileByUserId(1L);
-            return new ProfileResponse(new UserProfileDto(userProfile));
+        if (groupId != null) {
+            // 그룹 내 프로필 전달
+            profileService.validateProfileGroupByUserIdAndGroupId(userId, groupId);
+            List<Profiles> userProfile = profileService.getProfileByGroupId(userId, groupId);
+            GetProfileResponseDto[] response = userProfile.stream().map(GetProfileResponseDto::new).toArray(GetProfileResponseDto[]::new);
+            return ResponseEntity.ok(response);
         }
 
         if (toUserId != null) {
-            // 토큰 유저와 toUserId 가 같은 소속인지 확인
-            // toUserId 의 profile, profile_question 가져 오기
-            return new ProfileResponse(new GroupProfileDto(ProfileService.getGroupProfileById(toUserId)));
+            // 유저 프로필 전달
+            profileService.validateProfileByUserId(toUserId);
+            List<Profiles> userProfile = profileService.getOtherProfileByUser(userId, toUserId);
+
+            GetProfileResponseDto[] response = userProfile.stream().map(GetProfileResponseDto::new).toArray(GetProfileResponseDto[]::new);
+            return ResponseEntity.ok(response);
         }
 
-        // 2. profile, profile_question 가져 오기
-        Profiles userGroupProfile = ProfileService.getGroupProfileById(1L);
-        return new ProfileResponse(new GroupProfileDto(userGroupProfile));
+        // 내 프로필 전달
+        profileService.validateProfileByUserId(userId);
+        List<Profiles> userGroupProfile = profileService.getProfileByUserId(userId);
+        GetProfileResponseDto[] response = userGroupProfile.stream().map(GetProfileResponseDto::new).toArray(GetProfileResponseDto[]::new);
+        return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "프로필 등록", description = "프로필을 작성한다")
-    @PostMapping()
+    // 유저 프로필 생성
+    @Operation(summary = "유저 프로필 등록", description = "유저 프로필을 작성한다")
+    @PostMapping("/user")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public String saveProfile(Users user, @RequestParam(value = "group_id", required = false) Long groupId, @RequestBody GroupProfileDto profileDto) {
-        // group_id 가 있는 경우 profile, profile_question 에 생성
-        // group_id 가 없는 경우 user 테이블에 생성
-
-        return "InsertProfileController";
+    public void saveProfileByUser(Users users, @Valid @RequestBody CreateProfileByUserDto profileByUserDto) {
+        profileByUserDto.setUserId(users.getUserId());
+        profileService.validateProfileByUser(profileByUserDto);
+        profileService.saveProfileByUser(profileByUserDto);
     }
 
-    @Operation(summary = "프로필의 이미지 업로드 URL", description = "프로필의 이미지 업로드 URL 을 생성해서 준다")
+    // 그룹 프로필 생성
+    @Operation(summary = "그룹 프로필 등록", description = "그룹 프로필을 작성한다")
+    @PostMapping("/group")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public void saveProfile(Users users, @Valid @RequestBody CreateProfileByGroupDto profileByGroupDto) {
+        profileByGroupDto.setUserId(users.getUserId());
+        profileService.validateProfileByGroup(profileByGroupDto);
+        profileService.saveProfileByGroup(profileByGroupDto);
+    }
+
+    @Operation(summary = "프로필의 이미지 업로드 URL", description = "프로필의 이미지 업로드 URL 을 생성해서 준다 /profiles/{userId}.jpg or /profiles/{userId}/{groupId}.jpg")
     @GetMapping("/presigned-url")
     @ResponseStatus(value = HttpStatus.OK)
-    public Map<String, String> makeImageUploadURL(Users user, @RequestParam(value = "group_id", required = false) Long groupId) {
-        // 1. 유저 정보 확인 (유저 토큰 가져온 후 UserId 을 가져 와야 함)
-        // 1.1. 유저 정보가 없으면 에러 --> 어노테이션으로 처리
+    public Map<String, String> makeImageUploadURL(
+            Users users ,
+            @RequestParam(value = "groupId", required = false) Long groupId
+    ) {
+        String userId = users.getUserId();
+        if (groupId == null) {
+            // 유저 프로필
+            String filePath = "/profiles/" + userId + ".jpg";
+            Map<String, String> response = profileService.getSignedUrl(filePath);
 
-        // 2 그룹 파라메터가 있는지 확인 (쿼리 파라메터로 옵셔널하게 group_id 을 받아야 함)
-        // 2.1 그룹 정보가 없으면 에러
-        String fileName = "user.jpg";
-        if (groupId != null) {
-            fileName = "group.jpg";
+            return response;
         }
 
-        Long userId = 1L;
+        profileService.validateGroupExistCheck(groupId);
 
-        // 1. 서명된 URL 생성
-        val response = ProfileService.getSignedUrl(userId, fileName);
-
-        // 2. 서명된 URL 반환
-
-        // 3. 이미지 업로드 가능한 URL 생성
-        // 3.1 주면 됨
-//        return response;
-        return null;
+        String fileName = "/profiles/" + userId + "/" + groupId + ".jpg";
+        Map<String, String> response = profileService.getSignedUrl(fileName);
+        return response;
     }
 
-    // profile update
     @Operation(summary = "프로필 수정", description = "프로필을 수정한다")
     @PutMapping()
     @ResponseStatus(value = HttpStatus.OK)
-    public String updateProfile(Users user, @RequestParam(value = "group_id", required = false) Long groupId, @RequestBody GroupProfileDto profileDto) {
-        // group_id 가 있는 경우 profile, profile_question 에 수정
-        // group_id 가 없는 경우 user 테이블에 수정
+    public void updateProfile(
+            Users users,
+            @Valid @RequestBody UpdateProfileDto profileDto
+    ) {
+        profileDto.setUserId(users.getUserId());
+        // Profile 을 수정할 때 중요한건... GroupId 가 Null 인지 아닌지만 알면 된다.
+        if (profileDto.getGroupId() == null) {
+            profileService.validateProfileByUserId(profileDto.getUserId());
+            profileService.updateProfile(profileDto);
+        }
 
-        return "UpdateProfileController";
+        profileService.validateProfileGroupByUserIdAndGroupId(profileDto.getUserId(), profileDto.getGroupId());
+        profileService.updateProfile(profileDto);
     }
 }
