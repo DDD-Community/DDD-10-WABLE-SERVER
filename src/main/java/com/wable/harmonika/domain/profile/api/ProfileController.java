@@ -23,7 +23,7 @@ import java.util.Map;
 @Tag(name = "프로필 API", description = "프로필 API")
 @Slf4j
 @RestController
-@RequestMapping("/profiles")
+@RequestMapping("/v1/profiles")
 @RequiredArgsConstructor
 public class ProfileController {
     private final ProfileService profileService;
@@ -71,7 +71,6 @@ public class ProfileController {
         profileService.saveProfileByUser(profileByUserDto);
     }
 
-
     // 그룹 프로필 생성
     @Operation(summary = "그룹 프로필 등록", description = "그룹 프로필을 작성한다")
     @PostMapping("/group")
@@ -87,7 +86,7 @@ public class ProfileController {
     @ResponseStatus(value = HttpStatus.OK)
     public Map<String, String> makeImageUploadURL(
             Users users ,
-            @RequestParam(value = "groupId", required = false) String groupId
+            @RequestParam(value = "groupId", required = false) Long groupId
     ) {
         String userId = users.getUserId();
         if (groupId == null) {
@@ -97,6 +96,8 @@ public class ProfileController {
 
             return response;
         }
+
+        profileService.validateGroupExistCheck(groupId);
 
         String fileName = "/profiles/" + userId + "/" + groupId + ".jpg";
         Map<String, String> response = profileService.getSignedUrl(fileName);

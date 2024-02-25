@@ -42,7 +42,7 @@ public class ProfileCustomRepositoryImpl implements ProfileCustomRepository {
     public List<Profiles> getOtherProfileByUserAndGroupId(String toUserId, List<Long> groupId) {
         return jpaQueryFactory.selectFrom(profiles)
                 .join(profiles.user, users)
-                .leftJoin(profiles.group, groups)
+                .join(profiles.group, groups)
                 .where(profiles.user.userId.eq(toUserId))
                 .where(profiles.group.id.in(groupId))
                 .fetch();
@@ -52,7 +52,7 @@ public class ProfileCustomRepositoryImpl implements ProfileCustomRepository {
     public List<Profiles> getProfileByGroupId(String userId, Long groupId) {
         return jpaQueryFactory.selectFrom(profiles)
                 .join(profiles.user, users)
-                .leftJoin(profiles.group, groups )
+                .join(profiles.group, groups )
                 .where(profiles.group.id.eq(groupId))
                 .where(profiles.user.userId.eq(userId))
                 .fetch();
@@ -63,7 +63,6 @@ public class ProfileCustomRepositoryImpl implements ProfileCustomRepository {
         List<Profiles> result = jpaQueryFactory
                 .selectFrom(profiles)
                 .join(profiles.user, users)
-                .leftJoin(profiles.group, groups)
                 .where(profiles.user.userId.eq(userId))
                 .fetch();
 

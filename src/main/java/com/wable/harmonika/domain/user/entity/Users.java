@@ -35,8 +35,8 @@ public class Users extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Profiles> profiles;
 
-//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = Groups.class)
-//    private List<Groups> groups;
+    @OneToMany(targetEntity = Groups.class)
+    private List<Groups> groups;
 
     @Builder
     public Users(String userId, String gender, String name, LocalDate birth) {

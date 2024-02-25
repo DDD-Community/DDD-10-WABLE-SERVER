@@ -56,6 +56,13 @@ public class ProfileService {
             throw new InvalidException("userId", profileByUserDto.getUserId(), Error.PROFILE_DUPLICATION);
         }
     }
+    
+    public void  validateGroupExistCheck(Long groupId) {
+        boolean existsGroup = groupRepository.existsById(groupId);
+        if (existsGroup == false) {
+            throw new InvalidException("groupId", groupId, Error.GROUP_NOT_FOUND);
+        }
+    }
 
     public void validateProfileByGroup(CreateProfileByGroupDto profileByGroupDto) {
         boolean isRegisterUser = userRepository.existsByUserId(profileByGroupDto.getUserId());
