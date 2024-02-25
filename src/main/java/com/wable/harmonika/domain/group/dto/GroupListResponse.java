@@ -24,6 +24,7 @@ public class GroupListResponse {
     @Getter
     static class GroupResponse {
         private Long id;
+
         private String name;
 
         public GroupResponse(Long id, String name) {

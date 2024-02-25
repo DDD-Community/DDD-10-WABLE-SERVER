@@ -5,11 +5,14 @@ import lombok.Getter;
 
 @Getter
 public class UserResponse {
-
     private String userId;
+
     private String imageUrl;
+
     private String name;
+
     private String position;
+
     private LocalDate birthday;
 
     public UserResponse(String userId, String imageUrl, String name, String position,

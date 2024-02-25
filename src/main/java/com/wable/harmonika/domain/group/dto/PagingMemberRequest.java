@@ -5,9 +5,11 @@ import lombok.Getter;
 @Getter
 public class PagingMemberRequest {
     private static final int DEFAULT_PAGING_SIZE = 10;
+
     private static final int MAX_PAGING_SIZE = 30;
 
     private String lastName;
+
     private Integer size;
 
     public PagingMemberRequest() {

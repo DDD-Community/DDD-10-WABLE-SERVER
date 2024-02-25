@@ -15,6 +15,7 @@ public enum Error {
     PROFILE_NOT_FOUND("프로필을 찾을 수 없습니다."),
     GROUP_DUPLICATION("이미 등록된 그룹입니다."),
     GROUP_NOT_FOUND("그룹을 찾을 수 없습니다."),
+    GROUP_USER_NOT_FOUND("그룹에 소속된 유저가 아닙니다."),
 
     POST_NOT_FOUND("게시글을 찾을 수 없습니다."),
     COMMENT_NOT_FOUND("댓글을 찾을 수 없습니다."),

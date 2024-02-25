@@ -16,11 +16,15 @@ import com.wable.harmonika.domain.group.entity.Questions;
 import com.wable.harmonika.domain.group.entity.UserGroups;
 import com.wable.harmonika.domain.group.repository.*;
 import com.wable.harmonika.domain.profile.entity.Profiles;
+import com.wable.harmonika.domain.profile.repository.ProfileRepository;
 import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.domain.user.repository.UserRepository;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.wable.harmonika.global.error.Error;
+import com.wable.harmonika.global.error.exception.InvalidException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,18 +32,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class GroupService {
 
     private final GroupRepository groupRepository;
-    private final ProfilesRepository profilesRepository;
+    private final ProfileRepository profileRepository;
     private final UserGroupRepository userGroupRepository;
     private final UserRepository userRepository;
     private final QuestionsRepository questionRepository;
     private final GroupQuestionRepository groupQuestionRepository;
 
-    public GroupService(GroupRepository groupRepository, ProfilesRepository profilesRepository,
+    public GroupService(GroupRepository groupRepository, ProfileRepository profileRepository,
             UserGroupRepository userGroupRepository, UserRepository userRepository,
             QuestionsRepository questionRepository,
             GroupQuestionRepository groupQuestionRepository) {
         this.groupRepository = groupRepository;
-        this.profilesRepository = profilesRepository;
+        this.profileRepository = profileRepository;
         this.userGroupRepository = userGroupRepository;
         this.userRepository = userRepository;
         this.questionRepository = questionRepository;
@@ -74,7 +78,7 @@ public class GroupService {
         List<Users> users = userGroupRepository.findAllUserWithPaging(groupId, lastName, searchName,
                 size);
 
-        List<Profiles> findProfiles = profilesRepository.findAllByUserInAndGroupId(users, groupId);
+        List<Profiles> findProfiles = profileRepository.findAllByUserInAndGroupId(users, groupId);
         Map<Long, String> profileImageByUserId = findProfiles.stream()
                 .collect(Collectors.toMap(
                         profiles -> profiles.getUser().getId(),
@@ -106,12 +110,12 @@ public class GroupService {
 
     public void updateUserRole(Long groupId, UserRoleUpdateRequest request, Users users) {
         Users findUser = userRepository.findById(request.getUserId())
-                .orElseThrow(); // todo argument resolver 제거 예정
+                .orElseThrow(); // TODO: argument resolver 제거 예정
         Groups group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new RuntimeException("저장되지 않은 group 입니다."));
+                .orElseThrow(() -> new InvalidException("groupId", groupId, Error.GROUP_NOT_FOUND));
 
         if (userGroupRepository.findByUserAndGroup(findUser, group).isEmpty()) {
-            throw new RuntimeException("group에 저장된 유저가 아닙니다.");
+            throw new InvalidException("groupId", groupId, Error.GROUP_USER_NOT_FOUND);
         }
 
 //        userGroupRepository.updateUserRole(findUser, group, request.getRole());
@@ -127,7 +131,7 @@ public class GroupService {
 
     @Transactional
     public void updateGroup(Users users, GroupModifyRequest request, Long groupId) {
-        // todo  users 권한 체크
+        // TODO:  users 권한 체크
         Groups group = groupRepository.findById(groupId).orElseThrow();
         groupQuestionRepository.deleteAllByGroup(group);
 
