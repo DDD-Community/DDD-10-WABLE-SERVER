@@ -51,8 +51,7 @@ public class GroupController {
             @RequestParam(value = "lastName", required = false) String lastName,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
 
-        GroupUserListResponse members = groupService.findAllMember(groupId, lastName, searchName,
-                size);
+        GroupUserListResponse members = groupService.findAllMember(groupId, lastName, searchName, size);
 
         return ResponseEntity.ok(members);
     }
