@@ -43,6 +43,7 @@ public class GetProfileResponseDto {
 
         this.questions = profiles.getProfileQuestions().stream().map(
             profileQuestions -> new QuestionDTO(
+                profileQuestions.getId(),
                 profileQuestions.getSid(),
                 profileQuestions.getQuestion(),
                 profileQuestions.getQuestionType(),
@@ -53,12 +54,13 @@ public class GetProfileResponseDto {
         ).toList();
     }
 
-
-
     @Getter
     @Setter
     @NoArgsConstructor
     public static class QuestionDTO {
+        @JsonProperty("id")
+        private Long id;
+
         @JsonProperty("sid")
         private String sid;
 
@@ -77,8 +79,8 @@ public class GetProfileResponseDto {
         @JsonProperty("updatedAt")
         private LocalDateTime updatedAt;
 
-
         public QuestionDTO(
+            Long id,
             String sid,
             String question,
             QuestionTypes questionType,
@@ -86,6 +88,7 @@ public class GetProfileResponseDto {
             LocalDateTime createdAt,
             LocalDateTime updatedAt
         ) {
+            this.id = id;
             this.sid = sid;
             this.question = question;
             this.questionType = questionType;
