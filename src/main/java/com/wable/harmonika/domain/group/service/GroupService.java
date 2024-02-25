@@ -78,8 +78,7 @@ public class GroupService {
         return new GroupUserBirthdayListResponse(birthdays);
     }
 
-    public GroupUserListResponse findAllMember(Long groupId, String lastName, String searchName,
-                                               int size) {
+    public GroupUserListResponse findAllMember(Long groupId, String lastName, String searchName, int size) {
         List<Users> users = userGroupRepository.findAllUserWithPaging(groupId, lastName, searchName,
                 size);
 
