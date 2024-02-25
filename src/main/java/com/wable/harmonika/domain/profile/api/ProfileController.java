@@ -43,22 +43,14 @@ public class ProfileController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "그룹 및 타인 프로필 조회", description = "그룹 및 타인 프로필을 조회한다")
-    @GetMapping()
+    @Operation(summary = "그룹 프로필 조회", description = "그룹 프로필 조회")
+    @GetMapping("/group/{groupId}")
     public ResponseEntity<GetProfileResponseDto[]> getProfile(
             Users user,
-            @RequestParam(value = "groupId", required = false) Long groupId,
+            @Parameter(in = ParameterIn.PATH, description = "그룹 ID", required = true) @PathVariable Long groupId,
             @RequestParam(value = "userId", required = false) String toUserId
     ) {
         String userId = user.getUserId();
-
-        if (groupId != null) {
-            // 그룹 내 프로필 전달
-            profileService.validateProfileGroupByUserIdAndGroupId(userId, groupId);
-            List<Profiles> userProfile = profileService.getProfileByGroupId(userId, groupId);
-            GetProfileResponseDto[] response = userProfile.stream().map(GetProfileResponseDto::new).toArray(GetProfileResponseDto[]::new);
-            return ResponseEntity.ok(response);
-        }
 
         if (toUserId != null) {
             // 유저 프로필 전달
@@ -69,10 +61,10 @@ public class ProfileController {
             return ResponseEntity.ok(response);
         }
 
-        // 내 프로필 전달
-        profileService.validateProfileByUserId(userId);
-        List<Profiles> userGroupProfile = profileService.getProfileByUserId(userId);
-        GetProfileResponseDto[] response = userGroupProfile.stream().map(GetProfileResponseDto::new).toArray(GetProfileResponseDto[]::new);
+        // 그룹 내 프로필 전달
+        profileService.validateProfileGroupByUserIdAndGroupId(userId, groupId);
+        List<Profiles> userProfile = profileService.getProfileByGroupId(userId, groupId);
+        GetProfileResponseDto[] response = userProfile.stream().map(GetProfileResponseDto::new).toArray(GetProfileResponseDto[]::new);
         return ResponseEntity.ok(response);
     }
 
