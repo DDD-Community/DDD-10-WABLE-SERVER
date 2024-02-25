@@ -4,6 +4,7 @@ import com.wable.harmonika.domain.user.entity.Users;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +23,8 @@ public class GroupController {
 
     // 그룹 리스트
     @GetMapping
-    public ResponseEntity<GroupListResponse> findAllGroup(Users user,Long userId) {
-        GroupListResponse groupListResponse = groupService.findAll(userId);
+    public ResponseEntity<GroupListResponse> findAllGroup(Users user) {
+        GroupListResponse groupListResponse = groupService.findAll(user);
 
         return ResponseEntity.ok(groupListResponse);
     }
@@ -39,23 +40,49 @@ public class GroupController {
     }
 
     // 팀원 목록
-    @GetMapping("/{groupId}/members")
-    public ResponseEntity<GroupMemberListResponse> findAllMember(
+    @GetMapping("/{groupId}/users")
+    public ResponseEntity<GroupUserListResponse> findAllMember(
             Users user,
-            @PathVariable("groupId") Long groupId, @RequestParam("name") String name, // todo 팀원 검색
-            PagingMemberRequest request) {
+            @PathVariable("groupId") Long groupId,
+            @RequestParam(value = "searchName", required = false) String searchName,
+            @RequestParam(value = "lastName", required = false) String lastName,
+            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
 
-        GroupMemberListResponse members = groupService.findAllMember(groupId, request.getLastName(),
-                request.getSize());
+        GroupUserListResponse members = groupService.findAllMember(groupId, lastName, searchName,
+                size);
 
         return ResponseEntity.ok(members);
+    }
+
+    // 그룹 생성
+    @PostMapping
+    public ResponseEntity<String> createGroup(
+            Users user,
+            @RequestBody GroupModifyRequest request) {
+
+        groupService.createGroup(user, request);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{groupId}")
+    public ResponseEntity<String> updateGroup(
+            Users user,
+            @PathVariable Long groupId,
+            @RequestBody GroupModifyRequest request) {
+
+        groupService.updateGroup(user, request, groupId);
+
+        return ResponseEntity.ok().build();
     }
 
     // 팀원 역할 수정
     // todo 관리자 권한 체크
     @PutMapping("/{groupId}/role")
-    public ResponseEntity<String> updateUserRole(Users user,@PathVariable("groupId") Long groupId, @RequestBody UserRoleUpdateRequest request) {
-        groupService.updateUserRole(groupId, request);
+    public ResponseEntity<String> updateUserRole(
+            Users user,
+            @PathVariable("groupId") Long groupId, @RequestBody UserRoleUpdateRequest request) {
+        groupService.updateUserRole(groupId, request, user);
 
         return ResponseEntity.ok().build();
     }

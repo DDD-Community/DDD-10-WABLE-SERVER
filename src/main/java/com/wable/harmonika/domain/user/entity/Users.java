@@ -11,7 +11,7 @@ import lombok.*;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Users extends BaseTimeEntity {
 
     @Id
@@ -27,6 +27,13 @@ public class Users extends BaseTimeEntity {
 
     private LocalDate birth;
 
+
+    public Users(Long id, String userId, String name, LocalDate birth) {
+        this.id = id;
+        this.userId = userId;
+        this.name = name;
+        this.birth = birth;
+    }
 
     @Builder
     public Users(String userId) {

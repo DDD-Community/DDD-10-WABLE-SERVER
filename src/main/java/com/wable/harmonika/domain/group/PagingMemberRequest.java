@@ -10,6 +10,8 @@ public class PagingMemberRequest {
     private String lastName;
     private Integer size;
 
+    public PagingMemberRequest() {
+    }
 
     public PagingMemberRequest(String lastName, Integer size) {
         this.lastName = lastName;
