@@ -1,15 +1,22 @@
 package com.wable.harmonika.domain.profile.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wable.harmonika.domain.group.entity.QuestionTypes;
 import com.wable.harmonika.domain.profile.entity.ProfileQuestions;
 import com.wable.harmonika.domain.profile.entity.Profiles;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class GetProfileResponseDto {
     private String userId;
 
@@ -46,13 +53,30 @@ public class GetProfileResponseDto {
         ).toList();
     }
 
+
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
     public static class QuestionDTO {
+        @JsonProperty("sid")
         private String sid;
+
+        @JsonProperty("question")
         private String question;
+
+        @JsonProperty("questionType")
         private QuestionTypes questionType;
+
+        @JsonProperty("answers")
         private List<String> answers;
+
+        @JsonProperty("createdAt")
         private LocalDateTime createdAt;
+
+        @JsonProperty("updatedAt")
         private LocalDateTime updatedAt;
+
 
         public QuestionDTO(
             String sid,
