@@ -77,10 +77,10 @@ public class CardServiceImpl implements CardService {
         }
 
         if (vo.getContent() != null) {
-            card.setContent(vo.getContent());
+            card.updateContent(vo.getContent());
         }
         if (vo.getSid() != null) {
-            card.setSid(vo.getSid());
+            card.updateSid(vo.getSid());
         }
 
         cardRepository.save(card);
@@ -94,13 +94,13 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<CardsDto> findAllReceivedCards(ListCardsRequest request) throws Exception {
         List<Cards> allCards = cardRepository.findAllCards(
-                request.getGroupIds(),
-                request.getSids(),
-                request.getUserId(),
-                "",
-                request.getLastId(),
-                request.getSize());
-
+                FindAllCardsParam.builder()
+                        .groupIds(request.getGroupIds())
+                        .sids(request.getSids())
+                        .toUserId(request.getUserId())
+                        .lastId(request.getLastId())
+                        .size(request.getSize())
+                        .build());
 
         List<CardsDto> collect = allCards.stream()
                 .map(m -> new CardsDto(m))
@@ -112,13 +112,14 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<CardsDto> findAllSentCards(ListCardsRequest request) throws Exception {
         List<Cards> allCards = cardRepository.findAllCards(
-                request.getGroupIds(),
-                request.getSids(),
-                "",
-                request.getUserId(),
-                request.getLastId(),
-                request.getSize()
-        );
+                FindAllCardsParam.builder()
+                        .groupIds(request.getGroupIds())
+                        .sids(request.getSids())
+                        .fromUserId(request.getUserId())
+                        .lastId(request.getLastId())
+                        .size(request.getSize())
+                        .build());
+
         List<CardsDto> collect = allCards.stream()
                 .map(m -> new CardsDto(m))
                 .collect(Collectors.toList());
@@ -130,13 +131,13 @@ public class CardServiceImpl implements CardService {
     public List<CardsDto> findAllCardsByGroup(ListCardsByGroupRequest request) throws Exception {
         // TODO validate (해당 그룹원인지 확인)
         List<Cards> allCards = cardRepository.findAllCards(
-                request.getGroupIds(),
-                request.getSids(),
-                "",
-                "",
-                request.getLastId(),
-                request.getSize()
-        );
+                FindAllCardsParam.builder()
+                        .groupIds(request.getGroupIds())
+                        .sids(request.getSids())
+                        .lastId(request.getLastId())
+                        .size(request.getSize())
+                        .build());
+
         List<CardsDto> collect = allCards.stream()
                 .map(m -> new CardsDto(m))
                 .collect(Collectors.toList());

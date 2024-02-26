@@ -53,4 +53,14 @@ public class Cards extends BaseTimeEntity {
         this.fromUserProfile = fromUserProfile;
         this.toUserProfile = toUserProfile;
     }
+
+    public Cards updateContent(String content) {
+        this.content = content;
+        return this;
+    }
+
+    public Cards updateSid(CardNames sid) {
+        this.sid = sid;
+        return this;
+    }
 }

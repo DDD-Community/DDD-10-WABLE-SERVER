@@ -2,6 +2,7 @@ package com.wable.harmonika.domain.card.repository.impl;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.wable.harmonika.domain.card.dto.FindAllCardsParam;
 import com.wable.harmonika.domain.card.entity.CardNames;
 import com.wable.harmonika.domain.card.entity.Cards;
 import com.wable.harmonika.domain.card.repository.CardRepositoryCustom;
@@ -19,35 +20,35 @@ public class CardRepositoryImpl implements CardRepositoryCustom {
         this.query = query;
     }
 
-    public List<Cards> findAllCards(List<Long> groupIds, List<CardNames> sids, String toUserId, String fromUserId, Long lastId, Integer limit) {
+    public List<Cards> findAllCards(FindAllCardsParam param) {
         BooleanBuilder builder = new BooleanBuilder();
 
-        if (lastId != 0) {
-            builder.and(cards.id.lt(lastId)); // paging
+        if (param.getLastId() != null && param.getLastId() != 0) {
+            builder.and(cards.id.lt(param.getLastId()));
         }
 
-        if (!toUserId.equals("")) {
-            builder.and(cards.toUser.userId.eq(toUserId));
+        if (param.getToUserId() != null && !param.getToUserId().isEmpty()) {
+            builder.and(cards.toUser.userId.eq(param.getToUserId()));
         }
 
-        if (!fromUserId.equals("")) {
-            builder.and(cards.fromUser.userId.eq(fromUserId));
+        if (param.getFromUserId() != null && !param.getFromUserId().isEmpty()) {
+            builder.and(cards.fromUser.userId.eq(param.getFromUserId()));
         }
 
-        // groupId가 있으면 필터
-        if (groupIds != null && !groupIds.isEmpty()) {
-            builder.and(cards.group.id.in(groupIds));
-        }
-        // sid가 있으면 필터
-        if (sids != null && !sids.isEmpty()) {
-            builder.and(cards.sid.in(sids));
+        if (param.getGroupIds() != null && !param.getGroupIds().isEmpty()) {
+            builder.and(cards.group.id.in(param.getGroupIds()));
         }
 
+        if (param.getSids() != null && !param.getSids().isEmpty()) {
+            builder.and(cards.sid.in(param.getSids()));
+        }
+
+        // 쿼리 실행
         return query
                 .selectFrom(cards)
                 .where(builder)
                 .orderBy(cards.id.desc())
-                .limit(limit)
+                .limit(param.getSize())
                 .fetch();
     }
 }
