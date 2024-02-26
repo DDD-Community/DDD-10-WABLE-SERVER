@@ -21,13 +21,12 @@ public class CardsRequest {
     @Size(min = 5)
     private String content;
 
-    @JsonProperty("isVisible")
-    private boolean isVisible;
-
     @Enumerated(EnumType.STRING)
     private CardNames sid;
 
     private String toUserId;
+
+    private String fromUserId;
 
     private Long groupId;
 }

@@ -114,7 +114,7 @@ jib {
 }
 
 // QueryDSL
-def querydslDir = "$projectDir/generated/src/main"
+def querydslDir = "$projectDir/src/main/generated"
 
 querydsl {
 	jpa = true

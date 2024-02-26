@@ -28,4 +28,13 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("id", id));
     }
 
+    public void signUp(SignUpReqDto signUpReqDto) {
+        Users user = Users.builder().userId("abc")
+                .name(signUpReqDto.getName())
+                .birth(signUpReqDto.getBirth())
+                .build();
+
+        UserRepository.save(user);
+    }
+
 }
