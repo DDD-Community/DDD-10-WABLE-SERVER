@@ -1,6 +1,8 @@
 package com.wable.harmonika.domain.group.dto;
 
 import java.time.LocalDate;
+
+import com.wable.harmonika.domain.group.entity.Position;
 import lombok.Getter;
 
 @Getter
@@ -11,11 +13,11 @@ public class UserResponse {
 
     private String name;
 
-    private String position;
+    private Position position;
 
     private LocalDate birthday;
 
-    public UserResponse(String userId, String imageUrl, String name, String position,
+    public UserResponse(String userId, String imageUrl, String name, Position position,
             LocalDate birthday) {
         this.userId = userId;
         this.imageUrl = imageUrl;

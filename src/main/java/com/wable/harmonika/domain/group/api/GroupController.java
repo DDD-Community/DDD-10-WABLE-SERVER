@@ -60,7 +60,7 @@ public class GroupController {
     }
 
     @Operation(summary = "그룹 생성", description = "그룹 생성")
-    @PostMapping("")
+    @PostMapping()
     public ResponseEntity<String> createGroup(
             Users user,
             @RequestBody GroupModifyRequest request) {

@@ -44,15 +44,9 @@ public class Users extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserGroups> userGroups;
 
-    public Users(Long id, String userId, String name, LocalDate birth) {
-        this.id = id;
-        this.userId = userId;
-        this.name = name;
-        this.birth = birth;
-    }
-
     @Builder
-    public Users(String userId, String gender, String name, LocalDate birth) {
+    public Users(Long id, String userId, String gender, String name, LocalDate birth) {
+        this.id = id;
         this.userId = userId;
         this.gender = gender;
         this.name = name;

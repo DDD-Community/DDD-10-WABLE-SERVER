@@ -35,7 +35,8 @@ public class CardServiceImpl implements CardService {
         new Groups();
 
         cards.setFromUser(fromUser);
-        cards.setToUser(new Users(vo.getToUserId(), null, null, null));
+        cards.setToUser(Users.builder().
+                userId(vo.getToUserId()).build());
 
         cardRepository.save(cards);
     }
