@@ -47,9 +47,4 @@ public class Users extends BaseTimeEntity {
         this.name = name;
         this.birth = birth;
     }
-
-    public Users(String email, String name) {
-        this.email = email;
-        this.name = name;
-    }
 }

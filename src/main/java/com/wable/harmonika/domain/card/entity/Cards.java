@@ -10,7 +10,6 @@ import lombok.*;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "cards")
 public class Cards extends BaseTimeEntity {

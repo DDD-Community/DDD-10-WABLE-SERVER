@@ -36,10 +36,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CardController {
     private final CardService cardService;
-
-    private final ProfileService profileService;
-    private final UserService userService;
-
     @PostMapping()
     public void createCards(Users user, @Valid @RequestBody CardsRequest request) throws Exception {
         // 보낸 유저 아이디는 토큰에서 가져오기
