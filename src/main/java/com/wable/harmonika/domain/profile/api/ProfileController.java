@@ -56,7 +56,6 @@ public class ProfileController {
             // 유저 프로필 전달
             profileService.validateProfileGroupByUserIdAndGroupId(targetUserId, groupId);
             profileService.validateProfileGroupByUserIdAndGroupId(userId, groupId);
-            profileService.validateProfileByUserId(targetUserId);
             List<Profiles> userProfile = profileService.getOtherProfileByUser(userId, targetUserId);
 
             GetProfileResponseDto[] response = userProfile.stream().map(GetProfileResponseDto::new).toArray(GetProfileResponseDto[]::new);
