@@ -1,19 +1,31 @@
-package com.wable.harmonika.domain.group;
+package com.wable.harmonika.domain.group.service;
 
-import com.wable.harmonika.domain.group.GroupModifyRequest.FixedQuestion;
-import com.wable.harmonika.domain.group.GroupUserBirthdayListResponse.UserBirthday;
+import com.wable.harmonika.domain.group.dto.UserResponse;
+import com.wable.harmonika.domain.group.dto.UserRoleUpdateRequest;
+import com.wable.harmonika.domain.group.dto.GroupListResponse;
+import com.wable.harmonika.domain.group.dto.GroupModifyRequest;
+import com.wable.harmonika.domain.group.dto.GroupModifyRequest.FixedQuestion;
+import com.wable.harmonika.domain.group.dto.GroupUserBirthdayListResponse;
+import com.wable.harmonika.domain.group.dto.GroupUserBirthdayListResponse.UserBirthday;
+import com.wable.harmonika.domain.group.dto.GroupUserListResponse;
 import com.wable.harmonika.domain.group.entity.GroupQuestion;
 import com.wable.harmonika.domain.group.entity.Groups;
 import com.wable.harmonika.domain.group.entity.QuestionNames;
 import com.wable.harmonika.domain.group.entity.QuestionTypes;
 import com.wable.harmonika.domain.group.entity.Questions;
 import com.wable.harmonika.domain.group.entity.UserGroups;
+import com.wable.harmonika.domain.group.repository.*;
 import com.wable.harmonika.domain.profile.entity.Profiles;
+import com.wable.harmonika.domain.profile.repository.ProfileRepository;
 import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.domain.user.repository.UserRepository;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import com.wable.harmonika.global.error.Error;
+import com.wable.harmonika.global.error.exception.InvalidException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,18 +33,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class GroupService {
 
     private final GroupRepository groupRepository;
-    private final ProfilesRepository profilesRepository;
+    private final ProfileRepository profileRepository;
     private final UserGroupRepository userGroupRepository;
     private final UserRepository userRepository;
     private final QuestionsRepository questionRepository;
     private final GroupQuestionRepository groupQuestionRepository;
 
-    public GroupService(GroupRepository groupRepository, ProfilesRepository profilesRepository,
+    public GroupService(GroupRepository groupRepository, ProfileRepository profileRepository,
             UserGroupRepository userGroupRepository, UserRepository userRepository,
             QuestionsRepository questionRepository,
             GroupQuestionRepository groupQuestionRepository) {
         this.groupRepository = groupRepository;
-        this.profilesRepository = profilesRepository;
+        this.profileRepository = profileRepository;
         this.userGroupRepository = userGroupRepository;
         this.userRepository = userRepository;
         this.questionRepository = questionRepository;
@@ -49,8 +61,12 @@ public class GroupService {
     }
 
     public GroupUserBirthdayListResponse findAllBirthday(Long groupId) {
-        List<UserGroups> userGroups = userGroupRepository.findAllByGroup(
-                new Groups(groupId, null, null));
+        Optional<Groups> group = groupRepository.findById(groupId);
+        if (group.isEmpty()) {
+            throw new InvalidException("groupId", groupId, Error.GROUP_NOT_FOUND);
+        }
+
+        List<UserGroups> userGroups = userGroupRepository.findAllByGroup(group.get());
         List<Users> users = userGroups.stream()
                 .map(UserGroups::getUser)
                 .toList();
@@ -62,12 +78,11 @@ public class GroupService {
         return new GroupUserBirthdayListResponse(birthdays);
     }
 
-    public GroupUserListResponse findAllMember(Long groupId, String lastName, String searchName,
-            int size) {
+    public GroupUserListResponse findAllMember(Long groupId, String lastName, String searchName, int size) {
         List<Users> users = userGroupRepository.findAllUserWithPaging(groupId, lastName, searchName,
                 size);
 
-        List<Profiles> findProfiles = profilesRepository.findAllByUserInAndGroupId(users, groupId);
+        List<Profiles> findProfiles = profileRepository.findAllByUserInAndGroupId(users, groupId);
         Map<Long, String> profileImageByUserId = findProfiles.stream()
                 .collect(Collectors.toMap(
                         profiles -> profiles.getUser().getId(),
@@ -98,13 +113,13 @@ public class GroupService {
     }
 
     public void updateUserRole(Long groupId, UserRoleUpdateRequest request, Users users) {
-        Users findUser = userRepository.findById(request.getUserId())
-                .orElseThrow(); // todo argument resolver 제거 예정
+        Users findUser = userRepository.findByUserId(request.getUserId())
+                .orElseThrow(); // TODO: argument resolver 제거 예정
         Groups group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new RuntimeException("저장되지 않은 group 입니다."));
+                .orElseThrow(() -> new InvalidException("groupId", groupId, Error.GROUP_NOT_FOUND));
 
         if (userGroupRepository.findByUserAndGroup(findUser, group).isEmpty()) {
-            throw new RuntimeException("group에 저장된 유저가 아닙니다.");
+            throw new InvalidException("groupId", groupId, Error.GROUP_USER_NOT_FOUND);
         }
 
 //        userGroupRepository.updateUserRole(findUser, group, request.getRole());
@@ -113,14 +128,21 @@ public class GroupService {
 
     @Transactional
     public void createGroup(Users user, GroupModifyRequest request) {
-        Groups group = groupRepository.save(new Groups(null, request.getName(), user));
+        Users userBuilder = userRepository.findByUserId(user.getUserId())
+                .orElseThrow(() -> new InvalidException("userId", user.getUserId(), Error.ACCOUNT_NOT_FOUND));
+
+        Groups groupBuilder = Groups.builder()
+                .name(request.getName())
+                .owner(userBuilder)
+                .build();
+
+        Groups group = groupRepository.save(groupBuilder);
 
         saveGroupQuestions(request, group);
     }
 
     @Transactional
-    public void updateGroup(Users users, GroupModifyRequest request, Long groupId) {
-        // todo  users 권한 체크
+    public void updateGroup(GroupModifyRequest request, Long groupId) {
         Groups group = groupRepository.findById(groupId).orElseThrow();
         groupQuestionRepository.deleteAllByGroup(group);
 
@@ -156,5 +178,20 @@ public class GroupService {
 
         groupQuestions.addAll(fixedGroupQuestions);
         groupQuestionRepository.saveAll(groupQuestions);
+    }
+
+    public void validatorGroupOwner(Users user, Long groupId) {
+        Groups group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new InvalidException("groupId", groupId, Error.GROUP_NOT_FOUND));
+
+        Users findUser = userRepository.findByUserId(user.getUserId())
+                .orElseThrow(() -> new InvalidException("userId", user.getUserId(), Error.ACCOUNT_NOT_FOUND));
+
+        UserGroups userGroups = userGroupRepository.findByUserAndGroup(findUser, group)
+                .orElseThrow(() -> new InvalidException("groupId", groupId, Error.GROUP_USER_NOT_FOUND));
+
+        if (!userGroups.getPosition().equals("OWNER")) {
+            throw new InvalidException("groupId", groupId, Error.GROUP_NOT_OWNER);
+        }
     }
 }

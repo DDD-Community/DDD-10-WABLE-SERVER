@@ -1,4 +1,4 @@
-package com.wable.harmonika.domain.group;
+package com.wable.harmonika.domain.group.dto;
 
 import com.wable.harmonika.domain.user.entity.Users;
 import java.time.LocalDate;
@@ -16,10 +16,12 @@ public class GroupUserBirthdayListResponse {
 
     @Getter
     public static class UserBirthday {
-
         private String userId;
+
         private String name;
+
         private Integer month;
+
         private Integer day;
 
         public UserBirthday(String userId, String name, Integer month, Integer day) {

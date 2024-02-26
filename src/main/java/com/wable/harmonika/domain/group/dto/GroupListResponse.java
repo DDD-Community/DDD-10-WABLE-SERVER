@@ -1,4 +1,4 @@
-package com.wable.harmonika.domain.group;
+package com.wable.harmonika.domain.group.dto;
 
 import com.wable.harmonika.domain.group.entity.Groups;
 import java.util.List;
@@ -24,6 +24,7 @@ public class GroupListResponse {
     @Getter
     static class GroupResponse {
         private Long id;
+
         private String name;
 
         public GroupResponse(Long id, String name) {

@@ -1,6 +1,8 @@
 package com.wable.harmonika.domain.profile.service;
 
-import com.wable.harmonika.domain.group.GroupRepository;
+import com.wable.harmonika.domain.group.entity.UserGroups;
+import com.wable.harmonika.domain.group.repository.GroupRepository;
+import com.wable.harmonika.domain.group.repository.UserGroupRepository;
 import com.wable.harmonika.domain.profile.dto.CreateProfileByGroupDto;
 import com.wable.harmonika.domain.profile.dto.CreateProfileByUserDto;
 import com.wable.harmonika.domain.profile.dto.QuestionDataDto;
@@ -16,7 +18,6 @@ import com.wable.harmonika.global.error.exception.InvalidException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import net.minidev.asm.ConvertDate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +26,6 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -39,6 +39,7 @@ public class ProfileService {
     private final ProfileQuestionsRepository profileQuestionsRepository;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final UserGroupRepository userGroupRepository;
     private final S3Presigner s3Presigner;
 
     @Value("${cloud.aws.bucket}")
@@ -168,6 +169,14 @@ public class ProfileService {
     @Transactional
     public void saveProfileByGroup(CreateProfileByGroupDto profileByGroupDto) {
         Profiles profile = this.getProfileBuilder(profileByGroupDto);
+
+        UserGroups userGroup = UserGroups.builder()
+                .user(userRepository.findByUserId(profileByGroupDto.getUserId())
+                        .orElseThrow(() -> new InvalidException("userId", profileByGroupDto.getUserId(), Error.ACCOUNT_NOT_FOUND)))
+                .group(groupRepository.findById(profileByGroupDto.getGroupId())
+                        .orElseThrow(() -> new InvalidException("groupId", profileByGroupDto.getGroupId(), Error.GROUP_NOT_FOUND)))
+                .position("member").build();
+        userGroupRepository.save(userGroup);
 
         Long profileId = profileRepository.save(profile).getId();
 
