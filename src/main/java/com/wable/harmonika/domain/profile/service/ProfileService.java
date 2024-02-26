@@ -1,5 +1,6 @@
 package com.wable.harmonika.domain.profile.service;
 
+import com.wable.harmonika.domain.group.entity.Position;
 import com.wable.harmonika.domain.group.entity.UserGroups;
 import com.wable.harmonika.domain.group.repository.GroupRepository;
 import com.wable.harmonika.domain.group.repository.UserGroupRepository;
@@ -176,7 +177,7 @@ public class ProfileService {
                         .orElseThrow(() -> new InvalidException("userId", profileByGroupDto.getUserId(), Error.ACCOUNT_NOT_FOUND)))
                 .group(groupRepository.findById(profileByGroupDto.getGroupId())
                         .orElseThrow(() -> new InvalidException("groupId", profileByGroupDto.getGroupId(), Error.GROUP_NOT_FOUND)))
-                .position("member").build();
+                .position(Position.MEMBER).build();
         userGroupRepository.save(userGroup);
 
         Long profileId = profileRepository.save(profile).getId();

@@ -24,10 +24,10 @@ public class UserGroups extends BaseTimeEntity {
     @JoinColumn(name = "group_id")
     private Groups group;
 
-    private String position;
+    private Position position;
 
     @Builder
-    public UserGroups(Users user, Groups group, String position) {
+    public UserGroups(Users user, Groups group, Position position) {
         this.user = user;
         this.group = group;
         this.position = position;

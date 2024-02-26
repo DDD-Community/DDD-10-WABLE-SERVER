@@ -8,12 +8,7 @@ import com.wable.harmonika.domain.group.dto.GroupModifyRequest.FixedQuestion;
 import com.wable.harmonika.domain.group.dto.GroupUserBirthdayListResponse;
 import com.wable.harmonika.domain.group.dto.GroupUserBirthdayListResponse.UserBirthday;
 import com.wable.harmonika.domain.group.dto.GroupUserListResponse;
-import com.wable.harmonika.domain.group.entity.GroupQuestion;
-import com.wable.harmonika.domain.group.entity.Groups;
-import com.wable.harmonika.domain.group.entity.QuestionNames;
-import com.wable.harmonika.domain.group.entity.QuestionTypes;
-import com.wable.harmonika.domain.group.entity.Questions;
-import com.wable.harmonika.domain.group.entity.UserGroups;
+import com.wable.harmonika.domain.group.entity.*;
 import com.wable.harmonika.domain.group.repository.*;
 import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.domain.profile.repository.ProfileRepository;
@@ -94,16 +89,16 @@ public class GroupService {
         List<UserGroups> findUserGroups = userGroupRepository.findAllByUserInAndGroup(
                 users, group);
 
-        Map<Long, String> positionByUserId = findUserGroups.stream()
+        Map<String, Position> positionByUserId = findUserGroups.stream()
                 .collect(Collectors.toMap(
-                        userGroups -> userGroups.getUser().getId(),
+                        userGroups -> userGroups.getUser().getUserId(),
                         UserGroups::getPosition
                 ));
 
         List<UserResponse> userRespons = users.stream()
                 .map(user -> new UserResponse(user.getUserId(),
                         profileImageByUserId.get(user.getId()),
-                        user.getName(), positionByUserId.get(user.getId()), user.getBirth()))
+                        user.getName(), positionByUserId.get(user.getUserId()), user.getBirth()))
                 .toList();
 
         Integer count = userGroupRepository.countByGroup(group);
@@ -190,7 +185,7 @@ public class GroupService {
         UserGroups userGroups = userGroupRepository.findByUserAndGroup(findUser, group)
                 .orElseThrow(() -> new InvalidException("groupId", groupId, Error.GROUP_USER_NOT_FOUND));
 
-        if (!userGroups.getPosition().equals("OWNER")) {
+        if (!userGroups.getPosition().equals(Position.OWNER)) {
             throw new InvalidException("groupId", groupId, Error.GROUP_NOT_OWNER);
         }
     }
