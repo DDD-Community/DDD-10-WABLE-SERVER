@@ -21,9 +21,16 @@ public class ProfileQuestionsCustomRepositoryImpl implements ProfileQuestionsCus
 
     @Override
     public void updateProfileQuestionsByProfileId(Long id, ProfileQuestions data) {
-        jpaQueryFactory.update(profileQuestions)
-                .where(profileQuestions.id.eq(id))
-                .set(profileQuestions, data)
-                .execute();
+        // TODO: 삭제에 대한 로직 추가 해야함
+        if (id == null) {
+            jpaQueryFactory.insert(profileQuestions)
+                    .set(profileQuestions, data)
+                    .execute();
+        } else {
+            jpaQueryFactory.update(profileQuestions)
+                    .where(profileQuestions.id.eq(id))
+                    .set(profileQuestions, data)
+                    .execute();
+        }
     }
 }

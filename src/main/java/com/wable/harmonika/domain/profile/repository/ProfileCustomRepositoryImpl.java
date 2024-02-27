@@ -1,6 +1,7 @@
 package com.wable.harmonika.domain.profile.repository;
 
 
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wable.harmonika.domain.profile.entity.Profiles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,10 +71,14 @@ public class ProfileCustomRepositoryImpl implements ProfileCustomRepository {
 
     @Override
     public Profiles findByUserIdAndGroupId(String userId, Long groupId) {
-        return jpaQueryFactory.selectFrom(profiles)
-                .where(profiles.user.userId.eq(userId))
-                .where(profiles.group.id.eq(groupId))
-                .fetchFirst();
+        JPAQuery<Profiles> query = jpaQueryFactory.selectFrom(profiles)
+                .where(profiles.user.userId.eq(userId));
+
+        if (groupId != null) {
+            query = query.where(profiles.group.id.eq(groupId));
+        }
+
+        return query.fetchFirst();
     }
 
     @Override

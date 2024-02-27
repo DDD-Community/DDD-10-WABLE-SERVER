@@ -33,7 +33,8 @@ public class ProfileQuestions extends BaseTimeEntity {
     private List<String> answers;
 
     @Builder
-    public ProfileQuestions(Profiles profile, String sid, String question, QuestionTypes questionType, List<String> answers) {
+    public ProfileQuestions(Long id, Profiles profile, String sid, String question, QuestionTypes questionType, List<String> answers) {
+        this.id = id;
         this.profile = profile;
         this.sid = sid;
         this.question = question;
