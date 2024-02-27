@@ -1,14 +1,16 @@
-package com.wable.harmonika.domain.group;
+package com.wable.harmonika.domain.group.dto;
 
 import com.wable.harmonika.domain.group.entity.Groups;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Getter;
 
+@Getter
 public class GroupListResponse {
-    private List<GroupResponse> groupResponses;
+    private List<GroupResponse> groups;
 
-    public GroupListResponse(List<GroupResponse> groupResponses) {
-        this.groupResponses = groupResponses;
+    public GroupListResponse(List<GroupResponse> groups) {
+        this.groups = groups;
     }
 
     public static GroupListResponse of(List<Groups> groups) {
@@ -19,8 +21,10 @@ public class GroupListResponse {
         return new GroupListResponse(groupResponses);
     }
 
+    @Getter
     static class GroupResponse {
         private Long id;
+
         private String name;
 
         public GroupResponse(Long id, String name) {

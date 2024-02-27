@@ -1,19 +1,23 @@
-package com.wable.harmonika.domain.group;
+package com.wable.harmonika.domain.group.dto;
 
-import com.wable.harmonika.domain.user.entity.Users;
 import java.time.LocalDate;
+
+import com.wable.harmonika.domain.group.entity.Position;
 import lombok.Getter;
 
 @Getter
-public class MemberResponse {
+public class UserResponse {
+    private String userId;
 
-    private Long userId;
     private String imageUrl;
+
     private String name;
-    private String position ;
+
+    private Position position;
+
     private LocalDate birthday;
 
-    public MemberResponse(Long userId, String imageUrl, String name, String position,
+    public UserResponse(String userId, String imageUrl, String name, Position position,
             LocalDate birthday) {
         this.userId = userId;
         this.imageUrl = imageUrl;

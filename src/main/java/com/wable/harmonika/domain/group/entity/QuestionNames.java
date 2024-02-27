@@ -1,5 +1,5 @@
 package com.wable.harmonika.domain.group.entity;
 
 public enum QuestionNames {
-    MBTI, HOBBY, CUSTOM
+    MBTI, HOBBY, CUSTOM, NICKNAME
 }

@@ -31,7 +31,6 @@ public class Groups extends BaseTimeEntity {
 
     @Builder
     public Groups(Long id, String name, Users owner) {
-        this.id = id;
         this.name = name;
         this.owner = owner;
     }
