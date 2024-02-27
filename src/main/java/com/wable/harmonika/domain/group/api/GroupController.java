@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "프로필 API", description = "프로필 API")
+@Tag(name = "그룹 API", description = "그룹 API")
 @Slf4j
 @RestController
 @RequestMapping("/v1/groups")
