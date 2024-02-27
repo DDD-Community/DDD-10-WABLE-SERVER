@@ -1,6 +1,10 @@
 package com.wable.harmonika.domain.group.api;
 
-import com.wable.harmonika.domain.group.dto.*;
+import com.wable.harmonika.domain.group.dto.GroupListResponse;
+import com.wable.harmonika.domain.group.dto.GroupModifyRequest;
+import com.wable.harmonika.domain.group.dto.GroupUserBirthdayListResponse;
+import com.wable.harmonika.domain.group.dto.GroupUserListResponse;
+import com.wable.harmonika.domain.group.dto.UserPositionUpdateRequest;
 import com.wable.harmonika.domain.group.service.GroupService;
 import com.wable.harmonika.domain.user.entity.Users;
 import io.swagger.v3.oas.annotations.Operation;
@@ -83,27 +87,16 @@ public class GroupController {
         return ResponseEntity.ok().build();
     }
 
-    // TODO: 관리자 권한 체크
     @Operation(summary = "팀원 역할 수정", description = "팀원 역할 수정 + todo 관리자 권한 체크 해야함")
     @PutMapping("/{groupId}/role")
     public ResponseEntity<String> updateUserRole(
             Users user,
             @PathVariable("groupId") Long groupId,
-            @Valid @RequestBody UserRoleUpdateRequest request
+            @Valid @RequestBody UserPositionUpdateRequest request
     ) {
-        // TODO: MEMBER, ADMIN 에 대한 핸들링 필요
         groupService.validatorGroupOwner(user, groupId);
         groupService.updateUserRole(groupId, request, user);
 
         return ResponseEntity.ok().build();
     }
-
-    // 팀원 퇴출
-    // todo 관리자 권한 체크
-//    @PutMapping("/{groupId}/role")
-//    public ResponseEntity<String> updateUserRole(@PathVariable("groupId") Long groupId) {
-//        groupService.updateUserRole(groupId, request);
-//
-//        return ResponseEntity.ok().build();
-//    }
 }

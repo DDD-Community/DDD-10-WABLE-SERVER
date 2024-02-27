@@ -24,6 +24,7 @@ public class UserGroups extends BaseTimeEntity {
     @JoinColumn(name = "group_id")
     private Groups group;
 
+    @Enumerated(EnumType.STRING)
     private Position position;
 
     @Builder

@@ -1,6 +1,6 @@
 package com.wable.harmonika.domain.group.dto;
 
-import com.wable.harmonika.global.entity.Role;
+import com.wable.harmonika.domain.group.entity.Position;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -8,15 +8,15 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserRoleUpdateRequest {
+public class UserPositionUpdateRequest {
     @NotBlank
     private String userId;
 
     @NotNull
-    private Role role;
+    private Position position;
 
-    public UserRoleUpdateRequest(String userId, Role role) {
+    public UserPositionUpdateRequest(String userId, Position position) {
         this.userId = userId;
-        this.role = role;
+        this.position = position;
     }
 }
