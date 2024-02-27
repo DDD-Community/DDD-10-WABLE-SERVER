@@ -3,7 +3,6 @@ package com.wable.harmonika.domain.user.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.wable.harmonika.domain.group.entity.Groups;
-import com.wable.harmonika.domain.group.entity.UserGroups;
 import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -17,7 +16,7 @@ import lombok.*;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Users extends BaseTimeEntity {
 
     @Id
@@ -40,9 +39,6 @@ public class Users extends BaseTimeEntity {
 
     @OneToMany(targetEntity = Groups.class, fetch = FetchType.LAZY)
     private List<Groups> groups;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<UserGroups> userGroups;
 
     @Builder
     public Users(String userId, String gender, String name, LocalDate birth) {

@@ -9,13 +9,11 @@ import java.util.List;
 @Entity
 @Getter
 public class Questions extends BaseTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private QuestionNames sid;
+    private String sid;
 
     private String question;
 
@@ -24,17 +22,4 @@ public class Questions extends BaseTimeEntity {
 
     @ElementCollection
     private List<String> selections;
-
-    public Questions(Long id, QuestionNames sid, String question, QuestionTypes questionType,
-            List<String> selections) {
-        this.id = id;
-        this.sid = sid;
-        this.question = question;
-        this.questionType = questionType;
-        this.selections = selections;
-    }
-
-    public Questions() {
-
-    }
 }
