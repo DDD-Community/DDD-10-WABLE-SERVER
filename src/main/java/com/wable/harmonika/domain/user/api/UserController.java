@@ -4,6 +4,7 @@ import com.wable.harmonika.domain.user.dto.MyUserResDto;
 import com.wable.harmonika.domain.user.dto.SignUpReqDto;
 import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.domain.user.service.UserService;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,13 +24,14 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 //    cognito로 대체함
+    @Hidden
     @Operation(summary = "회원가입", description = "회원가입을 한다")
     @PostMapping("/signup")
     @ResponseStatus(value = HttpStatus.CREATED)
     public void signUp(@Valid @RequestBody SignUpReqDto signUpReqDto) {
         userService.signUp(signUpReqDto);
     }
-
+    @Hidden
     @Operation(summary = "내 정보 조회", description = "내 정보를 조회한다")
     @GetMapping("/me")
     @ResponseStatus(value = HttpStatus.OK)

@@ -35,7 +35,7 @@ public class ProfileController {
 
     @Operation(summary = "내 프로필 조회", description = "내 프로필을 조회한다")
     @GetMapping("/me")
-    public ResponseEntity<GetProfileResponseDto[]> getProfileMe(Users user) {
+    public ResponseEntity<GetProfileResponseDto[]> getProfileMe(@Parameter(hidden = true) Users user) {
         String userId = user.getUserId();
         profileService.validateProfileByUserId(userId);
         List<Profiles> userGroupProfile = profileService.getProfileByUserId(userId);
@@ -46,7 +46,7 @@ public class ProfileController {
     @Operation(summary = "그룹 프로필 조회", description = "그룹 프로필 조회")
     @GetMapping("/group/{groupId}")
     public ResponseEntity<GetProfileResponseDto[]> getProfile(
-            Users user,
+            @Parameter(hidden = true) Users user,
             @Parameter(in = ParameterIn.PATH, description = "그룹 ID", required = true) @PathVariable Long groupId,
             @RequestParam(value = "userId", required = false) String targetUserId
     ) {
@@ -73,7 +73,7 @@ public class ProfileController {
     @Operation(summary = "유저 프로필 등록", description = "유저 프로필을 작성한다")
     @PostMapping("/user")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void saveProfileByUser(Users users, @Valid @RequestBody CreateProfileByUserDto profileByUserDto) {
+    public void saveProfileByUser(@Parameter(hidden = true) Users users, @Valid @RequestBody CreateProfileByUserDto profileByUserDto) {
         profileByUserDto.setUserId(users.getUserId());
         profileService.validateProfileByUser(profileByUserDto);
         profileService.saveProfileByUser(profileByUserDto);
@@ -83,7 +83,7 @@ public class ProfileController {
     @Operation(summary = "그룹 프로필 등록", description = "그룹 프로필을 작성한다")
     @PostMapping("/group")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void saveProfile(Users users, @Valid @RequestBody CreateProfileByGroupDto profileByGroupDto) {
+    public void saveProfile(@Parameter(hidden = true) Users users, @Valid @RequestBody CreateProfileByGroupDto profileByGroupDto) {
         profileByGroupDto.setUserId(users.getUserId());
         profileService.validateProfileByGroup(profileByGroupDto);
         profileService.saveProfileByGroup(profileByGroupDto);
@@ -93,7 +93,7 @@ public class ProfileController {
     @GetMapping("/presigned-url")
     @ResponseStatus(value = HttpStatus.OK)
     public Map<String, String> makeImageUploadURL(
-            Users users ,
+            @Parameter(hidden = true) Users users ,
             @RequestParam(value = "groupId", required = false) Long groupId
     ) {
         String userId = users.getUserId();
@@ -116,7 +116,7 @@ public class ProfileController {
     @PutMapping()
     @ResponseStatus(value = HttpStatus.OK)
     public void updateProfile(
-            Users users,
+            @Parameter(hidden = true) Users users,
             @Valid @RequestBody UpdateProfileDto profileDto
     ) {
         profileDto.setUserId(users.getUserId());
