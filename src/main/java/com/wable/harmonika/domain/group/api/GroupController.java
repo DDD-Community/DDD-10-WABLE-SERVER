@@ -7,6 +7,7 @@ import com.wable.harmonika.domain.group.dto.GroupUserListResponse;
 import com.wable.harmonika.domain.group.dto.UserPositionUpdateRequest;
 import com.wable.harmonika.domain.group.service.GroupService;
 import com.wable.harmonika.domain.user.entity.Users;
+import com.wable.harmonika.global.auth.TokenGenerator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/groups")
 @RequiredArgsConstructor
 public class GroupController {
+
     private final GroupService groupService;
 
     @Operation(summary = "내가 속한 그룹 리스트", description = "내가 속한 그룹 리스트")
@@ -58,7 +60,8 @@ public class GroupController {
             @RequestParam(value = "lastName", required = false) String lastName,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
 
-        GroupUserListResponse members = groupService.findAllMember(groupId, lastName, searchName, size);
+        GroupUserListResponse members = groupService.findAllMember(groupId, lastName, searchName,
+                size);
 
         return ResponseEntity.ok(members);
     }
@@ -87,7 +90,7 @@ public class GroupController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "팀원 역할 수정", description = "팀원 역할 수정 + todo 관리자 권한 체크 해야함")
+    @Operation(summary = "팀원 역할 수정", description = "팀원 역할 수정")
     @PutMapping("/{groupId}/role")
     public ResponseEntity<String> updateUserRole(
             Users user,
@@ -98,5 +101,17 @@ public class GroupController {
         groupService.updateUserRole(groupId, request, user);
 
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "초대코드 토큰 생성", description = "초대 코드 토큰생성")
+    @GetMapping("/{groupId}/invitationCode")
+    public ResponseEntity<String> updateUserRole(
+            Users user,
+            @PathVariable("groupId") Long groupId
+    ) {
+        groupService.validatorGroupOwner(user, groupId);
+
+        String token = TokenGenerator.generateJwtToken();
+        return ResponseEntity.ok(token);
     }
 }
