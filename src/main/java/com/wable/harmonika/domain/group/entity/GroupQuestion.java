@@ -19,17 +19,4 @@ public class GroupQuestion {
     @ManyToOne
     @JoinColumn(name = "question_id")
     private Questions question;
-
-    private boolean required;
-
-    public GroupQuestion(Long id, Groups group, Questions question, boolean required) {
-        this.id = id;
-        this.group = group;
-        this.question = question;
-        this.required = required;
-    }
-
-    public GroupQuestion() {
-
-    }
 }

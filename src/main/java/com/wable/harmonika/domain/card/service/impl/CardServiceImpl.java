@@ -5,6 +5,7 @@ import com.wable.harmonika.domain.card.entity.CardNames;
 import com.wable.harmonika.domain.card.entity.Cards;
 import com.wable.harmonika.domain.card.repository.CardRepository;
 import com.wable.harmonika.domain.card.service.CardService;
+import com.wable.harmonika.domain.group.GroupRepository;
 import com.wable.harmonika.domain.group.entity.Groups;
 import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.domain.profile.repository.ProfileRepository;
