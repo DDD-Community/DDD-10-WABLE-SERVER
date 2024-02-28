@@ -4,11 +4,17 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+
 import java.util.Date;
 
 public class TokenGenerator {
 
-    private static String secretKey = "1234563923842039482304982384187342839573490804356389475892374981347";
+
+    @Value("${private.group.secretKey}")
+    private static String secretKey;
+
+    @Value("${private.group.validityMillis}")
     private static long validityMillis = 259200000;
 
     public static String generateJwtToken() {

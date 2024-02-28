@@ -28,6 +28,11 @@ cloud:
     stack:
       auto: false
 
+private:
+  group:
+    secretKey: ENC(n5dxpP/9J3ZNCyimV+N8+gW6Edh9xFqdOatgQLIz5YpldVPlNNpJd7vEED+umZcP)
+    validityMillis: ENC(8aPdvU+zDbp/VUAcQTx/L83Q5+WNwo0kA8D5bAjrY1OtbcnX+mi1fIE5l1TmYqZS)
+
 # Prefix 설정
 server:
   servlet:
