@@ -15,7 +15,7 @@ public class TokenGenerator {
     private static String secretKey;
 
     @Value("${private.group.validityMillis}")
-    private static long validityMillis = 259200000;
+    private static long validityMillis;
 
     public static String generateJwtToken() {
         long nowMillis = System.currentTimeMillis();
