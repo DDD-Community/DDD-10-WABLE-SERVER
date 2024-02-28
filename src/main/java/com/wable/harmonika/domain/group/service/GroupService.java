@@ -1,28 +1,37 @@
 package com.wable.harmonika.domain.group.service;
 
 import com.wable.harmonika.domain.group.dto.GroupDetailResponse;
-import com.wable.harmonika.domain.group.dto.QuestionsResponse;
-import com.wable.harmonika.domain.group.dto.UserResponse;
-import com.wable.harmonika.domain.group.dto.UserPositionUpdateRequest;
 import com.wable.harmonika.domain.group.dto.GroupListResponse;
 import com.wable.harmonika.domain.group.dto.GroupModifyRequest;
 import com.wable.harmonika.domain.group.dto.GroupModifyRequest.FixedQuestion;
 import com.wable.harmonika.domain.group.dto.GroupUserBirthdayListResponse;
 import com.wable.harmonika.domain.group.dto.GroupUserBirthdayListResponse.UserBirthday;
 import com.wable.harmonika.domain.group.dto.GroupUserListResponse;
-import com.wable.harmonika.domain.group.entity.*;
-import com.wable.harmonika.domain.group.repository.*;
+import com.wable.harmonika.domain.group.dto.QuestionsResponse;
+import com.wable.harmonika.domain.group.dto.UserPositionResponse;
+import com.wable.harmonika.domain.group.dto.UserPositionUpdateRequest;
+import com.wable.harmonika.domain.group.dto.UserResponse;
+import com.wable.harmonika.domain.group.entity.GroupQuestion;
+import com.wable.harmonika.domain.group.entity.Groups;
+import com.wable.harmonika.domain.group.entity.Position;
+import com.wable.harmonika.domain.group.entity.QuestionNames;
+import com.wable.harmonika.domain.group.entity.QuestionTypes;
+import com.wable.harmonika.domain.group.entity.Questions;
+import com.wable.harmonika.domain.group.entity.UserGroups;
+import com.wable.harmonika.domain.group.repository.GroupQuestionRepository;
+import com.wable.harmonika.domain.group.repository.GroupRepository;
+import com.wable.harmonika.domain.group.repository.QuestionsRepository;
+import com.wable.harmonika.domain.group.repository.UserGroupRepository;
 import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.domain.profile.repository.ProfileRepository;
 import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.domain.user.repository.UserRepository;
+import com.wable.harmonika.global.error.Error;
+import com.wable.harmonika.global.error.exception.InvalidException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import com.wable.harmonika.global.error.Error;
-import com.wable.harmonika.global.error.exception.InvalidException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,6 +84,16 @@ public class GroupService {
         return new GroupUserBirthdayListResponse(birthdays);
     }
 
+    public UserPositionResponse getUserPosition(Users user, Long groupId) {
+        Groups group = groupRepository.findById(groupId).orElseThrow(
+                () -> new InvalidException("group id ", groupId, Error.GROUP_NOT_FOUND));
+
+        UserGroups userGroup = userGroupRepository.findByUserAndGroup(user, group).orElseThrow(
+                () -> new InvalidException("groupId", groupId, Error.GROUP_USER_NOT_FOUND));
+
+        return new UserPositionResponse(userGroup.getPosition().equals(Position.OWNER));
+    }
+
     public GroupUserListResponse findAllMember(Long groupId, String lastName, String searchName,
             int size,
             Users requestUser) {
@@ -100,7 +119,7 @@ public class GroupService {
                         UserGroups::getPosition
                 ));
 
-        List<UserResponse> userRespons = users.stream()
+        List<UserResponse> userResponse = users.stream()
                 .map(user -> new UserResponse(user.getUserId(),
                         profileImageByUserId.get(user.getId()),
                         user.getName(), positionByUserId.get(user.getUserId()), user.getBirth()))
@@ -111,7 +130,7 @@ public class GroupService {
         boolean isOwner = userGroupRepository.findByUserAndGroup(requestUser, group).get()
                 .getPosition()
                 .equals(Position.OWNER);
-        return new GroupUserListResponse(count, isOwner, userRespons);
+        return new GroupUserListResponse(count, isOwner, userResponse);
     }
 
     public void updateUserRole(Long groupId, UserPositionUpdateRequest request, Users user) {

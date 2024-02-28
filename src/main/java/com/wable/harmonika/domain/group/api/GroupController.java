@@ -5,6 +5,7 @@ import com.wable.harmonika.domain.group.dto.GroupListResponse;
 import com.wable.harmonika.domain.group.dto.GroupModifyRequest;
 import com.wable.harmonika.domain.group.dto.GroupUserBirthdayListResponse;
 import com.wable.harmonika.domain.group.dto.GroupUserListResponse;
+import com.wable.harmonika.domain.group.dto.UserPositionResponse;
 import com.wable.harmonika.domain.group.dto.UserPositionUpdateRequest;
 import com.wable.harmonika.domain.group.service.GroupService;
 import com.wable.harmonika.domain.user.entity.Users;
@@ -46,6 +47,17 @@ public class GroupController {
         GroupListResponse groupListResponse = groupService.findAll(user);
 
         return ResponseEntity.ok(groupListResponse);
+    }
+
+    @Operation(summary = "유저의 어드민 유무", description = "유저의 어드민 유무")
+    @GetMapping("/{groupId}/user/position")
+    public ResponseEntity<UserPositionResponse> findUserPosition(
+            @Parameter(hidden = true) Users user,
+            @PathVariable("groupId") Long groupId) {
+
+        UserPositionResponse userPosition = groupService.getUserPosition(user, groupId);
+
+        return ResponseEntity.ok(userPosition);
     }
 
     @Operation(summary = "그룹내 생일자 리스트", description = "그룹내 생일자 리스트")
