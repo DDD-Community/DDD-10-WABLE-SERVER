@@ -9,6 +9,7 @@ import com.wable.harmonika.domain.group.service.GroupService;
 import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.global.auth.TokenGenerator;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "프로필 API", description = "프로필 API")
+@Tag(name = "그룹 API", description = "그룹 API")
 @Slf4j
 @RestController
 @RequestMapping("/v1/groups")
@@ -35,7 +36,7 @@ public class GroupController {
 
     @Operation(summary = "내가 속한 그룹 리스트", description = "내가 속한 그룹 리스트")
     @GetMapping()
-    public ResponseEntity<GroupListResponse> findAllGroup(Users user) {
+    public ResponseEntity<GroupListResponse> findAllGroup(@Parameter(hidden = true) Users user) {
         GroupListResponse groupListResponse = groupService.findAll(user);
 
         return ResponseEntity.ok(groupListResponse);
@@ -44,7 +45,7 @@ public class GroupController {
     @Operation(summary = "그룹내 생일자 리스트", description = "그룹내 생일자 리스트")
     @GetMapping("/{groupId}/birthday")
     public ResponseEntity<GroupUserBirthdayListResponse> findAllBirthday(
-            Users user,
+            @Parameter(hidden = true) Users user,
             @PathVariable("groupId") Long groupId) {
         GroupUserBirthdayListResponse groupBirthdays = groupService.findAllBirthday(groupId);
 
@@ -54,7 +55,7 @@ public class GroupController {
     @Operation(summary = "그룹내 팁원 리스트", description = "그룹내 팁원 리스트")
     @GetMapping("/{groupId}/users")
     public ResponseEntity<GroupUserListResponse> findAllMember(
-            Users user,
+            @Parameter(hidden = true) Users user,
             @PathVariable("groupId") Long groupId,
             @RequestParam(value = "searchName", required = false) String searchName,
             @RequestParam(value = "lastName", required = false) String lastName,
@@ -69,7 +70,7 @@ public class GroupController {
     @Operation(summary = "그룹 생성", description = "그룹 생성")
     @PostMapping("")
     public ResponseEntity<String> createGroup(
-            Users user,
+            @Parameter(hidden = true) Users user,
             @RequestBody GroupModifyRequest request) {
 
         groupService.createGroup(user, request);
@@ -80,7 +81,7 @@ public class GroupController {
     @Operation(summary = "그룹 수정", description = "그룹 수정")
     @PutMapping("/{groupId}")
     public ResponseEntity<String> updateGroup(
-            Users user,
+            @Parameter(hidden = true) Users user,
             @PathVariable Long groupId,
             @Valid @RequestBody GroupModifyRequest request) {
 
@@ -93,7 +94,7 @@ public class GroupController {
     @Operation(summary = "팀원 역할 수정", description = "팀원 역할 수정")
     @PutMapping("/{groupId}/role")
     public ResponseEntity<String> updateUserRole(
-            Users user,
+            @Parameter(hidden = true) Users user,
             @PathVariable("groupId") Long groupId,
             @Valid @RequestBody UserPositionUpdateRequest request
     ) {
