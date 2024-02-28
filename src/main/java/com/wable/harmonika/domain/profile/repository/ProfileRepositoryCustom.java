@@ -4,7 +4,7 @@ import com.wable.harmonika.domain.profile.entity.Profiles;
 
 import java.util.List;
 
-public interface ProfileCustomRepository {
+public interface ProfileRepositoryCustom {
     boolean existsByUserIdAndGroupIdIsNull(String userID);
 
     boolean existsByUserIdAndGroupId(String userID, Long groupId);

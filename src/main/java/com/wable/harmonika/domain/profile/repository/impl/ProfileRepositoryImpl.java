@@ -1,9 +1,10 @@
-package com.wable.harmonika.domain.profile.repository;
+package com.wable.harmonika.domain.profile.repository.impl;
 
 
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wable.harmonika.domain.profile.entity.Profiles;
+import com.wable.harmonika.domain.profile.repository.ProfileRepositoryCustom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -14,12 +15,12 @@ import static com.wable.harmonika.domain.profile.entity.QProfiles.profiles;
 import static com.wable.harmonika.domain.user.entity.QUsers.users;
 
 @Repository
-public class ProfileCustomRepositoryImpl implements ProfileCustomRepository {
+public class ProfileRepositoryImpl implements ProfileRepositoryCustom {
 
     @Autowired
     private final JPAQueryFactory jpaQueryFactory;
 
-    public ProfileCustomRepositoryImpl(JPAQueryFactory jpaQueryFactory) {
+    public ProfileRepositoryImpl(JPAQueryFactory jpaQueryFactory) {
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
