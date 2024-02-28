@@ -73,7 +73,9 @@ public class GroupService {
         return new GroupUserBirthdayListResponse(birthdays);
     }
 
-    public GroupUserListResponse findAllMember(Long groupId, String lastName, String searchName, int size) {
+    public GroupUserListResponse findAllMember(Long groupId, String lastName, String searchName,
+            int size,
+            Users requestUser) {
         List<Users> users = userGroupRepository.findAllUserWithPaging(groupId, lastName, searchName,
                 size);
 
@@ -84,7 +86,8 @@ public class GroupService {
                         Profiles::getProfileImageUrl
                 ));
 
-        Groups group = new Groups(groupId, null, null);
+        Groups group = groupRepository.findById(groupId).orElseThrow(
+                () -> new InvalidException("group id ", groupId, Error.GROUP_NOT_FOUND));
 
         List<UserGroups> findUserGroups = userGroupRepository.findAllByUserInAndGroup(
                 users, group);
@@ -103,8 +106,10 @@ public class GroupService {
 
         Integer count = userGroupRepository.countByGroup(group);
 
-        return new GroupUserListResponse(count, userRespons);
-
+        boolean isOwner = userGroupRepository.findByUserAndGroup(requestUser, group).get()
+                .getPosition()
+                .equals(Position.OWNER);
+        return new GroupUserListResponse(count, isOwner, userRespons);
     }
 
     public void updateUserRole(Long groupId, UserPositionUpdateRequest request, Users user) {

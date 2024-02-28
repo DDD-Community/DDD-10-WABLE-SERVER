@@ -8,11 +8,12 @@ import lombok.Getter;
 public class GroupUserListResponse {
 
     private Integer totalCount;
-
+    private boolean isOwner;
     private List<UserResponse> users;
 
-    public GroupUserListResponse(Integer totalCount, List<UserResponse> users) {
+    public GroupUserListResponse(Integer totalCount, boolean isOwner, List<UserResponse> users) {
         this.totalCount = totalCount;
+        this.isOwner = isOwner;
         this.users = users;
     }
 }
