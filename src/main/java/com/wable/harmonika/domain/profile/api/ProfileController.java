@@ -10,9 +10,9 @@ import com.wable.harmonika.domain.profile.service.ProfileService;
 import com.wable.harmonika.domain.user.entity.Users;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,10 +44,14 @@ public class ProfileController {
     }
 
     @Operation(summary = "그룹 프로필 조회", description = "그룹 프로필 조회")
+    @Parameters({
+            @Parameter(name = "groupId", in = ParameterIn.PATH, description = "그룹 아이디 리스트", schema = @Schema(type = "string"), required = true),
+            @Parameter(name = "userId", in = ParameterIn.QUERY, description = "유저 아이디", schema = @Schema(type = "string"), required = false)
+    })
     @GetMapping("/group/{groupId}")
     public ResponseEntity<GetProfileResponseDto[]> getProfile(
             @Parameter(hidden = true) Users user,
-            @Parameter(in = ParameterIn.PATH, description = "그룹 ID", required = true) @PathVariable Long groupId,
+            @PathVariable Long groupId,
             @RequestParam(value = "userId", required = false) String targetUserId
     ) {
         String userId = user.getUserId();
@@ -73,7 +77,10 @@ public class ProfileController {
     @Operation(summary = "유저 프로필 등록", description = "유저 프로필을 작성한다")
     @PostMapping("/user")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void saveProfileByUser(@Parameter(hidden = true) Users users, @Valid @RequestBody CreateProfileByUserDto profileByUserDto) {
+    public void saveProfileByUser(
+            @Parameter(hidden = true) Users users,
+            @Valid @RequestBody CreateProfileByUserDto profileByUserDto)
+    {
         profileByUserDto.setUserId(users.getUserId());
         profileService.validateProfileByUser(profileByUserDto);
         profileService.saveProfileByUser(profileByUserDto);
@@ -83,7 +90,10 @@ public class ProfileController {
     @Operation(summary = "그룹 프로필 등록", description = "그룹 프로필을 작성한다")
     @PostMapping("/group")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void saveProfile(@Parameter(hidden = true) Users users, @Valid @RequestBody CreateProfileByGroupDto profileByGroupDto) {
+    public void saveProfile(
+            @Parameter(hidden = true) Users users,
+            @Valid @RequestBody CreateProfileByGroupDto profileByGroupDto)
+    {
         profileByGroupDto.setUserId(users.getUserId());
         profileService.validateProfileByGroup(profileByGroupDto);
         profileService.saveProfileByGroup(profileByGroupDto);
@@ -112,19 +122,32 @@ public class ProfileController {
         return response;
     }
 
-    @Operation(summary = "프로필 수정", description = "프로필을 수정한다")
-    @PutMapping()
-    @ResponseStatus(value = HttpStatus.OK)
-    public void updateProfile(
+    @Operation(summary = "유저의 기본 프로필 수정", description = "프로필을 수정한다.")
+    @PutMapping("/user")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public void updateProfileByUser(
             @Parameter(hidden = true) Users users,
             @Valid @RequestBody UpdateProfileDto profileDto
     ) {
         profileDto.setUserId(users.getUserId());
-        // Profile 을 수정할 때 중요한건... GroupId 가 Null 인지 아닌지만 알면 된다.
-        if (profileDto.getGroupId() == null) {
-            profileService.validateProfileByUserId(profileDto.getUserId());
-            profileService.updateProfile(profileDto);
-        }
+
+        profileService.validateProfileByUserId(profileDto.getUserId());
+        profileService.updateProfile(profileDto);
+    }
+
+    @Operation(summary = "유저의 그룹 프로필 수정", description = "유저의 프로필을 수정한다. PATH 에 그룹 아이디를 넣어줘야 한다.")
+    @Parameters({
+            @Parameter(name = "groupId", in = ParameterIn.PATH, description = "그룹 아이디 리스트", schema = @Schema(type = "string"), required = true)
+    })
+    @PutMapping("/group/{groupId}")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public void updateProfileGroup(
+            @Parameter(hidden = true) Users users,
+            @PathVariable Long groupId,
+            @Valid @RequestBody UpdateProfileDto profileDto
+    ) {
+        profileDto.setUserId(users.getUserId());
+        profileDto.setGroupId(groupId);
 
         profileService.validateProfileGroupByUserIdAndGroupId(profileDto.getUserId(), profileDto.getGroupId());
         profileService.updateProfile(profileDto);

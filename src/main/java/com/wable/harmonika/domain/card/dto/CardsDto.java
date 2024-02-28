@@ -11,7 +11,7 @@ public class CardsDto {
 
     private String fromUserId;
 
-    private    String fromUserNickname;
+    private String fromUserNickname;
 
     private String fromUserProfileImageUrl;
 

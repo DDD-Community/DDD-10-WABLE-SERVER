@@ -22,7 +22,6 @@ public class UpdateProfileDto {
     @NotNull(message = "empty")
     @Past(message = "invalid")
     private LocalDate birth;
-    // TODO: 타입에 대한 에러 핸들링은 어떻게하냐..
 
     @NotBlank
     private String nickName;
@@ -32,7 +31,7 @@ public class UpdateProfileDto {
     @NotEmpty(message = "Questions list must not be empty")
     private List<QuestionDataDto> questions;
 
-    private Long groupId;
+    private Long groupId = null;
 
     public UpdateProfileDto(String userId, String name, String gender, LocalDate birth, String nickName, String profileImageUrl, List<QuestionDataDto> questions, Long groupId) {
         this.userId = userId;

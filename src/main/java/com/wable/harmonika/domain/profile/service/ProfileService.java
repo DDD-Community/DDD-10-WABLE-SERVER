@@ -129,6 +129,7 @@ public class ProfileService {
         return profileByUserDto.stream()
                 .map(question -> ProfileQuestions.builder()
                         .profile(profile)
+                        .id(question.getId())
                         .sid(question.getSid())
                         .question(question.getQuestion())
                         .questionType(question.getQuestionType())
