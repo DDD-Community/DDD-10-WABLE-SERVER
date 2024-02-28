@@ -24,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @Tag(name = "그룹 API", description = "그룹 API")
 @Slf4j
@@ -33,6 +36,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class GroupController {
 
     private final GroupService groupService;
+
+    private final TokenGenerator tokenGenerator;
 
     @Operation(summary = "내가 속한 그룹 리스트", description = "내가 속한 그룹 리스트")
     @GetMapping()
@@ -106,13 +111,17 @@ public class GroupController {
 
     @Operation(summary = "초대코드 토큰 생성", description = "초대 코드 토큰생성")
     @GetMapping("/{groupId}/invitationCode")
-    public ResponseEntity<String> updateUserRole(
+    public ResponseEntity<Map<String, String>> updateUserRole(
             Users user,
             @PathVariable("groupId") Long groupId
     ) {
         groupService.validatorGroupOwner(user, groupId);
 
-        String token = TokenGenerator.generateJwtToken();
-        return ResponseEntity.ok(token);
+        String token = tokenGenerator.generateJwtToken();
+
+        Map<String, String> responseData = new HashMap<>();
+        responseData.put("data", token);
+
+        return ResponseEntity.ok(responseData);
     }
 }

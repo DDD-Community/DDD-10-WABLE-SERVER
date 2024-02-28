@@ -44,6 +44,7 @@ public class ProfileService {
     private final UserRepository userRepository;
     private final UserGroupRepository userGroupRepository;
     private final S3Presigner s3Presigner;
+    private final TokenGenerator tokenGenerator;
 
     @Value("${cloud.aws.bucket}")
     private String imageBucketName;
@@ -86,7 +87,7 @@ public class ProfileService {
     }
 
     public void validateGroupToken(String groupToken) {
-        boolean isValidToken = TokenGenerator.validateJwtToken(groupToken);
+        boolean isValidToken = tokenGenerator.validateJwtToken(groupToken);
         if (isValidToken == false) {
             throw new UnauthorizedException("expired group token");
         }

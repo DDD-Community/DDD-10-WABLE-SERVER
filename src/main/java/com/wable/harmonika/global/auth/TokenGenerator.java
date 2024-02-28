@@ -4,30 +4,32 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+@Component
 public class TokenGenerator {
 
+    @Value("${cloud.private.group.secretKey}")
+    private String secretKey;
 
-    @Value("${private.group.secretKey}")
-    private static String secretKey;
+    @Value("${cloud.private.group.validityMillis}")
+    private long validityMillis;
 
-    @Value("${private.group.validityMillis}")
-    private static long validityMillis;
-
-    public static String generateJwtToken() {
+    public String generateJwtToken() {
         long nowMillis = System.currentTimeMillis();
         long expMillis = nowMillis + validityMillis;
 
         return Jwts.builder()
                 .setExpiration(new Date(expMillis))
-                .signWith(SignatureAlgorithm.HS256, TokenGenerator.secretKey.getBytes())
+                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
                 .compact();
     }
 
-    public static boolean validateJwtToken(String token) {
+    public boolean validateJwtToken(String token) {
         try {
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))

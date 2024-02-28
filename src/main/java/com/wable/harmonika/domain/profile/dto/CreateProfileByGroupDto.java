@@ -13,7 +13,7 @@ public class CreateProfileByGroupDto {
     @Null
     private String userId;
 
-    @NotBlank
+    @NotBlank(message = "empty")
     private String name;
 
     @Pattern(regexp = "^(male|female)$", message = "invalid")
@@ -24,7 +24,7 @@ public class CreateProfileByGroupDto {
     private LocalDate birth;
     // TODO: 타입에 대한 에러 핸들링은 어떻게하냐..
 
-    @NotBlank
+    @NotBlank(message = "empty")
     private String nickName;
 
     private String profileImageUrl;
@@ -35,7 +35,7 @@ public class CreateProfileByGroupDto {
     @NotNull(message = "empty")
     private Long groupId;
 
-    @NotBlank
+    @NotBlank(message = "empty")
     private String token;
 
     public CreateProfileByGroupDto(String userId, String name, String gender, LocalDate birth, String nickName, String profileImageUrl, List<QuestionDataDto> questions, Long groupId, String token) {
