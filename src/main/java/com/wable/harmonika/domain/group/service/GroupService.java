@@ -1,7 +1,7 @@
 package com.wable.harmonika.domain.group.service;
 
 import com.wable.harmonika.domain.group.dto.UserResponse;
-import com.wable.harmonika.domain.group.dto.UserRoleUpdateRequest;
+import com.wable.harmonika.domain.group.dto.UserPositionUpdateRequest;
 import com.wable.harmonika.domain.group.dto.GroupListResponse;
 import com.wable.harmonika.domain.group.dto.GroupModifyRequest;
 import com.wable.harmonika.domain.group.dto.GroupModifyRequest.FixedQuestion;
@@ -107,24 +107,25 @@ public class GroupService {
 
     }
 
-    public void updateUserRole(Long groupId, UserRoleUpdateRequest request, Users users) {
-        Users findUser = userRepository.findByUserId(request.getUserId())
-                .orElseThrow(); // TODO: argument resolver 제거 예정
+    public void updateUserRole(Long groupId, UserPositionUpdateRequest request, Users user) {
         Groups group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new InvalidException("groupId", groupId, Error.GROUP_NOT_FOUND));
 
-        if (userGroupRepository.findByUserAndGroup(findUser, group).isEmpty()) {
+        if (userGroupRepository.findByUserAndGroup(user, group).isEmpty()) {
             throw new InvalidException("groupId", groupId, Error.GROUP_USER_NOT_FOUND);
         }
+        Users targetUser = userRepository.findByUserId(request.getUserId())
+                .orElseThrow(() -> new InvalidException("userId", request.getUserId(),
+                        Error.GROUP_USER_NOT_FOUND));
 
-//        userGroupRepository.updateUserRole(findUser, group, request.getRole());
-
+        userGroupRepository.updateUserRole(targetUser, group, request.getPosition());
     }
 
     @Transactional
     public void createGroup(Users user, GroupModifyRequest request) {
         Users userBuilder = userRepository.findByUserId(user.getUserId())
-                .orElseThrow(() -> new InvalidException("userId", user.getUserId(), Error.ACCOUNT_NOT_FOUND));
+                .orElseThrow(() -> new InvalidException("userId", user.getUserId(),
+                        Error.ACCOUNT_NOT_FOUND));
 
         Groups groupBuilder = Groups.builder()
                 .name(request.getName())
@@ -144,6 +145,7 @@ public class GroupService {
         saveGroupQuestions(request, group);
 
     }
+
     private void saveGroupQuestions(GroupModifyRequest request, Groups group) {
         List<Questions> newQuestions = request.getRequiredQuestions().stream()
                 .map(s -> new Questions(null, QuestionNames.CUSTOM, s,
@@ -180,10 +182,12 @@ public class GroupService {
                 .orElseThrow(() -> new InvalidException("groupId", groupId, Error.GROUP_NOT_FOUND));
 
         Users findUser = userRepository.findByUserId(user.getUserId())
-                .orElseThrow(() -> new InvalidException("userId", user.getUserId(), Error.ACCOUNT_NOT_FOUND));
+                .orElseThrow(() -> new InvalidException("userId", user.getUserId(),
+                        Error.ACCOUNT_NOT_FOUND));
 
         UserGroups userGroups = userGroupRepository.findByUserAndGroup(findUser, group)
-                .orElseThrow(() -> new InvalidException("groupId", groupId, Error.GROUP_USER_NOT_FOUND));
+                .orElseThrow(
+                        () -> new InvalidException("groupId", groupId, Error.GROUP_USER_NOT_FOUND));
 
         if (!userGroups.getPosition().equals(Position.OWNER)) {
             throw new InvalidException("groupId", groupId, Error.GROUP_NOT_OWNER);

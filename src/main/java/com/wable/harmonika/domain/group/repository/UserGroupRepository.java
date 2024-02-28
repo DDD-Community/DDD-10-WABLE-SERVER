@@ -1,12 +1,16 @@
 package com.wable.harmonika.domain.group.repository;
 
 import com.wable.harmonika.domain.group.entity.Groups;
+import com.wable.harmonika.domain.group.entity.Position;
 import com.wable.harmonika.domain.group.entity.UserGroups;
 import com.wable.harmonika.domain.user.entity.Users;
 import io.lettuce.core.dynamic.annotation.Param;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,10 +24,10 @@ public interface UserGroupRepository extends JpaRepository<UserGroups, Long>, Us
 
     Integer countByGroup(Groups group);
 
-//    @Transactional
-//    @Modifying
-//    @Query("update UserGroups u set u.position = :role where u.user = :user and u.group = :group")
-//    void updateUserRole(@Param("user") Users user,@Param("group") Groups groupId, Role role);
+    @Transactional
+    @Modifying
+    @Query("update UserGroups u set u.position = :position where u.user = :user and u.group = :group")
+    void updateUserRole(@Param("user") Users user,@Param("group") Groups group, Position position);
 
-    Optional<UserGroups> findByUserAndGroup(@Param("user")Users users, @Param("group")Groups group);
+    Optional<UserGroups> findByUserAndGroup(/*@Param("user")*/Users user, /*@Param("group")*/Groups group);
 }
