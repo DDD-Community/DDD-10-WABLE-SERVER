@@ -1,5 +1,6 @@
 package com.wable.harmonika.domain.group.api;
 
+import com.wable.harmonika.domain.group.dto.GroupDetailResponse;
 import com.wable.harmonika.domain.group.dto.GroupListResponse;
 import com.wable.harmonika.domain.group.dto.GroupModifyRequest;
 import com.wable.harmonika.domain.group.dto.GroupUserBirthdayListResponse;
@@ -94,6 +95,17 @@ public class GroupController {
         groupService.updateGroup(request, groupId);
 
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "그룹 상세 조회", description = "그룹 상세 조회")
+    @GetMapping("/{groupId}")
+    public ResponseEntity<GroupDetailResponse> findGroup(
+            @Parameter(hidden = true) Users user,
+            @PathVariable Long groupId) {
+        groupService.validatorGroupOwner(user, groupId);
+        GroupDetailResponse response = groupService.findGroup(groupId);
+
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "팀원 역할 수정", description = "팀원 역할 수정")

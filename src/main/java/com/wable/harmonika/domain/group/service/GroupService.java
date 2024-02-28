@@ -1,5 +1,7 @@
 package com.wable.harmonika.domain.group.service;
 
+import com.wable.harmonika.domain.group.dto.GroupDetailResponse;
+import com.wable.harmonika.domain.group.dto.QuestionsResponse;
 import com.wable.harmonika.domain.group.dto.UserResponse;
 import com.wable.harmonika.domain.group.dto.UserPositionUpdateRequest;
 import com.wable.harmonika.domain.group.dto.GroupListResponse;
@@ -148,20 +150,48 @@ public class GroupService {
         groupQuestionRepository.deleteAllByGroup(group);
 
         saveGroupQuestions(request, group);
+    }
 
+    public GroupDetailResponse findGroup(Long groupId) {
+        Groups group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new InvalidException("groupId", groupId, Error.GROUP_NOT_FOUND));
+
+        List<GroupQuestion> groupQuestions = groupQuestionRepository.findALlByGroup(group);
+        Map<Long, Boolean> isRequiredByQuestionId = groupQuestions.stream()
+                .collect(Collectors.toMap(
+                        groupQuestion -> groupQuestion.getQuestion().getId(),
+                        GroupQuestion::isRequired
+                ));
+
+        List<Questions> questions = groupQuestions.stream()
+                .map(GroupQuestion::getQuestion)
+                .toList();
+
+        List<QuestionsResponse> response = questions.stream()
+                .map(question -> QuestionsResponse.of(question,
+                        isRequiredByQuestionId.get(question.getId())))
+                .collect(Collectors.toList());
+
+        return new GroupDetailResponse(groupId, group.getName(), response);
     }
 
     private void saveGroupQuestions(GroupModifyRequest request, Groups group) {
+        // 새로운 질문들 저장
         List<Questions> newQuestions = request.getRequiredQuestions().stream()
                 .map(s -> new Questions(null, QuestionNames.CUSTOM, s,
                         QuestionTypes.OPEN_ENDED, null))
                 .collect(Collectors.toList());
 
         questionRepository.saveAll(newQuestions);
+        List<GroupQuestion> groupQuestions = newQuestions.stream()
+                .map(questions -> new GroupQuestion(null, group, questions, true))
+                .collect(Collectors.toList());
 
+        // 고정 질문들
         List<Questions> fixedQuestions = questionRepository.findBySidIn(
                 List.of(QuestionNames.MBTI, QuestionNames.NICKNAME, QuestionNames.HOBBY));
 
+        // 고정 질문들의 필수여부를 저장
         List<GroupQuestion> fixedGroupQuestions = fixedQuestions.stream()
                 .map(savedFixedQuestion -> {
                     FixedQuestion reqeustFixedQuestion = request.getFixedQuestions().stream()
@@ -173,10 +203,6 @@ public class GroupService {
                             reqeustFixedQuestion.isRequired());
                 })
                 .toList();
-
-        List<GroupQuestion> groupQuestions = newQuestions.stream()
-                .map(questions -> new GroupQuestion(null, group, questions, true))
-                .collect(Collectors.toList());
 
         groupQuestions.addAll(fixedGroupQuestions);
         groupQuestionRepository.saveAll(groupQuestions);
