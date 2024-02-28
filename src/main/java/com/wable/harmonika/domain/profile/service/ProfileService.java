@@ -14,8 +14,10 @@ import com.wable.harmonika.domain.profile.repository.ProfileQuestionsRepository;
 import com.wable.harmonika.domain.profile.repository.ProfileRepository;
 import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.domain.user.repository.UserRepository;
+import com.wable.harmonika.global.auth.TokenGenerator;
 import com.wable.harmonika.global.error.Error;
 import com.wable.harmonika.global.error.exception.InvalidException;
+import com.wable.harmonika.global.error.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -80,6 +82,13 @@ public class ProfileService {
         boolean hasGroup = profileRepository.existsByUserIdAndGroupId(profileByGroupDto.getUserId(), profileByGroupDto.getGroupId());
         if (hasGroup) {
             throw new InvalidException("groupId", profileByGroupDto.getUserId(), Error.GROUP_DUPLICATION);
+        }
+    }
+
+    public void validateGroupToken(String groupToken) {
+        boolean isValidToken = TokenGenerator.validateJwtToken(groupToken);
+        if (isValidToken == false) {
+            throw new UnauthorizedException("expired group token");
         }
     }
 

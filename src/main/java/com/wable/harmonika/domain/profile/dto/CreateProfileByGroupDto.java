@@ -35,7 +35,10 @@ public class CreateProfileByGroupDto {
     @NotNull(message = "empty")
     private Long groupId;
 
-    public CreateProfileByGroupDto(String userId, String name, String gender, LocalDate birth, String nickName, String profileImageUrl, List<QuestionDataDto> questions, Long groupId) {
+    @NotBlank
+    private String token;
+
+    public CreateProfileByGroupDto(String userId, String name, String gender, LocalDate birth, String nickName, String profileImageUrl, List<QuestionDataDto> questions, Long groupId, String token) {
         this.userId = userId;
         this.name = name;
         this.gender = gender;
@@ -44,5 +47,6 @@ public class CreateProfileByGroupDto {
         this.profileImageUrl = profileImageUrl;
         this.questions = questions;
         this.groupId = groupId;
+        this.token = token;
     }
 }

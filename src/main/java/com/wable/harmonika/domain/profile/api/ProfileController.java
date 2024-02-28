@@ -96,6 +96,7 @@ public class ProfileController {
     {
         profileByGroupDto.setUserId(users.getUserId());
         profileService.validateProfileByGroup(profileByGroupDto);
+        profileService.validateGroupToken(profileByGroupDto.getToken());
         profileService.saveProfileByGroup(profileByGroupDto);
     }
 
