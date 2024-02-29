@@ -29,7 +29,8 @@ pipeline {
                 // TOOD: shell script 추가 해야함
                 sh """
                     docker pull ${repository}:main;
-                    docker stop ddd-api;
+                    docker stop ddd-api || true;
+                    docker rm ddd-api || true;
                     docker container run -d -t -e ENCRYPTOR_PASSWORD=${env.ENCRYPTOR_PASSWORD} --network=ddd-10-wable-server_default --restart always --name ddd-api ghcr.io/ddd-community/ddd-10-wable-server:main;
                 """
             }
