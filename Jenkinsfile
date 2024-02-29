@@ -4,6 +4,18 @@ pipeline {
     agent any
 
     stages {
+        stage('Start Notification') {
+            steps {
+                script {
+                    def jsonData = '{"username":"Jenkins harmonika", "content":"[DEV] - API 디폴로이중..."}'
+                    sh """
+                    curl -d '${jsonData}' \
+                        -H 'Content-Type: application/json' \
+                        -X POST ${env.DISCORD_WEBHOOK_URL}
+                    """
+                }
+            }
+        }
         stage('Github Pull') {
             steps{
                 checkout scm
@@ -35,13 +47,16 @@ pipeline {
                 """
             }
         }
-        stage('Notification') {
+        stage('Deploy Notification') {
             steps {
-                sh """
-                curl -d '{"username":"Jenkins harmonika", "content":"[DEV] - API 디폴로이 되었습니다.\n Swagger : https://waggle.reactjs.kr/api/swagger-ui/index.html  \nRepository : https://github.com/DDD-Community/DDD-10-WABLE-SERVER"}' \
-                    -H "Content-Type: application/json" \
-                    -X POST ${env.DISCORD_WEBHOOK_URL}
-                """
+                script {
+                    def jsonData = '{"username":"Jenkins harmonika", "content":"[DEV] - API 디폴로이 되었습니다.\\n Swagger : https://waggle.reactjs.kr/api/swagger-ui/index.html  \\nRepository : https://github.com/DDD-Community/DDD-10-WABLE-SERVER"}'
+                    sh """
+                    curl -d '${jsonData}' \
+                        -H 'Content-Type: application/json' \
+                        -X POST ${env.DISCORD_WEBHOOK_URL}
+                    """
+                }
             }
         }
     }
