@@ -1,20 +1,14 @@
-# harmonika - DDD-10-WABLE-SERVER 
-> harmonika API ..
-
-CI/CD 끝나면 아래 링크 수정 필요
-
-[![Build Status](https://harmonika/DDD-Community/DDD-10-WABLE-SERVER.svg?branch=main)](https://harmonika/DDD-Community/DDD-10-WABLE-SERVER)
-[![Coverage Status](https://harmonika/DDD-Community/DDD-10-WABLE-SERVER.svg?branch=main)](https://harmonika/DDD-Community/DDD-10-WABLE-SERVER?branch=main)
+# 와글(waggle)
+와글은 동아리, 동호회, 스타트업, 학교, 커뮤니티 등에서 사용할 수 있는 카드 기반의 소셜 네트워크 자기소개 서비스입니다.
 
 
-* MySQL 뭐시기..
-* API 뭐시기..
-* 스웨거 뭐시기..
+* 사이트 : https://waggle.reactjs.kr/
+* API : https://waggle.reactjs.kr/api 
+* 스웨거 : https://waggle.reactjs.kr/api/swagger-ui/index.html
 
 
 ## 요구 사항
-* JDK ..
-* Maven/Gradle ..
+* JDK 17
 
 ## 실행 방법
 
@@ -29,8 +23,6 @@ docker-compose up -d
 http://localhost:81 에서 잘 하셈
 
 ## 개발 환경 설정
-
-TODO: 개발 의존성 설치 방법과 자동 테스트 슈트 실행 방법 작성
 
 아래 방법을 통해 개발에 필요한 DB, Redis, phpMyAdmin을 실행할 수 있다.
 phpMyAdmin은 http://localhost:8888 에서 접속할 수 있으며, MySQL을 웹에서 관리할 수 있다.
@@ -76,11 +68,6 @@ spring:
     password: password
 ```
 
-## 업데이트 내역
-
-* 0.0.0
-    * 준비중..
-
 ## MVP
 
 <details><summary>Phase 0</summary><pre markdown="1">
@@ -121,7 +108,5 @@ spring:
 </pre></details>
 
 ## ERD
----
-[그림 첨부 예정]
 
-https://dbdiagram.io/d/wable-64888412722eb77494e48e6a
+<img src="./assets/wable.png" alt="erd" width="100%"/>
