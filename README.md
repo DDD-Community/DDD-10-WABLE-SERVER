@@ -58,14 +58,14 @@ docker run -d \
   redis:7.2-alpine
 ```
 
-로컬 개발환경에서는 application.yml 을 아래와 같이 설정하면 된다.
-```yml
-# src/main/resources/application.yml
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/default
-    username: admin
-    password: password
+로컬 개발환경에서는 application.yml 을 사용하게 되며 환경변수에는 ENCRYPTOR_PASSWORD=secret 이 필요하다.
+
+또는 인텔리제이에서 실행할 때, environment variables 에 ENCRYPTOR_PASSWORD=secret 를 추가하면 된다.
+```sh
+$ env 
+...
+ENCRYPTOR_PASSWORD=secret
+...
 ```
 
 ## MVP
@@ -106,6 +106,10 @@ spring:
     - 사용자는 조직의 커스텀 카드를 생성할 수 있음
     - 사용자별 인공지능 요약 제공 (사람들이 말한 바에 따르면, 당신은 00한 사람이군요!)
 </pre></details>
+
+## 인프라
+<img src="./assets/infra.png" alt="infra" width="100%"/>
+
 
 ## ERD
 
