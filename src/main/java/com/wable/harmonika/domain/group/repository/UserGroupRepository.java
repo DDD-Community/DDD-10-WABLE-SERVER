@@ -14,7 +14,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserGroupRepository extends JpaRepository<UserGroups, Long>, UserGroupRepositoryCustom {
+public interface UserGroupRepository extends JpaRepository<UserGroups, Long>,
+        UserGroupRepositoryCustom {
 
     List<UserGroups> findAllByUserInAndGroup(List<Users> users, Groups group);
 
@@ -27,7 +28,7 @@ public interface UserGroupRepository extends JpaRepository<UserGroups, Long>, Us
     @Transactional
     @Modifying
     @Query("update UserGroups u set u.position = :position where u.user = :user and u.group = :group")
-    void updateUserRole(@Param("user") Users user,@Param("group") Groups group, Position position);
+    void updateUserRole(@Param("user") Users user, @Param("group") Groups group, Position position);
 
-    Optional<UserGroups> findByUserAndGroup(/*@Param("user")*/Users user, /*@Param("group")*/Groups group);
+    Optional<UserGroups> findByUserAndGroup(Users user, Groups group);
 }

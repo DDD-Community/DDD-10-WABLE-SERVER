@@ -1,9 +1,11 @@
 package com.wable.harmonika.domain.group.api;
 
+import com.wable.harmonika.domain.group.dto.GroupDetailResponse;
 import com.wable.harmonika.domain.group.dto.GroupListResponse;
 import com.wable.harmonika.domain.group.dto.GroupModifyRequest;
 import com.wable.harmonika.domain.group.dto.GroupUserBirthdayListResponse;
 import com.wable.harmonika.domain.group.dto.GroupUserListResponse;
+import com.wable.harmonika.domain.group.dto.UserPositionResponse;
 import com.wable.harmonika.domain.group.dto.UserPositionUpdateRequest;
 import com.wable.harmonika.domain.group.service.GroupService;
 import com.wable.harmonika.domain.user.entity.Users;
@@ -47,6 +49,17 @@ public class GroupController {
         return ResponseEntity.ok(groupListResponse);
     }
 
+    @Operation(summary = "유저의 어드민 유무", description = "유저의 어드민 유무")
+    @GetMapping("/{groupId}/user/position")
+    public ResponseEntity<UserPositionResponse> findUserPosition(
+            @Parameter(hidden = true) Users user,
+            @PathVariable("groupId") Long groupId) {
+
+        UserPositionResponse userPosition = groupService.getUserPosition(user, groupId);
+
+        return ResponseEntity.ok(userPosition);
+    }
+
     @Operation(summary = "그룹내 생일자 리스트", description = "그룹내 생일자 리스트")
     @GetMapping("/{groupId}/birthday")
     public ResponseEntity<GroupUserBirthdayListResponse> findAllBirthday(
@@ -67,7 +80,7 @@ public class GroupController {
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
 
         GroupUserListResponse members = groupService.findAllMember(groupId, lastName, searchName,
-                size);
+                size, user);
 
         return ResponseEntity.ok(members);
     }
@@ -94,6 +107,17 @@ public class GroupController {
         groupService.updateGroup(request, groupId);
 
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "그룹 상세 조회", description = "그룹 상세 조회")
+    @GetMapping("/{groupId}")
+    public ResponseEntity<GroupDetailResponse> findGroup(
+            @Parameter(hidden = true) Users user,
+            @PathVariable Long groupId) {
+        groupService.validatorGroupOwner(user, groupId);
+        GroupDetailResponse response = groupService.findGroup(groupId);
+
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "팀원 역할 수정", description = "팀원 역할 수정")
