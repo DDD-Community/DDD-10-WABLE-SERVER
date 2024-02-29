@@ -27,6 +27,10 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+  private:
+    group:
+      secretKey: ENC(iGUPWEyRfu6vTBYdFeAa91gXWRpxAObYy9eSxZC8mlACtWTFFocdRj/ajb2BjZ//CvZXbNZkEtupSUZja4Quo5CF5Y03eauouKayLTBEwETy4w6w3WY9i0cVpT0UrpytZjsjdoWj+FwrQxgp5kcJ4w==)
+      validityMillis: ENC(8aPdvU+zDbp/VUAcQTx/L83Q5+WNwo0kA8D5bAjrY1OtbcnX+mi1fIE5l1TmYqZS)
 
 # Prefix 설정
 server:

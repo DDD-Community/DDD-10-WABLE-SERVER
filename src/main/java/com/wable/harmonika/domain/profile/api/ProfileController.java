@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Collections;
 
 import java.util.List;
 import java.util.Map;
@@ -77,26 +78,33 @@ public class ProfileController {
     @Operation(summary = "유저 프로필 등록", description = "유저 프로필을 작성한다")
     @PostMapping("/user")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void saveProfileByUser(
+    public ResponseEntity<Map<String, String>> saveProfileByUser(
             @Parameter(hidden = true) Users users,
             @Valid @RequestBody CreateProfileByUserDto profileByUserDto)
     {
         profileByUserDto.setUserId(users.getUserId());
         profileService.validateProfileByUser(profileByUserDto);
         profileService.saveProfileByUser(profileByUserDto);
+
+        Map<String, String> responseData = Collections.singletonMap("data", "success");
+        return ResponseEntity.ok(responseData);
     }
 
     // 그룹 프로필 생성
     @Operation(summary = "그룹 프로필 등록", description = "그룹 프로필을 작성한다")
     @PostMapping("/group")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void saveProfile(
+    public ResponseEntity<Map<String, String>> saveProfile(
             @Parameter(hidden = true) Users users,
             @Valid @RequestBody CreateProfileByGroupDto profileByGroupDto)
     {
         profileByGroupDto.setUserId(users.getUserId());
         profileService.validateProfileByGroup(profileByGroupDto);
+        profileService.validateGroupToken(profileByGroupDto.getToken());
         profileService.saveProfileByGroup(profileByGroupDto);
+
+        Map<String, String> responseData = Collections.singletonMap("data", "success");
+        return ResponseEntity.ok(responseData);
     }
 
     @Operation(summary = "프로필의 이미지 업로드 URL", description = "프로필의 이미지 업로드 URL 을 생성해서 준다 /profiles/{userId}.jpg or /profiles/{userId}/{groupId}.jpg")
@@ -125,7 +133,7 @@ public class ProfileController {
     @Operation(summary = "유저의 기본 프로필 수정", description = "프로필을 수정한다.")
     @PutMapping("/user")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void updateProfileByUser(
+    public ResponseEntity<Map<String, String>> updateProfileByUser(
             @Parameter(hidden = true) Users users,
             @Valid @RequestBody UpdateProfileDto profileDto
     ) {
@@ -133,6 +141,9 @@ public class ProfileController {
 
         profileService.validateProfileByUserId(profileDto.getUserId());
         profileService.updateProfile(profileDto);
+
+        Map<String, String> responseData = Collections.singletonMap("data", "success");
+        return ResponseEntity.ok(responseData);
     }
 
     @Operation(summary = "유저의 그룹 프로필 수정", description = "유저의 프로필을 수정한다. PATH 에 그룹 아이디를 넣어줘야 한다.")
@@ -141,7 +152,7 @@ public class ProfileController {
     })
     @PutMapping("/group/{groupId}")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void updateProfileGroup(
+    public ResponseEntity<Map<String, String>> updateProfileGroup(
             @Parameter(hidden = true) Users users,
             @PathVariable Long groupId,
             @Valid @RequestBody UpdateProfileDto profileDto
@@ -151,5 +162,8 @@ public class ProfileController {
 
         profileService.validateProfileGroupByUserIdAndGroupId(profileDto.getUserId(), profileDto.getGroupId());
         profileService.updateProfile(profileDto);
+
+        Map<String, String> responseData = Collections.singletonMap("data", "success");
+        return ResponseEntity.ok(responseData);
     }
 }
