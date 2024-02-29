@@ -37,12 +37,9 @@ pipeline {
         stage('Notification') {
             steps {
                 sh """
-                    curl --location ${env.DISCORD_WEBHOOK_URL} \
-                    --header 'Content-Type: application/json' \
-                    --data-raw '{
-                        "username": "Jenkins harmonika",
-                        "content": "[DEV] - API 디폴로이 되었습니다. \nSwagger : https://harmonika.wo.tc/api/swagger-ui/index.html \nRepository : https://github.com/DDD-Community/DDD-10-WABLE-SERVER"
-                    }'
+                curl -d '{"username":"Jenkins harmonika", "content":"[DEV] - API 디폴로이 되었습니다.\n Swagger : https://waggle.reactjs.kr/api/swagger-ui/index.html  \nRepository : https://github.com/DDD-Community/DDD-10-WABLE-SERVER"}' \
+                    -H "Content-Type: application/json" \
+                    -X POST ${env.DISCORD_WEBHOOK_URL}
                 """
             }
         }
