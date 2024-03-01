@@ -24,6 +24,7 @@ public class UserGroupRepositoryCustomImpl implements UserGroupRepositoryCustom 
                 .where(userGroups.group.id.eq(groupId)
                         .and(searchNameContains(searchName))
                         .and(lastNameGt(lastName)))
+                .orderBy(users.name.asc())
                 .limit(size)
                 .fetch();
     }
