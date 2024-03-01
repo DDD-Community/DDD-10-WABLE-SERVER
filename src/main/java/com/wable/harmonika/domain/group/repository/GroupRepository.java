@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GroupRepository extends JpaRepository<Groups, Long> {
      boolean existsByIdAndOwner(Long groupId, Users owner);
+
+        boolean existsByName(String name);
 }

@@ -91,6 +91,7 @@ public class GroupController {
             @Parameter(hidden = true) Users user,
             @RequestBody GroupModifyRequest request) {
 
+        groupService.validatorGroupName(request.getName());
         groupService.createGroup(user, request);
 
         return ResponseEntity.ok().build();

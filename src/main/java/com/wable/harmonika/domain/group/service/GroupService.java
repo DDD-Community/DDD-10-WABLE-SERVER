@@ -247,4 +247,10 @@ public class GroupService {
             throw new InvalidException("groupId", groupId, Error.GROUP_NOT_OWNER);
         }
     }
+
+    public void validatorGroupName(String name) {
+        if (groupRepository.existsByName(name)) {
+            throw new InvalidException("name", name, Error.GROUP_NAME_DUPLICATE);
+        }
+    }
 }

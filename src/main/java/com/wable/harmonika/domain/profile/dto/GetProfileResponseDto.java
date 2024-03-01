@@ -2,6 +2,7 @@ package com.wable.harmonika.domain.profile.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wable.harmonika.domain.group.entity.Groups;
+import com.wable.harmonika.domain.group.entity.QuestionNames;
 import com.wable.harmonika.domain.group.entity.QuestionTypes;
 import com.wable.harmonika.domain.profile.entity.Profiles;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -100,7 +101,7 @@ public class GetProfileResponseDto {
         private Long id;
 
         @JsonProperty("sid")
-        private String sid;
+        private QuestionNames sid;
 
         @JsonProperty("question")
         private String question;
@@ -119,7 +120,7 @@ public class GetProfileResponseDto {
 
         public QuestionDTO(
             Long id,
-            String sid,
+            QuestionNames sid,
             String question,
             QuestionTypes questionType,
             List<String> answers,

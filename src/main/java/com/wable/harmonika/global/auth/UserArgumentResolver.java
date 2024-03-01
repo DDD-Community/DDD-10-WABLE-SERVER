@@ -8,11 +8,13 @@ import com.wable.harmonika.global.error.exception.ForbiddenException;
 import com.wable.harmonika.global.error.exception.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.MethodParameter;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -23,6 +25,9 @@ import java.util.Optional;
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private VerifyToken verifyToken;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -40,7 +45,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
                 throw new UnauthorizedException("401 Unauthorized !!");
             }
             String token = authorization.replaceAll("^Bearer( )*", "");
-            if (new VerifyToken().verify(token) == false) {
+            if (verifyToken.verify(token) == false) {
                 throw new UnauthorizedException("401 Unauthorized !!");
             }
             String username = AwsCognitoJwtParserUtil.getClaim(token, "cognito:username");
@@ -58,7 +63,8 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Builder
-    public UserArgumentResolver(UserRepository userRepository) {
+    public UserArgumentResolver(UserRepository userRepository, VerifyToken verifyToken) {
         this.userRepository = userRepository;
+        this.verifyToken = verifyToken;
     }
 }

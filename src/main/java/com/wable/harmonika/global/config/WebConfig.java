@@ -2,6 +2,8 @@ package com.wable.harmonika.global.config;
 
 import com.wable.harmonika.domain.user.repository.UserRepository;
 import com.wable.harmonika.global.auth.UserArgumentResolver;
+import com.wable.harmonika.global.auth.VerifyToken;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -15,16 +17,23 @@ public class WebConfig implements WebMvcConfigurer {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private VerifyToken verifyToken;
+
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(UserArgumentResolver.builder().
                 userRepository(userRepository).
+                verifyToken(verifyToken).
                 build());
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("*");
+        registry
+                .addMapping("/**")
+                .allowedHeaders("*")
+                .allowedOrigins("*")
+                .allowedMethods("*");
     }
 }
