@@ -1,5 +1,6 @@
 package com.wable.harmonika.domain.profile.dto;
 
+import com.wable.harmonika.domain.group.entity.QuestionNames;
 import com.wable.harmonika.domain.group.entity.QuestionTypes;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -15,7 +16,7 @@ public class QuestionDataDto {
     private Long id;
 
     @NotBlank
-    private String sid;
+    private QuestionNames sid;
 
     @NotBlank
     private String question;
@@ -26,7 +27,7 @@ public class QuestionDataDto {
     @NotEmpty
     private List<String> answers;
 
-    public QuestionDataDto(Long id, String sid, String question, QuestionTypes questionType, List<String> answers) {
+    public QuestionDataDto(Long id, QuestionNames sid, String question, QuestionTypes questionType, List<String> answers) {
         this.id = id;
         this.sid = sid;
         this.question = question;
