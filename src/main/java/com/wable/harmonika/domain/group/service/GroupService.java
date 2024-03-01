@@ -137,12 +137,14 @@ public class GroupService {
         Groups group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new InvalidException("groupId", groupId, Error.GROUP_NOT_FOUND));
 
-        if (userGroupRepository.findByUserAndGroup(user, group).isEmpty()) {
+        Users targetUser = userRepository.findByUserId(request.getUserId()).orElseThrow(
+                () -> new InvalidException("userId", request.getUserId(),
+                        Error.GROUP_USER_NOT_FOUND)
+        );
+
+        if (userGroupRepository.findByUserAndGroup(targetUser, group).isEmpty()) {
             throw new InvalidException("groupId", groupId, Error.GROUP_USER_NOT_FOUND);
         }
-        Users targetUser = userRepository.findByUserId(request.getUserId())
-                .orElseThrow(() -> new InvalidException("userId", request.getUserId(),
-                        Error.GROUP_USER_NOT_FOUND));
 
         userGroupRepository.updateUserRole(targetUser, group, request.getPosition());
     }
@@ -159,6 +161,8 @@ public class GroupService {
                 .build();
 
         Groups group = groupRepository.save(groupBuilder);
+
+        userGroupRepository.save(new UserGroups(user, group, Position.OWNER));
 
         saveGroupQuestions(request, group);
     }
