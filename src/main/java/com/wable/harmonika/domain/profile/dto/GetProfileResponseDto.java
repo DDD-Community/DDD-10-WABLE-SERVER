@@ -101,7 +101,7 @@ public class GetProfileResponseDto {
         private Long id;
 
         @JsonProperty("sid")
-        private QuestionNames sid;
+        private String sid;
 
         @JsonProperty("question")
         private String question;
@@ -120,7 +120,7 @@ public class GetProfileResponseDto {
 
         public QuestionDTO(
             Long id,
-            QuestionNames sid,
+            String sid,
             String question,
             QuestionTypes questionType,
             List<String> answers,
