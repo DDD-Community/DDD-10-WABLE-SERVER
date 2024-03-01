@@ -1,5 +1,6 @@
 package com.wable.harmonika.domain.profile.entity;
 
+import com.wable.harmonika.domain.group.entity.QuestionNames;
 import com.wable.harmonika.domain.group.entity.QuestionTypes;
 import com.wable.harmonika.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -22,7 +23,7 @@ public class ProfileQuestions extends BaseTimeEntity {
     @JoinColumn(name = "profile_id")
     private Profiles profile;
 
-    private String sid;
+    private QuestionNames sid;
 
     private String question;
 
@@ -33,7 +34,7 @@ public class ProfileQuestions extends BaseTimeEntity {
     private List<String> answers;
 
     @Builder
-    public ProfileQuestions(Long id, Profiles profile, String sid, String question, QuestionTypes questionType, List<String> answers) {
+    public ProfileQuestions(Long id, Profiles profile, QuestionNames sid, String question, QuestionTypes questionType, List<String> answers) {
         this.id = id;
         this.profile = profile;
         this.sid = sid;
