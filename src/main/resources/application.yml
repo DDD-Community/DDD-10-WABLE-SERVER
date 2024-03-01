@@ -36,3 +36,8 @@ cloud:
 server:
   servlet:
     context-path: /api
+
+# cognito 설정
+cognito:
+  clientId: 60k5jb34qhf78mrq3mfaatvq0c
+  issuerUri: https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_0q6Cok8uM

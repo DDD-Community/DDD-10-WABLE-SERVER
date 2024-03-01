@@ -37,18 +37,7 @@ server:
   servlet:
     context-path: /api
 
-  # cognito 설정
-  security:
-    oauth2:
-      client:
-        registration:
-          cognito:
-            clientId: pphu5ge7ch41s2nhqmo1v5te8
-            clientSecret: clientSecret
-            scope: email
-            redirect-uri: https://waggle-waggle.vercel.app
-            clientName: userPoolAppClient
-        provider:
-          cognito:
-            issuerUri: https://cognito-idp.{region}.amazonaws.com/{poolId}
-            user-name-attribute: cognito:username
+# cognito 설정
+cognito:
+  clientId: pphu5ge7ch41s2nhqmo1v5te8
+  issuerUri: https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_80Se4Ok5g
