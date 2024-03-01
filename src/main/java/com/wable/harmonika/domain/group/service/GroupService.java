@@ -61,16 +61,14 @@ public class GroupService {
         List<Groups> groups = userGroups.stream()
                 .map(UserGroups::getGroup)
                 .collect(Collectors.toList());
-        // Owner 인 그룹 가져오기
+
         List<Groups> ownerGroups = groupRepository.findByOwner(users);
         groups.addAll(ownerGroups);
 
-        // Remove groups with duplicate IDs using a map
         Map<Long, Groups> uniqueGroupsById = groups.stream()
                 .collect(Collectors.toMap(Groups::getId, group -> group, (existing, replacement) -> existing));
         List<Groups> uniqueGroups = new ArrayList<>(uniqueGroupsById.values());
 
-        // Groups::getId Soring 해야함
         uniqueGroups.sort(Comparator.comparing(Groups::getId));
 
         return GroupListResponse.of(uniqueGroups);
