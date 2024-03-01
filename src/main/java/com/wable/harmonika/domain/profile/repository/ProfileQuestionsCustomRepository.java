@@ -4,5 +4,5 @@ import com.wable.harmonika.domain.profile.entity.ProfileQuestions;
 import com.wable.harmonika.domain.profile.entity.Profiles;
 
 public interface ProfileQuestionsCustomRepository {
-    void updateProfileQuestionsByProfileId(Long id, ProfileQuestions profileQuestions);
+    void updateProfileQuestionsByProfileId(Long profileQuestionId, ProfileQuestions profileQuestions);
 }

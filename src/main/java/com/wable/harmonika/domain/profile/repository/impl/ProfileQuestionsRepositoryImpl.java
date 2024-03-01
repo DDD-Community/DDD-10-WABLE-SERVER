@@ -21,15 +21,15 @@ public class ProfileQuestionsRepositoryImpl implements ProfileQuestionsCustomRep
 
 
     @Override
-    public void updateProfileQuestionsByProfileId(Long id, ProfileQuestions data) {
+    public void updateProfileQuestionsByProfileId(Long profileQuestionId, ProfileQuestions data) {
         // TODO: 삭제에 대한 로직 추가 해야함
-        if (id == null) {
+        if (profileQuestionId == null) {
             jpaQueryFactory.insert(profileQuestions)
                     .set(profileQuestions, data)
                     .execute();
         } else {
             jpaQueryFactory.update(profileQuestions)
-                    .where(profileQuestions.id.eq(id))
+                    .where(profileQuestions.id.eq(profileQuestionId))
                     .set(profileQuestions, data)
                     .execute();
         }

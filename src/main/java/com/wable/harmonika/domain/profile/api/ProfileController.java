@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 
@@ -146,7 +147,7 @@ public class ProfileController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<Map<String, String>> updateProfileByUser(
             @Parameter(hidden = true) Users users,
-            @Valid @RequestBody UpdateProfileDto profileDto
+            @Validated @RequestBody UpdateProfileDto profileDto
     ) {
         profileDto.setUserId(users.getUserId());
 

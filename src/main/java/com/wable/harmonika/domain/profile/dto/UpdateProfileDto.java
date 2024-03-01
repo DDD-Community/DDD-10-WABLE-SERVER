@@ -1,5 +1,6 @@
 package com.wable.harmonika.domain.profile.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +29,7 @@ public class UpdateProfileDto {
 
     private String profileImageUrl;
 
-    @NotEmpty(message = "Questions list must not be empty")
+    @Valid
     private List<QuestionDataDto> questions;
 
     private Long groupId = null;
