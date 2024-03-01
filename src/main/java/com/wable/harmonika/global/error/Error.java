@@ -21,7 +21,8 @@ public enum Error {
     POST_NOT_FOUND("게시글을 찾을 수 없습니다."),
     COMMENT_NOT_FOUND("댓글을 찾을 수 없습니다."),
 
-    POST_LIKE_ERROR("잘못된 좋아요 요청입니다.");
+    POST_LIKE_ERROR("잘못된 좋아요 요청입니다."),
+    GROUP_NAME_DUPLICATE("사용할 수 없는 그룹 이름입니다.");
 
 
 
