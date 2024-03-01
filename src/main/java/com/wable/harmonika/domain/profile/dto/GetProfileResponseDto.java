@@ -31,7 +31,7 @@ public class GetProfileResponseDto {
 
     private String name;
 
-    private String nickName;
+    private String nickname;
 
     private String gender;
 
@@ -49,7 +49,7 @@ public class GetProfileResponseDto {
         this.gender = profiles.getUser().getGender();
         this.birth = profiles.getUser().getBirth();
 
-        this.nickName = profiles.getNickname();
+        this.nickname = profiles.getNickname();
         this.profileImageUrl = profiles.getProfileImageUrl();
 
         if (profiles.getGroup() != null) {

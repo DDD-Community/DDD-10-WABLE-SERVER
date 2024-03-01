@@ -25,7 +25,7 @@ public class CreateProfileByGroupDto {
     // TODO: 타입에 대한 에러 핸들링은 어떻게하냐..
 
     @NotBlank(message = "empty")
-    private String nickName;
+    private String nickname;
 
     private String profileImageUrl;
 
@@ -38,12 +38,12 @@ public class CreateProfileByGroupDto {
     @NotBlank(message = "empty")
     private String token;
 
-    public CreateProfileByGroupDto(String userId, String name, String gender, LocalDate birth, String nickName, String profileImageUrl, List<QuestionDataDto> questions, Long groupId, String token) {
+    public CreateProfileByGroupDto(String userId, String name, String gender, LocalDate birth, String nickname, String profileImageUrl, List<QuestionDataDto> questions, Long groupId, String token) {
         this.userId = userId;
         this.name = name;
         this.gender = gender;
         this.birth = birth;
-        this.nickName = nickName;
+        this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
         this.questions = questions;
         this.groupId = groupId;

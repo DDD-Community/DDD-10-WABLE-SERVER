@@ -25,7 +25,7 @@ public class UpdateProfileDto {
     private LocalDate birth;
 
     @NotBlank
-    private String nickName;
+    private String nickname;
 
     private String profileImageUrl;
 
@@ -34,12 +34,12 @@ public class UpdateProfileDto {
 
     private Long groupId = null;
 
-    public UpdateProfileDto(String userId, String name, String gender, LocalDate birth, String nickName, String profileImageUrl, List<QuestionDataDto> questions, Long groupId) {
+    public UpdateProfileDto(String userId, String name, String gender, LocalDate birth, String nickname, String profileImageUrl, List<QuestionDataDto> questions, Long groupId) {
         this.userId = userId;
         this.name = name;
         this.gender = gender;
         this.birth = birth;
-        this.nickName = nickName;
+        this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
         this.questions = questions;
         this.groupId = groupId;
