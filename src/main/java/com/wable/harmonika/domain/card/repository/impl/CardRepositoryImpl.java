@@ -13,6 +13,7 @@ import java.util.List;
 import static com.wable.harmonika.domain.card.entity.QCards.cards;
 
 public class CardRepositoryImpl implements CardRepositoryCustom {
+
     @Autowired
     private final JPAQueryFactory query;
 
@@ -50,5 +51,35 @@ public class CardRepositoryImpl implements CardRepositoryCustom {
                 .orderBy(cards.id.desc())
                 .limit(param.getSize())
                 .fetch();
+    }
+
+    public Long countBy(FindAllCardsParam param) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (param.getLastId() != null && param.getLastId() != 0) {
+            builder.and(cards.id.lt(param.getLastId()));
+        }
+
+        if (param.getToUserId() != null && !param.getToUserId().isEmpty()) {
+            builder.and(cards.toUser.userId.eq(param.getToUserId()));
+        }
+
+        if (param.getFromUserId() != null && !param.getFromUserId().isEmpty()) {
+            builder.and(cards.fromUser.userId.eq(param.getFromUserId()));
+        }
+
+        if (param.getGroupIds() != null && !param.getGroupIds().isEmpty()) {
+            builder.and(cards.group.id.in(param.getGroupIds()));
+        }
+
+        if (param.getSids() != null && !param.getSids().isEmpty()) {
+            builder.and(cards.sid.in(param.getSids()));
+        }
+
+        // 쿼리 실행
+        return query
+                .selectFrom(cards)
+                .where(builder)
+                .fetchCount();
     }
 }

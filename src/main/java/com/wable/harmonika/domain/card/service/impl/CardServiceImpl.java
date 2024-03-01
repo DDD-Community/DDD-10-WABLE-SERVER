@@ -91,39 +91,49 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public List<CardsDto> findAllReceivedCards(ListCardsRequest request) throws Exception {
-        List<Cards> allCards = cardRepository.findAllCards(
-                FindAllCardsParam.builder()
-                        .groupIds(request.getGroupIds())
-                        .sids(request.getSids())
-                        .toUserId(request.getUserId())
-                        .lastId(request.getLastId())
-                        .size(request.getSize())
-                        .build());
+    public ListCardsResponse findAllReceivedCards(ListCardsRequest request) throws Exception {
+        FindAllCardsParam param = FindAllCardsParam.builder()
+                .groupIds(request.getGroupIds())
+                .sids(request.getSids())
+                .toUserId(request.getUserId())
+                .lastId(request.getLastId())
+                .size(request.getSize())
+                .build();
+        List<Cards> allCards = cardRepository.findAllCards(param);
 
         List<CardsDto> collect = allCards.stream()
                 .map(m -> new CardsDto(m))
                 .collect(Collectors.toList());
 
-        return collect;
+        Integer count = cardRepository.countBy(param).intValue();
+
+        return ListCardsResponse.builder()
+                .totalCount(count)
+                .cards(collect)
+                .build();
     }
 
     @Override
-    public List<CardsDto> findAllSentCards(ListCardsRequest request) throws Exception {
-        List<Cards> allCards = cardRepository.findAllCards(
-                FindAllCardsParam.builder()
-                        .groupIds(request.getGroupIds())
-                        .sids(request.getSids())
-                        .fromUserId(request.getUserId())
-                        .lastId(request.getLastId())
-                        .size(request.getSize())
-                        .build());
+    public ListCardsResponse findAllSentCards(ListCardsRequest request) throws Exception {
+        FindAllCardsParam param = FindAllCardsParam.builder()
+                .groupIds(request.getGroupIds())
+                .sids(request.getSids())
+                .fromUserId(request.getUserId())
+                .lastId(request.getLastId())
+                .size(request.getSize())
+                .build();
+        List<Cards> allCards = cardRepository.findAllCards(param);
 
         List<CardsDto> collect = allCards.stream()
                 .map(m -> new CardsDto(m))
                 .collect(Collectors.toList());
 
-        return collect;
+        Integer count = cardRepository.countBy(param).intValue();
+
+        return ListCardsResponse.builder()
+                .totalCount(count)
+                .cards(collect)
+                .build();
     }
 
     @Override

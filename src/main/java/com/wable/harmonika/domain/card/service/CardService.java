@@ -15,9 +15,9 @@ public interface CardService {
     public Cards findById(Long bno) throws Exception;
     public void update(UpdateCardsRequest vo) throws Exception;
     public void delete(Long bno) throws Exception;
-    public List<CardsDto> findAllReceivedCards(ListCardsRequest request) throws Exception;
+    public ListCardsResponse findAllReceivedCards(ListCardsRequest request) throws Exception;
 
-    public List<CardsDto> findAllSentCards(ListCardsRequest request) throws Exception;
+    public ListCardsResponse findAllSentCards(ListCardsRequest request) throws Exception;
 
     public List<CardsDto> findAllCardsByGroup(ListCardsByGroupRequest request) throws Exception;
 
