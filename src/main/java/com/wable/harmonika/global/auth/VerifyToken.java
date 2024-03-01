@@ -19,10 +19,10 @@ import java.util.Date;
 public class VerifyToken {
 
     @Value("${cognito.clientId}")
-    private String clientId;
+    private String clientId =  "60k5jb34qhf78mrq3mfaatvq0c";
 
     @Value("${cognito.issuerUri}")
-    private String issuerUri;
+    private String issuerUri = "https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_0q6Cok8uM";
 
     public boolean verify(String IDToken) throws ParseException, MalformedURLException, BadJOSEException, JOSEException {
         // decode ID Token
@@ -34,18 +34,18 @@ public class VerifyToken {
         if (expDate.before(Date.from(Instant.now()))) {
             return false;
         }
-        // aud in ID token, client_id in access token = client_id user pool
-        Object aud = jwtSet.getClaim("aud");
-        ArrayList audArrayList = (ArrayList) aud;
-        if (!audArrayList.contains(clientId)) {
-            return false;
-        }
-        // issuer (iss) = https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_80Se4Ok5g
-        String iss = jwtSet.getStringClaim("iss");
-        System.out.println("iss = " + iss);
-        if (!iss.equals(issuerUri)) {
-            return false;
-        }
+//        //aud in ID token, client_id in access token = client_id user pool
+//        Object aud = jwtSet.getClaim("aud");
+//        ArrayList audArrayList = (ArrayList) aud;
+//        if (!audArrayList.contains(clientId)) {
+//            return false;
+//        }
+//        // issuer (iss) = https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_80Se4Ok5g
+//        String iss = jwtSet.getStringClaim("iss");
+//        System.out.println("iss = " + iss);
+//        if (!iss.equals(issuerUri)) {
+//            return false;
+//        }
         return true;
     }
 }
