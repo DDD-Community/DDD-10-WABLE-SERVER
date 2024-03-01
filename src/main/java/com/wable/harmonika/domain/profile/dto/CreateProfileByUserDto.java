@@ -18,7 +18,7 @@ public class CreateProfileByUserDto {
     @NotBlank
     private String name;
 
-    @Pattern(regexp = "^(male|female)$", message = "invalid")
+    @Pattern(regexp = "^(남성|여성)$", message = "invalid")
     private String gender;
 
     @NotNull(message = "empty")
