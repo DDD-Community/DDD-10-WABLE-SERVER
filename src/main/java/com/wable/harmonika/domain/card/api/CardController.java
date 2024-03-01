@@ -58,39 +58,36 @@ public class CardController {
     @Parameters({
             @Parameter(name = "groupIds", in = ParameterIn.QUERY, description = "그룹 아이디 리스트", schema = @Schema(type = "array")),
             @Parameter(name = "sids", in = ParameterIn.QUERY, description = "주제 아이디 리스트", schema = @Schema(type = "array")),
-            @Parameter(name = "userId", in = ParameterIn.QUERY, description = "유저 아이디", schema = @Schema(type = "string")),
             @Parameter(name = "lastId", in = ParameterIn.QUERY, description = "마지막 카드 아이디", schema = @Schema(type = "integer")),
             @Parameter(name = "size", in = ParameterIn.QUERY, description = "조회할 카드 갯수", schema = @Schema(type = "integer"))
     })
     @Operation(summary = "내가 받은 카드 조회하기", description = "내가 받은 카드를 조회 시, 그룹별(groupIds)/주제별(sids)로 조회할 수 있습니다. ")
     @RequestMapping(value="/received", method=RequestMethod.GET)
-    public ResponseEntity<List<CardsDto>> listReceivedCards(@Parameter(hidden = true)  Users user, @Valid @ModelAttribute ListCardsRequest request) throws Exception {
+    public ResponseEntity<ListCardsResponse> listReceivedCards(@Parameter(hidden = true)  Users user, @Valid @ModelAttribute ListCardsRequest request) throws Exception {
         // 받을 유저의 아이디 설정
         request.setUserId(user.getUserId());
         // 받은 카드 조회
-        List<CardsDto> cards =  cardService.findAllReceivedCards(request);
+        ListCardsResponse response =  cardService.findAllReceivedCards(request);
 
-        return new ResponseEntity<>(cards, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @Parameters({
             @Parameter(name = "groupIds", in = ParameterIn.QUERY, description = "그룹 아이디 리스트", schema = @Schema(type = "array")),
             @Parameter(name = "sids", in = ParameterIn.QUERY, description = "주제 아이디 리스트", schema = @Schema(type = "array")),
-            @Parameter(name = "userId", in = ParameterIn.QUERY, description = "유저 아이디", schema = @Schema(type = "string")),
             @Parameter(name = "lastId", in = ParameterIn.QUERY, description = "마지막 카드 아이디", schema = @Schema(type = "integer")),
             @Parameter(name = "size", in = ParameterIn.QUERY, description = "조회할 카드 갯수", schema = @Schema(type = "integer"))
     })
     @Operation(summary = "내가 보낸 카드 조회하기", description = "내가 보낸 카드를 조회 시, 그룹별(groupIds)/주제별(sids)로 조회할 수 있습니다. ")
     @RequestMapping(value="/sent", method=RequestMethod.GET)
-    public ResponseEntity<List<CardsDto>> listSentCards(@Parameter(hidden = true)  Users user, @Parameter(hidden = true) @Valid @ModelAttribute ListCardsRequest request) throws Exception {
+    public ResponseEntity<ListCardsResponse> listSentCards(@Parameter(hidden = true)  Users user, @Parameter(hidden = true) @Valid @ModelAttribute ListCardsRequest request) throws Exception {
         request.setUserId(user.getUserId());
         // 보낸 카드 조회
-        List<CardsDto> cards =  cardService.findAllSentCards(request);
+        ListCardsResponse cards =  cardService.findAllSentCards(request);
         return new ResponseEntity<>(cards, HttpStatus.OK);
     }
     @Parameters({
             @Parameter(name = "groupIds", in = ParameterIn.QUERY, description = "그룹 아이디 리스트", schema = @Schema(type = "array")),
             @Parameter(name = "sids", in = ParameterIn.QUERY, description = "주제 아이디 리스트", schema = @Schema(type = "array")),
-            @Parameter(name = "userId", in = ParameterIn.QUERY, description = "유저 아이디", schema = @Schema(type = "string")),
             @Parameter(name = "lastId", in = ParameterIn.QUERY, description = "마지막 카드 아이디", schema = @Schema(type = "integer")),
             @Parameter(name = "size", in = ParameterIn.QUERY, description = "조회할 카드 갯수", schema = @Schema(type = "integer"))
     })
