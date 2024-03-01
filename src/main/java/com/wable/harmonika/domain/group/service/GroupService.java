@@ -28,9 +28,8 @@ import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.domain.user.repository.UserRepository;
 import com.wable.harmonika.global.error.Error;
 import com.wable.harmonika.global.error.exception.InvalidException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,8 +61,19 @@ public class GroupService {
         List<Groups> groups = userGroups.stream()
                 .map(UserGroups::getGroup)
                 .collect(Collectors.toList());
+        // Owner 인 그룹 가져오기
+        List<Groups> ownerGroups = groupRepository.findByOwner(users);
+        groups.addAll(ownerGroups);
 
-        return GroupListResponse.of(groups);
+        // Remove groups with duplicate IDs using a map
+        Map<Long, Groups> uniqueGroupsById = groups.stream()
+                .collect(Collectors.toMap(Groups::getId, group -> group, (existing, replacement) -> existing));
+        List<Groups> uniqueGroups = new ArrayList<>(uniqueGroupsById.values());
+
+        // Groups::getId Soring 해야함
+        uniqueGroups.sort(Comparator.comparing(Groups::getId));
+
+        return GroupListResponse.of(uniqueGroups);
     }
 
     public GroupUserBirthdayListResponse findAllBirthday(Long groupId) {
