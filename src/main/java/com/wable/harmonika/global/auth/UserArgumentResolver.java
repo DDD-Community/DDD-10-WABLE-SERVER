@@ -13,8 +13,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import static com.wable.harmonika.global.auth.AwsCognitoJwtValidatorUtil.validateAWSJwtToken;
-
 
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 

@@ -15,8 +15,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
-
-import static com.wable.harmonika.global.auth.AwsCognitoJwtValidatorUtil.validateAWSJwtToken;
 @Configuration
 public class VerifyToken {
 
@@ -28,7 +26,7 @@ public class VerifyToken {
 
     public boolean verify(String IDToken) throws ParseException, MalformedURLException, BadJOSEException, JOSEException {
         // decode ID Token
-        JWTClaimsSet jwtSet = validateAWSJwtToken(IDToken);
+        JWTClaimsSet jwtSet = new AwsCognitoJwtValidatorUtil().validateAWSJwtToken(IDToken);
 
         // check exp in claim
         Object exp = jwtSet.getClaim("exp");

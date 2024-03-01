@@ -20,10 +20,7 @@ import java.text.ParseException;
 
 public class AwsCognitoJwtValidatorUtil {
 
-
-    private AwsCognitoJwtValidatorUtil() {
-    }
-    public static JWTClaimsSet validateAWSJwtToken(String token) throws ParseException, JOSEException, BadJOSEException, MalformedURLException, UnauthorizedException {
+    public JWTClaimsSet validateAWSJwtToken(String token) throws ParseException, JOSEException, BadJOSEException, MalformedURLException, UnauthorizedException {
         try {
             String jsonWebKeyFileURL = AwsCognitoJwtParserUtil.getJsonWebKeyURL(token);
 
@@ -48,7 +45,7 @@ public class AwsCognitoJwtValidatorUtil {
         JsonObject header = getHeader(token);
         String  signature = getSignature(token);*/
 
-        JWTClaimsSet jwtClaimsSet = AwsCognitoJwtValidatorUtil.validateAWSJwtToken(token);
+        JWTClaimsSet jwtClaimsSet = new AwsCognitoJwtValidatorUtil().validateAWSJwtToken(token);
         System.out.println(jwtClaimsSet.toJSONObject());
     }
 
