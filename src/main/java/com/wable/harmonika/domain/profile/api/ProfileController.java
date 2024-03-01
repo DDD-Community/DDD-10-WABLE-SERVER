@@ -117,7 +117,7 @@ public class ProfileController {
         String userId = users.getUserId();
         if (groupId == null) {
             // 유저 프로필
-            String filePath = "/profiles/" + userId + ".jpg";
+            String filePath = "profile/" + userId + ".jpg";
             Map<String, String> response = profileService.getSignedUrl(filePath);
 
             return response;
@@ -125,7 +125,7 @@ public class ProfileController {
 
         profileService.validateGroupExistCheck(groupId);
 
-        String fileName = "/profiles/" + userId + "/" + groupId + ".jpg";
+        String fileName = "profile/" + userId + "/" + groupId + ".jpg";
         Map<String, String> response = profileService.getSignedUrl(fileName);
         return response;
     }

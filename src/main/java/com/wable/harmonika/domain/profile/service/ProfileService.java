@@ -235,18 +235,17 @@ public class ProfileService {
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(imageBucketName)
                 .key(fileName)
-                .contentType(contentType)
                 .build();
 
         PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
-                .signatureDuration(Duration.ofMinutes(10))
+                .signatureDuration(Duration.ofMinutes(100))
                 .putObjectRequest(objectRequest)
                 .build();
 
         val preSignedRequest = s3Presigner.presignPutObject(presignRequest);
         val signedUrl = preSignedRequest.url().toString();
 
-        return Map.of("signedUrl", signedUrl, "filename", fileName);
+        return Map.of("signedUrl", signedUrl, "filename", "https://ddd-harmonika.s3.ap-northeast-2.amazonaws.com/" + fileName);
     }
 
     private void validateImageExtension(String fileName) {
