@@ -36,8 +36,19 @@ public class ProfileController {
 
     @Operation(summary = "내 프로필 조회", description = "내 프로필을 조회한다")
     @GetMapping("/me")
-    public ResponseEntity<GetProfileResponseDto[]> getProfileMe(@Parameter(hidden = true) Users user) {
+    public ResponseEntity<GetProfileResponseDto[]> getProfileMe(
+            @Parameter(hidden = true) Users user,
+            @RequestParam(value = "groupId", required = false) String groupId
+    ) {
         String userId = user.getUserId();
+        if (groupId != null) {
+            // 그룹 프로필 조회
+            profileService.validateProfileGroupByUserIdAndGroupId(userId, Long.parseLong(groupId));
+            List<Profiles> userGroupProfile = profileService.getProfileByGroupId(userId, Long.parseLong(groupId));
+            GetProfileResponseDto[] response = userGroupProfile.stream().map(GetProfileResponseDto::new).toArray(GetProfileResponseDto[]::new);
+            return ResponseEntity.ok(response);
+        }
+
         profileService.validateProfileByUserId(userId);
         List<Profiles> userGroupProfile = profileService.getProfileByUserId(userId);
         GetProfileResponseDto[] response = userGroupProfile.stream().map(GetProfileResponseDto::new).toArray(GetProfileResponseDto[]::new);
