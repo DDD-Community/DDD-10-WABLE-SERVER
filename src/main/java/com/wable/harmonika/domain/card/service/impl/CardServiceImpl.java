@@ -99,6 +99,7 @@ public class CardServiceImpl implements CardService {
                 .lastId(request.getLastId())
                 .size(request.getSize())
                 .build();
+
         List<Cards> allCards = cardRepository.findAllCards(param);
 
         List<CardsDto> collect = allCards.stream()
@@ -122,6 +123,7 @@ public class CardServiceImpl implements CardService {
                 .lastId(request.getLastId())
                 .size(request.getSize())
                 .build();
+
         List<Cards> allCards = cardRepository.findAllCards(param);
 
         List<CardsDto> collect = allCards.stream()

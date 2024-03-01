@@ -1,13 +1,18 @@
 package com.wable.harmonika.domain.card.dto;
 
+import com.wable.harmonika.domain.card.entity.CardNames;
 import com.wable.harmonika.domain.card.entity.Cards;
 import lombok.Getter;
+
+import java.time.LocalDateTime;
 
 @Getter
 public class CardsDto {
     private Long id;
 
     private String content;
+
+    private CardNames sid;
 
     private String fromUserId;
 
@@ -21,15 +26,18 @@ public class CardsDto {
 
     private String toUserProfileImageUrl;
 
+    private LocalDateTime createdAt;
+
     public CardsDto(Cards cards) {
         this.id = cards.getId();
         this.content = cards.getContent();
+        this.sid = cards.getSid();
         this.fromUserId = cards.getFromUser().getUserId();
         this.toUserId = cards.getToUser().getUserId();
         this.fromUserNickname = cards.getFromUserProfile().getNickname();
         this.toUserNickname = cards.getToUserProfile().getNickname();
         this.fromUserProfileImageUrl = cards.getFromUserProfile().getProfileImageUrl();
         this.toUserProfileImageUrl = cards.getToUserProfile().getProfileImageUrl();
-
+        this.createdAt = cards.getToUserProfile().getCreatedAt();
     }
 }
