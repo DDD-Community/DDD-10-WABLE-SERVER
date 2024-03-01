@@ -16,6 +16,7 @@ import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 @Component
@@ -35,20 +36,22 @@ public class VerifyToken {
         // check exp in claim
         Object exp = jwtSet.getClaim("exp");
         Date expDate = (Date) exp;
+        System.out.println("expDate = " + expDate + " \n");
         if (expDate.before(Date.from(Instant.now()))) {
-            return false;
+
         }
         //aud in ID token, client_id in access token = client_id user pool
         Object aud = jwtSet.getClaim("aud");
         ArrayList audArrayList = (ArrayList) aud;
+        for (int i = 0; i < audArrayList.size(); i++) {
+            System.out.print("aud" + audArrayList.get(i) + " \n");
+        }
         if (!audArrayList.contains(clientId)) {
-            return false;
         }
         // issuer (iss) = https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_80Se4Ok5g
         String iss = jwtSet.getStringClaim("iss");
-        System.out.println("iss = " + iss);
+        System.out.println("iss =" + iss + " \n");
         if (!iss.equals(issuerUri)) {
-            return false;
         }
         return true;
     }
