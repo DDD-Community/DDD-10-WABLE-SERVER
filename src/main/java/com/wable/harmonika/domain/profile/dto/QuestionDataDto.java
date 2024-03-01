@@ -2,13 +2,16 @@ package com.wable.harmonika.domain.profile.dto;
 
 import com.wable.harmonika.domain.group.entity.QuestionTypes;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
 public class QuestionDataDto {
-    @NotBlank
+    @NotNull
     private Long id;
 
     @NotBlank
@@ -17,13 +20,14 @@ public class QuestionDataDto {
     @NotBlank
     private String question;
 
-    @NotBlank
+    @NotNull
     private QuestionTypes questionType;
 
-    @NotBlank
+    @NotEmpty
     private List<String> answers;
 
-    public QuestionDataDto(String sid, String question, QuestionTypes questionType, List<String> answers) {
+    public QuestionDataDto(Long id, String sid, String question, QuestionTypes questionType, List<String> answers) {
+        this.id = id;
         this.sid = sid;
         this.question = question;
         this.questionType = questionType;
