@@ -27,19 +27,19 @@ public class CreateProfileByUserDto {
     // TODO: 타입에 대한 에러 핸들링은 어떻게하냐..
 
     @NotBlank
-    private String nickName;
+    private String nickname;
 
     private String profileImageUrl;
 
     @NotEmpty(message = "Questions list must not be empty")
     private List<QuestionDataDto> questions;
 
-    public CreateProfileByUserDto(String userId, String name, String gender, LocalDate birth, String nickName, String profileImageUrl, List<QuestionDataDto> questions) {
+    public CreateProfileByUserDto(String userId, String name, String gender, LocalDate birth, String nickname, String profileImageUrl, List<QuestionDataDto> questions) {
         this.userId = userId;
         this.name = name;
         this.gender = gender;
         this.birth = birth;
-        this.nickName = nickName;
+        this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
         this.questions = questions;
     }

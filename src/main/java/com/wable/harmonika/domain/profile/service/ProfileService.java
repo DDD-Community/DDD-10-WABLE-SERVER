@@ -104,7 +104,7 @@ public class ProfileService {
 
     private Profiles getProfileBuilder(CreateProfileByUserDto profileByUserDto) {
         return Profiles.builder()
-                .nickname(profileByUserDto.getNickName())
+                .nickname(profileByUserDto.getNickname())
                 .user(userRepository.findByUserId(profileByUserDto.getUserId())
                         .orElseThrow(() -> new InvalidException("userId", profileByUserDto.getUserId(), Error.ACCOUNT_NOT_FOUND)))
                 .profileImageUrl(profileByUserDto.getProfileImageUrl())
@@ -117,7 +117,7 @@ public class ProfileService {
                         .orElseThrow(() -> new InvalidException("userId", profileByUserDto.getUserId(), Error.ACCOUNT_NOT_FOUND)))
                 .group(groupRepository.findById(profileByUserDto.getGroupId())
                         .orElseThrow(() -> new InvalidException("groupId", profileByUserDto.getGroupId(), Error.GROUP_NOT_FOUND)))
-                .nickname(profileByUserDto.getNickName())
+                .nickname(profileByUserDto.getNickname())
                 .profileImageUrl(profileByUserDto.getProfileImageUrl())
                 .build();
     }
