@@ -97,13 +97,9 @@ public class AwsCognitoJwtParserUtil {
         try {
             final JsonObject payload = getPayload(jwt);
 
-            payload.entrySet().forEach(entry -> {
-                System.out.println(entry.getKey() + " : " + entry.getValue());
-            });
-
-            String sub = payload.get("sub").getAsString();
-            if (sub != null) {
-                return sub;
+            final Object claimValue = payload.get(claim);
+            if (claimValue != null) {
+                return claimValue.toString();
             }
 
         } catch (final Exception e) {
