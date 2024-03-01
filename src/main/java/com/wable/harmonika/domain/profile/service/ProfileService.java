@@ -180,6 +180,12 @@ public class ProfileService {
 
     @Transactional
     public void saveProfileByGroup(CreateProfileByGroupDto profileByGroupDto) {
+        String userId = profileByGroupDto.getUserId();
+        Long groupId = profileByGroupDto.getGroupId();
+        Users user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new InvalidException("userId", userId, Error.ACCOUNT_NOT_FOUND));
+
+         boolean isOwner =  groupRepository.existsByIdAndOwner(groupId, user);
         Profiles profile = this.getProfileBuilder(profileByGroupDto);
 
         UserGroups userGroup = UserGroups.builder()
@@ -187,7 +193,7 @@ public class ProfileService {
                         .orElseThrow(() -> new InvalidException("userId", profileByGroupDto.getUserId(), Error.ACCOUNT_NOT_FOUND)))
                 .group(groupRepository.findById(profileByGroupDto.getGroupId())
                         .orElseThrow(() -> new InvalidException("groupId", profileByGroupDto.getGroupId(), Error.GROUP_NOT_FOUND)))
-                .position(Position.MEMBER).build();
+                 .position(isOwner ? Position.OWNER : Position.MEMBER).build();
         userGroupRepository.save(userGroup);
 
         Long profileId = profileRepository.save(profile).getId();
