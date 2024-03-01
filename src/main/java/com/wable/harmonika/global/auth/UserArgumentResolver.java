@@ -8,6 +8,7 @@ import com.wable.harmonika.global.error.exception.ForbiddenException;
 import com.wable.harmonika.global.error.exception.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
