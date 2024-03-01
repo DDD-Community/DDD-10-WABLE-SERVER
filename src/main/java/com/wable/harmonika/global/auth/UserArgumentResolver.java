@@ -13,8 +13,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import static com.wable.harmonika.global.auth.AwsCognitoJwtValidatorUtil.validateAWSJwtToken;
-
 
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
@@ -34,7 +32,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
                 throw new UnauthorizedException("401 Unauthorized !!");
             }
             String token = authorization.replaceAll("^Bearer( )*", "");
-            if (VerifyToken.verify(token) == false){
+            if (new VerifyToken().verify(token) == false){
                 throw new UnauthorizedException("401 Unauthorized !!");
             }
             String username = AwsCognitoJwtParserUtil.getClaim(token, "cognito:username");
