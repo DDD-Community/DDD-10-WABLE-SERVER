@@ -23,6 +23,7 @@ public class Groups extends BaseTimeEntity {
     @Column(updatable = false)
     private Long id;
 
+    @Column(name="name" , unique=true)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
