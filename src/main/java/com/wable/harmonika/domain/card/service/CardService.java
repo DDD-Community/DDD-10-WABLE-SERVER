@@ -4,7 +4,6 @@ package com.wable.harmonika.domain.card.service;
 import com.wable.harmonika.domain.card.dto.*;
 import com.wable.harmonika.domain.card.entity.CardNames;
 import com.wable.harmonika.domain.card.entity.Cards;
-import com.wable.harmonika.domain.user.entity.Users;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

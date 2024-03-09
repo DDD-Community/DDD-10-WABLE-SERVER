@@ -164,7 +164,6 @@ public class GroupService {
 
         userGroupRepository.save(new UserGroups(user, group, Position.OWNER));
 
-        saveGroupQuestions(request, group);
     }
 
     @Transactional
@@ -172,7 +171,6 @@ public class GroupService {
         Groups group = groupRepository.findById(groupId).orElseThrow();
         groupQuestionRepository.deleteAllByGroup(group);
 
-        saveGroupQuestions(request, group);
     }
 
     public GroupDetailResponse findGroup(Long groupId) {
@@ -196,39 +194,6 @@ public class GroupService {
                 .collect(Collectors.toList());
 
         return new GroupDetailResponse(groupId, group.getName(), response);
-    }
-
-    private void saveGroupQuestions(GroupModifyRequest request, Groups group) {
-        // 새로운 질문들 저장
-        List<Questions> newQuestions = request.getRequiredQuestions().stream()
-                .map(s -> new Questions(null, QuestionNames.CUSTOM, s,
-                        QuestionTypes.OPEN_ENDED, null))
-                .collect(Collectors.toList());
-
-        questionRepository.saveAll(newQuestions);
-        List<GroupQuestion> groupQuestions = newQuestions.stream()
-                .map(questions -> new GroupQuestion(null, group, questions, true))
-                .collect(Collectors.toList());
-
-        // 고정 질문들
-        List<Questions> fixedQuestions = questionRepository.findBySidIn(
-                List.of(QuestionNames.MBTI, QuestionNames.NICKNAME, QuestionNames.HOBBY));
-
-        // 고정 질문들의 필수여부를 저장
-        List<GroupQuestion> fixedGroupQuestions = fixedQuestions.stream()
-                .map(savedFixedQuestion -> {
-                    FixedQuestion reqeustFixedQuestion = request.getFixedQuestions().stream()
-                            .filter(fq -> fq.getId().equals(savedFixedQuestion.getId()))
-                            .findAny()
-                            .orElseThrow();
-
-                    return new GroupQuestion(null, group, savedFixedQuestion,
-                            reqeustFixedQuestion.isRequired());
-                })
-                .toList();
-
-        groupQuestions.addAll(fixedGroupQuestions);
-        groupQuestionRepository.saveAll(groupQuestions);
     }
 
     public void validatorGroupOwner(Users user, Long groupId) {
