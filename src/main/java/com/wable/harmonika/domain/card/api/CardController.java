@@ -8,8 +8,6 @@ import com.wable.harmonika.domain.profile.dto.GroupProfileDto;
 import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.domain.profile.service.ProfileService;
 import com.wable.harmonika.domain.user.entity.Users;
-import com.wable.harmonika.domain.user.entity.Users;
-import com.wable.harmonika.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -45,7 +43,7 @@ public class CardController {
 
     @Operation(summary = "카드 만들기", description = "카드 만들기")
     @PostMapping()
-    public void createCards(@Parameter(hidden = true)  Users user, @Valid @RequestBody CardsRequest request) throws Exception {
+    public void createCards(@Parameter(hidden = true) Users user, @Valid @RequestBody CardsRequest request) throws Exception {
         // 보낸 유저 아이디는 토큰에서 가져오기
         request.setFromUserId(user.getUserId());
         cardService.create(request);

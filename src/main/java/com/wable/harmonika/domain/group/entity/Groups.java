@@ -1,7 +1,6 @@
 package com.wable.harmonika.domain.group.entity;
 
 
-import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;

@@ -4,13 +4,13 @@ jasypt:
 
 spring:
   datasource:
-    url: ENC(enkC5zDBhu7HLKAS1ejRw7CJFVt01tFe1ctjVx+R0CzVEhSeGE2utwJrQXQm9gmrUr7RVWm8bADXox5cXhJKE0qQyh4bDihj0WT2L+H8jQE=)
-    username: ENC(bJ3RHmDfsp6MJ9v74tBIwTGDM3wXLS9cw2mKXvJc+pp3I0NjUytZs5XYFFv0GykB)
-    password: ENC(9Shs096teqo8YjCjpGjd/te/Odl7xF09om99qjV6IsWBb44petABcl1sngaKt4+u)
+    url: jdbc:mysql://localhost:3306/default
+    username: root
+    password: password
   # Hibernate 설정
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
       naming:
         strategy: org.hibernate.cfg.ImprovedNamingStrategy
       properties:
