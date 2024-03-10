@@ -8,7 +8,6 @@ import com.wable.harmonika.domain.card.service.CardService;
 import com.wable.harmonika.domain.group.entity.Groups;
 import com.wable.harmonika.domain.profile.entity.Profiles;
 import com.wable.harmonika.domain.profile.repository.ProfileRepository;
-import com.wable.harmonika.domain.user.entity.Users;
 import com.wable.harmonika.domain.user.exception.UserNotFoundException;
 import com.wable.harmonika.domain.user.repository.UserRepository;
 import com.wable.harmonika.global.error.Error;

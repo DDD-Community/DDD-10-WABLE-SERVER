@@ -3,7 +3,6 @@ package com.wable.harmonika.domain.card.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wable.harmonika.domain.card.entity.CardNames;
 import com.wable.harmonika.domain.group.entity.Groups;
-import com.wable.harmonika.domain.user.entity.Users;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;

@@ -60,17 +60,7 @@ public class GroupController {
         return ResponseEntity.ok(userPosition);
     }
 
-    @Operation(summary = "그룹내 생일자 리스트", description = "그룹내 생일자 리스트")
-    @GetMapping("/{groupId}/birthday")
-    public ResponseEntity<GroupUserBirthdayListResponse> findAllBirthday(
-            @Parameter(hidden = true) Users user,
-            @PathVariable("groupId") Long groupId) {
-        GroupUserBirthdayListResponse groupBirthdays = groupService.findAllBirthday(groupId);
-
-        return ResponseEntity.ok(groupBirthdays);
-    }
-
-    @Operation(summary = "그룹내 팁원 리스트", description = "그룹내 팁원 리스트")
+    @Operation(summary = "그룹내 팀원 리스트", description = "그룹내 팀원 리스트")
     @GetMapping("/{groupId}/users")
     public ResponseEntity<GroupUserListResponse> findAllMember(
             @Parameter(hidden = true) Users user,
@@ -84,7 +74,7 @@ public class GroupController {
 
         return ResponseEntity.ok(members);
     }
-
+    // TODO: 쉽게
     @Operation(summary = "그룹 생성", description = "그룹 생성")
     @PostMapping("")
     public ResponseEntity<String> createGroup(
@@ -106,30 +96,6 @@ public class GroupController {
 
         groupService.validatorGroupOwner(user, groupId);
         groupService.updateGroup(request, groupId);
-
-        return ResponseEntity.ok().build();
-    }
-
-    @Operation(summary = "그룹 상세 조회", description = "그룹 상세 조회")
-    @GetMapping("/{groupId}")
-    public ResponseEntity<GroupDetailResponse> findGroup(
-            @Parameter(hidden = true) Users user,
-            @PathVariable Long groupId) {
-        groupService.validatorGroupOwner(user, groupId);
-        GroupDetailResponse response = groupService.findGroup(groupId);
-
-        return ResponseEntity.ok(response);
-    }
-
-    @Operation(summary = "팀원 역할 수정", description = "팀원 역할 수정")
-    @PutMapping("/{groupId}/role")
-    public ResponseEntity<String> updateUserRole(
-            @Parameter(hidden = true) Users user,
-            @PathVariable("groupId") Long groupId,
-            @Valid @RequestBody UserPositionUpdateRequest request
-    ) {
-        groupService.validatorGroupOwner(user, groupId);
-        groupService.updateUserRole(groupId, request, user);
 
         return ResponseEntity.ok().build();
     }
