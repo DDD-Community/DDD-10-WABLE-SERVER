@@ -36,6 +36,7 @@ cloud:
 server:
   servlet:
     context-path: /api
+  port: 8080
 
 # cognito 설정
 cognito:
