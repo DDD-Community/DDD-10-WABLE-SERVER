@@ -1,44 +1,12 @@
 version: "3.7"
 
 services:
-  jenkins:
-    privileged: true
-    container_name: ddd-jenkins
-    build: 
-      dockerfile: Dockerfile.jenkins
-    restart: always
-    ports:
-      - "8080:8080"
-      - "50000:50000"
-    volumes:
-      - ./data/jenkins/jenkins_home:/var/jenkins_home
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    environment:
-      TZ: "Asia/Seoul"
-
-  sonarqube:
-    container_name: ddd-sonarqube
-    image: sonarqube
-    depends_on:
-      - mysql
-    environment:
-      - SONARQUBE_JDBC_URL=jdbc:mysql://ddd-mysql:3306/default?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance&useSSL=false
-      - SONARQUBE_JDBC_USERNAME=admin
-      - SONARQUBE_JDBC_PASSWORD=password
-    volumes:
-      - ./data/sonarqube/conf:/opt/sonarqube/conf
-      - ./data/sonarqube/data:/opt/sonarqube/data
-      - ./data/sonarqube/extensions:/opt/sonarqube/extensions
-      - ./data/sonarqube/logs:/opt/sonarqube/logs
-
   mysql:
     container_name: ddd-mysql
     image: mysql:8.2
     ports:
       - '3306:3306'
     restart: always
-#    TODO: docker entrypoint 파일 수정 해야함
-#    mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"' > /some/path/on/your/host/all-databases.sql
     command: --default-authentication-plugin=mysql_native_password
     environment:
       - MYSQL_DATABASE=default
@@ -49,36 +17,7 @@ services:
       - ./data/mysql/data:/var/lib/mysql
       - ./data/mysql/conf.d:/etc/mysql/conf.d
 
-  phpmyadmin:
-    container_name: ddd-phpmyadmin
-    image: phpmyadmin
-    restart: always
-    environment:
-      - PMA_ARBITRARY=1
-      - PMA_HOST=ddd-mysql
-
   redis:
     container_name: ddd-redis
     image: redis:7.2-alpine
-    restart: always
-
-  nginx:
-    # Email: admin@example.com
-    # Password: changeme
-    # 인증서 쉽게 붙일수잇도록 도와주는애
-    image: 'jc21/nginx-proxy-manager:latest'
-    container_name: ddd-nginx
-    restart: unless-stopped
-    ports:
-      - '80:80'
-      - '81:81' # 화이트리스트 정책
-      - '443:443'
-    volumes:
-      - ./data/nginx:/data
-      - ./data/nginx/letsencrypt:/etc/letsencrypt
-
-  api:
-    container_name: ddd-api
-    build:
-      context: .
     restart: always

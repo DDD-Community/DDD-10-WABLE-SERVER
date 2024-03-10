@@ -1,1 +1,6 @@
 rootProject.name = 'harmonika'
+
+include('user-api')
+
+include('statistics-daemon')
+include('location-daemon')
