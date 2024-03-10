@@ -40,3 +40,5 @@ data/
 
 /src/main/generated/
 /src/querydsl/
+
+.DS_Store
