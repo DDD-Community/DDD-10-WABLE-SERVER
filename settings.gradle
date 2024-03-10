@@ -4,3 +4,5 @@ include('user-api')
 
 include('statistics-daemon')
 include('location-daemon')
+
+include('core')
