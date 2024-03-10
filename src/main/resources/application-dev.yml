@@ -4,13 +4,13 @@ jasypt:
 
 spring:
   datasource:
-    url: ENC(uW99qXewsVbrUfoUUmdEX9tTTTNEjd653F3igVYqDV2k+DC5CAmLCunwKlhSPWJU2d5cH9zuajvETWYo9XyOwJf7A0oR1xGWBYXOG+tJwGo=)
-    username: ENC(NtYGB8d4CwhGQ9f5p/rmebVSMMoSWd863myZO0IHwa48zyBT9FtJQDOJl51lzL2b)
-    password: ENC(ovaMAIknRctuozbNHwrZBf+0wZIlGs5PXjeMe+AWLYhMjUlc1UBXAp5IiEDwFIXp)
+    url: jdbc:mysql://localhost:3306/default
+    username: root
+    password: password
   # Hibernate 설정
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
       naming:
         strategy: org.hibernate.cfg.ImprovedNamingStrategy
       properties:
@@ -20,16 +20,16 @@ spring:
 cloud:
   aws:
     credentials:
-      accessKey: ENC(Ij9inu+dGlOweV/EyB4bFdiOh1ZZyDZBjDCmf6dq5h9+BrvKvZAJnTJIW1iF84WM9indqsHkKj2MAFCL/lU4WA==)
-      secretKey: ENC(5risYUm8b7lp77GPGPr1FKFcalC+KICC+K3FKNwah7HyJlU+0Xj83hkOdsd5Ks1nyS5lBwR8f7ZJ8gZA7RFDBjcDwU4AwotOi95977DpXQI=)
-    bucket: ENC(6cjlk56Ve3Gf4vqOf9MWk4gCHFhU5oeMXoYGN+VzLUON6Zs5wWn654EbIcXJXm87)
+      accessKey: ENC(Xmm07iXvC3PGbv3BpLE9URNexy9A/JzAfcgiROK3cl0KadW537FMb0jqNz50dEMGbvXixBUTVzKfbttVf3uYwg==)
+      secretKey: ENC(3PDM4+K9Zx4GjJRD9YSuk41F3Go/zZ5MUHs7+jN41VISZkku381AKcnoXC3Zbvnz8ysPivcsxMteP+wlB1y1H7EQ6AAsZovBgqNmMuyzmjs=)
+    bucket: ENC(be0O3eACXC5sWqEKZgjZtjAZy/uT2WTVmxgsuz9BALgWz5LCk8mny7iekw0enh/d)
     region:
       static: ap-northeast-2
     stack:
       auto: false
   private:
     group:
-      secretKey: ENC(J1jfnOM3OGzlos4RFISO6WMzaWo/rFvKRf/xLLZ3gQmYVzQroxqUWCHMyYtqFaVQ3HLHze/4jGRKrvOuw6xEnB+K5s567dK3nDGZIb4GD+PkbLlDSnGB864y5EYO7qNGlDAjmhfneLuZhysyC/S7Ag==)
+      secretKey: ENC(iGUPWEyRfu6vTBYdFeAa91gXWRpxAObYy9eSxZC8mlACtWTFFocdRj/ajb2BjZ//CvZXbNZkEtupSUZja4Quo5CF5Y03eauouKayLTBEwETy4w6w3WY9i0cVpT0UrpytZjsjdoWj+FwrQxgp5kcJ4w==)
       validityMillis: ENC(8aPdvU+zDbp/VUAcQTx/L83Q5+WNwo0kA8D5bAjrY1OtbcnX+mi1fIE5l1TmYqZS)
 
 # Prefix 설정
@@ -39,5 +39,5 @@ server:
 
 # cognito 설정
 cognito:
-  clientId: pphu5ge7ch41s2nhqmo1v5te8
-  issuerUri: https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_80Se4Ok5g
+  clientId: 60k5jb34qhf78mrq3mfaatvq0c
+  issuerUri: https://cognito-idp.ap-northeast-2.amazonaws.com/ap-northeast-2_0q6Cok8uM
