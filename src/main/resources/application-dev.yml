@@ -5,8 +5,8 @@ jasypt:
 spring:
   datasource:
     url: ENC(uW99qXewsVbrUfoUUmdEX9tTTTNEjd653F3igVYqDV2k+DC5CAmLCunwKlhSPWJU2d5cH9zuajvETWYo9XyOwJf7A0oR1xGWBYXOG+tJwGo=)
-    username: ENC(NtYGB8d4CwhGQ9f5p/rmebVSMMoSWd863myZO0IHwa48zyBT9FtJQDOJl51lzL2b)
     password: ENC(ovaMAIknRctuozbNHwrZBf+0wZIlGs5PXjeMe+AWLYhMjUlc1UBXAp5IiEDwFIXp)
+    username: ENC(NtYGB8d4CwhGQ9f5p/rmebVSMMoSWd863myZO0IHwa48zyBT9FtJQDOJl51lzL2b)
   # Hibernate 설정
   jpa:
     hibernate:
